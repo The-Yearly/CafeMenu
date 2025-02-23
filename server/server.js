@@ -6,13 +6,14 @@ const app=express()
 app.use(express.json())
 const cors = require("cors");
 app.use(cors());
-let d={1:"startes",2:"Malibu Specials"}
+let d={"1":"Starters & Sides","2":"Wraps & Burgers"}
 async function setInit(){
     for(g in data){
         await prisma.items.create({
             data:{
                 item_name:data[g]["name"],
                 item_bio:"Sss",
+                item_subcategory:data[g]["subcategory"],
                 item_category:data[g]["category"],
                 item_image:"https://media.licdn.com/dms/image/v2/D5635AQFx5Rfm_c0uKw/profile-framedphoto-shrink_200_200/profile-framedphoto-shrink_200_200/0/1735573684581?e=1740675600&v=beta&t=kq-KZ59_0QQRDz35yq-pVCpsULwV2zzTofI-zRFYwHY",
                 item_isVegan:false,
