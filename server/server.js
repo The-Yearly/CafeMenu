@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const express=require("express")
-const data=require("/home/theyearly/cafemenu/server/data.json")
+const data=require("/data.json")
 const prisma=new PrismaClient()
 const app=express()
 app.use(express.json())
