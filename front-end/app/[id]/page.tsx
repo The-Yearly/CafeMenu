@@ -2,17 +2,19 @@
 import { Food } from "../assets/interface/food";
 import { Swiper,SwiperSlide } from "swiper/react";
 import { EffectCoverflow,Autoplay, Pagination } from "swiper/modules";
+import cart from "@/app/assets/images/Cart.png"
 import AddButton from "../components/addButton";
 import Image from "next/image";
 import { useState,useEffect } from "react";
 import 'swiper/css/bundle';
-import dynamic from "next/dynamic";
 export default function Home(){
   const [route,setRoute]=useState(1)
   const [data,setData]=useState<Food[]|null>(null)
   const [search,setSearch]=useState("")
   const [filteredData,setFilter]=useState<Food[]|null>(null)
   const [top5,setTop5]=useState<Food[]|null>(null)
+  const [iscartShowing,setCartShowing]=useState(false)
+
   useEffect(()=>{const fetchdata=async()=>{
     const link="http://localhost:8000/getData/"+route
     const res=await fetch(link)
@@ -35,9 +37,9 @@ export default function Home(){
   }
   if(data!=null){
     const top5=data.slice(0,5)
-    console.log(data)
     return(
       <>
+        <Image src={cart} className="absolute xl-phone:top-[5vw] xl-phone:right-[5vw] xl-phone:w-[10vw]" onClick={()=>{setCartShowing(true)}} height={1000} width={1000} alt="Cart"/>
         <div>
           <p className="absolute xl-phone:top-[15vw] xl-phone:left-[5vw] xl-phone:text-[8vw] font-playwrite">Malibu Cafe</p>
           <input className="absolute xl-phone:h-[15vw] xl-phone:top-[35vw] xl-phone:left-[2vw] xl-phone:w-[96vw] xl-phone:pl-[5vw] xl-phone:rounded-[3vw] bg-white p-[1vw]" value={search} onChange={gotInput} placeholder="Search"/>
