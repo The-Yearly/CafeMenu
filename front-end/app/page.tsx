@@ -5,7 +5,7 @@ import cart from "@/app/assets/images/cart.png"
 import Link from "next/link"
 import AddButton from "./components/addButton"
 import { Food } from "./assets/interface/food"
-import Item from "./components/itemPop"
+
 export default function Home(){
   const[route,setRoute]=useState(0)
   const [data,setData]=useState<Food[]|null>(null)
@@ -91,7 +91,6 @@ export default function Home(){
                       <p className="absolute text-center text-black font-courier 2xl:text-[1.5vw] break-words  2xl:w-[10vw] 2xl:top-[8.5vw] lg:text-[2vw] lg:w-[15vw] lg:top-[11vw]  md:text-[2.5vw] md:w-[20vw] md:top-[13vw]  sm:text-[3vw] sm:w-[20vw] sm:top-[18vw]  xl-phone:text-[4vw] xl-phone:w-[30vw] xl-phone:top-[22vw] text-[4.5vw] w-[30vw] top-[24vw] ">{food.item_name}</p>
                       <p  className="absolute z-10 text-center text-gray-500 font-times 2xl:top-[11vw] 2xl:text-[0.9vw] 2xl:w-[10vw] line-clamp-2 lg:top-[14vw] lg:text-[1.4vw] lg:w-[15vw] md:top-[17vw] md:text-[2vw] md:w-[21vw] sm:top-[22vw] sm:text-[2.2vw] sm:w-[28vw] xl-phone:top-[30vw] xl-phone:text-[3.5vw] xl-phone:w-[40vw] top-[31vw] text-[3.5vw] w-[40vw]">{food.item_bio}</p>
                       <p className="absolute text-center 2xl:top-[13.7vw] 2xl:text-[1.5vw] font-times lg:text-[2vw] lg:top-[19vw] md:text-[2.5vw] md:top-[24vw] sm:text-[3vw] sm:top-[29vw] xl-phone:text-[4vw] xl-phone:top-[40vw] text-[4.5vw] top-[43vw]">1000</p>
-                      <Item item={food}/>
                     </div>
                   )}
               </div>

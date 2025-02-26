@@ -2,109 +2,550 @@
   {
     "name": "Buffalo Wings",
     "cost": 220.00,
-    "category": "Starters & Sides",
-    "subcategory": "Starters"
+    "category": "Appetizers",
+    "sub_category": "Starters"
   },
   {
     "name": "BBQ Baked Wings",
     "cost": 220.00,
-    "category": "Starters & Sides",
-    "subcategory": "Starters"
+    "category": "Appetizers",
+    "sub_category": "Starters"
   },
   {
     "name": "Potato Wedges",
     "cost": 210.00,
-    "category": "Starters & Sides",
-    "subcategory": "Starters"
+    "category": "Appetizers",
+    "sub_category": "Starters"
+  },
+  {
+    "name": "Bazooka Loaded Fries",
+    "cost": 210.00,
+    "category": "Appetizers",
+    "sub_category": "Starters"
+  },
+  {
+    "name": "Chicken Pops",
+    "cost": 190.00,
+    "category": "Appetizers",
+    "sub_category": "Starters"
   },
   {
     "name": "Malibu Chicken",
     "cost": 500.00,
     "category": "Specials",
-    "subcategory": "Malibu Specials"
+    "sub_category": "Malibu Specials"
+  },
+  {
+    "name": "MC Churros",
+    "cost": 190.00,
+    "category": "Desserts",
+    "sub_category": "Malibu Specials"
+  },
+  {
+    "name": "Cheese Mud Cake",
+    "cost": 120.00,
+    "category": "Desserts",
+    "sub_category": "Malibu Specials"
+  },
+  {
+    "name": "Choco Moose Cake",
+    "cost": 140.00,
+    "category": "Desserts",
+    "sub_category": "Malibu Specials"
+  },
+  {
+    "name": "Choco Mellow",
+    "cost": 99.00,
+    "category": "Desserts",
+    "sub_category": "Malibu Specials"
   },
   {
     "name": "Naruto Flame Wrap",
     "cost": 230.00,
-    "category": "Wraps & Burgers",
-    "subcategory": "Wraps"
+    "category": "Wraps",
+    "sub_category": "Wraps"
   },
   {
     "name": "Fried Spirit Wrap",
     "cost": 225.00,
-    "category": "Wraps & Burgers",
-    "subcategory": "Wraps"
+    "category": "Wraps",
+    "sub_category": "Wraps"
+  },
+  {
+    "name": "One Piece Tangy Wrap",
+    "cost": 220.00,
+    "category": "Wraps",
+    "sub_category": "Wraps"
+  },
+  {
+    "name": "Attack on Bun Wrap",
+    "cost": 270.00,
+    "category": "Wraps",
+    "sub_category": "Wraps"
+  },
+  {
+    "name": "Itachi Raven Wrap",
+    "cost": 265.00,
+    "category": "Wraps",
+    "sub_category": "Wraps"
   },
   {
     "name": "Bone - In 1 Piece",
     "cost": 103.00,
     "category": "Chicken",
-    "subcategory": "Broasted Bone-In"
+    "sub_category": "Broasted Bone-In"
   },
   {
     "name": "Bone - In 2 Piece",
     "cost": 179.00,
     "category": "Chicken",
-    "subcategory": "Broasted Bone-In"
+    "sub_category": "Broasted Bone-In"
+  },
+  {
+    "name": "Bone - In 4 Piece",
+    "cost": 362.00,
+    "category": "Chicken",
+    "sub_category": "Broasted Bone-In"
+  },
+  {
+    "name": "Bone - In 8 Piece",
+    "cost": 700.00,
+    "category": "Chicken",
+    "sub_category": "Broasted Bone-In"
+  },
+  {
+    "name": "Bone - In 12 Piece",
+    "cost": 999.00,
+    "category": "Chicken",
+    "sub_category": "Broasted Bone-In"
   },
   {
     "name": "Fantastic Duos",
     "cost": 600.00,
+    "category": "Combos",
+    "sub_category": "Bone-In Combos"
+  },
+  {
+    "name": "Elite Feast",
+    "cost": 999.00,
+    "category": "Combos",
+    "sub_category": "Bone-In Combos"
+  },
+  {
+    "name": "Miami Party Meal",
+    "cost": 1150.00,
+    "category": "Combos",
+    "sub_category": "Bone-In Combos"
+  },
+  {
+    "name": "Ultimate Hunger Feast Miami Party Meal",
+    "cost": 1700.00,
+    "category": "Combos",
+    "sub_category": "Bone-In Combos"
+  },
+  {
+    "name": "Legendary Fried Heaven",
+    "cost": 2100.00,
+    "category": "Combos",
+    "sub_category": "Bone-In Combos"
+  },
+  {
+    "name": "2 Piece Tenders",
+    "cost": 90.00,
     "category": "Chicken",
-    "subcategory": "Bone-In Combos"
+    "sub_category": "Tenders"
+  },
+  {
+    "name": "4 Piece Tenders",
+    "cost": 180.00,
+    "category": "Chicken",
+    "sub_category": "Tenders"
+  },
+  {
+    "name": "8 Piece Tenders",
+    "cost": 360.00,
+    "category": "Chicken",
+    "sub_category": "Tenders"
+  },
+  {
+    "name": "12 Piece Tenders",
+    "cost": 540.00,
+    "category": "Chicken",
+    "sub_category": "Tenders"
+  },
+  {
+    "name": "24 Piece Tenders",
+    "cost": 1000.00,
+    "category": "Chicken",
+    "sub_category": "Tenders"
   },
   {
     "name": "Sweet Narutochilli",
     "cost": 310.00,
-    "category": "Rice & Bowls",
-    "subcategory": "Rice Bowls"
+    "category": "Main Course",
+    "sub_category": "Rice Bowls"
+  },
+  {
+    "name": "Dragonz Breath",
+    "cost": 310.00,
+    "category": "Main Course",
+    "sub_category": "Rice Bowls"
+  },
+
+
+  {
+    "name": "Pirates Paradise",
+    "cost": 310.00,
+    "category": "Main Course",
+    "sub_category": "Rice Bowls"
+  },
+  {
+    "name": "Dark Domain",
+    "cost": 310.00,
+    "category": "Main Course",
+    "sub_category": "Rice Bowls"
+  },
+  {
+    "name": "Green Garden",
+    "cost": 250.00,
+    "category": "Main Course",
+    "sub_category": "Rice Bowls"
+
   },
   {
     "name": "Steamed Momo",
     "cost": 120.00,
-    "category": "Momos",
-    "subcategory": "Momos"
+    "category": "Main Course",
+    "sub_category": "Momos"
   },
   {
-    "name": "Chipotle",
-    "cost": 20.00,
-    "category": "Add-Ons",
-    "subcategory": "Sauces"
+    "name": "Fried Momo",
+    "cost": 150.00,
+    "category": "Main Course",
+    "sub_category": "Momos"
+  },
+  {
+    "name": "Black Raven Momo",
+    "cost": 180.00,
+    "category": "Main Course",
+    "sub_category": "Momos"
+  },
+  {
+    "name": "Hot Tandoori Momo",
+    "cost": 180.00,
+    "category": "Main Course",
+    "sub_category": "Momos"
+  },
+  {
+    "name": "Corn and Cheese Momo",
+    "cost": 140.00,
+    "category": "Main Course",
+    "sub_category": "Momos"
   },
   {
     "name": "Coca Cola",
     "cost": 70.00,
     "category": "Drinks",
-    "subcategory": "Fizzy Drinks"
+    "sub_category": "Soft Drinks"
+  },
+  {
+    "name": "Sprite",
+    "cost": 70.00,
+    "category": "Drinks",
+    "sub_category": "Soft Drinks"
+  },
+  {
+    "name": "Black Float",
+    "cost": 110.00,
+    "category": "Drinks",
+    "sub_category": "Floats"
+  },
+  {
+    "name": "Pink Float",
+    "cost": 110.00,
+    "category": "Drinks",
+    "sub_category": "Floats"
+  },
+  {
+    "name": "Passion Float",
+    "cost": 110.00,
+    "category": "Drinks",
+    "sub_category": "Floats"
   },
   {
     "name": "Caramel",
     "cost": 180.00,
-    "category": "Drinks",
-    "subcategory": "Shake / Frappe / Smoothie"
+    "category": "Shakes & Smoothies",
+    "sub_category": "Shakes"
+  },
+  {
+    "name": "Lotus Biscoff",
+    "cost": 199.00,
+    "category": "Shakes & Smoothies",
+    "sub_category": "Shakes"
+  },
+  {
+    "name": "Chocolate",
+    "cost": 170.00,
+    "category": "Shakes & Smoothies",
+    "sub_category": "Shakes"
+  },
+  {
+    "name": "Strawberry",
+    "cost": 170.00,
+    "category": "Shakes & Smoothies",
+    "sub_category": "Shakes"
+  },
+  {
+    "name": "Blueberry",
+    "cost": 190.00,
+    "category": "Shakes & Smoothies",
+    "sub_category": "Shakes"
+  },
+  {
+    "name": "Jack Frost",
+    "cost": 190.00,
+    "category": "Shakes & Smoothies",
+    "sub_category": "Shakes"
+  },
+  {
+    "name": "Whey Protein",
+    "cost": 199.00,
+    "category": "Shakes & Smoothies",
+    "sub_category": "Protein Drinks"
+  },
+  {
+    "name": "Mass Gainer",
+    "cost": 188.00,
+    "category": "Shakes & Smoothies",
+    "sub_category": "Protein Drinks"
+  },
+  {
+    "name": "Coffee Smash",
+    "cost": 160.00,
+    "category": "Shakes & Smoothies",
+    "sub_category": "Frappes"
+  },
+  {
+    "name": "Mango Smoothie",
+    "cost": 150.00,
+    "category": "Shakes & Smoothies",
+    "sub_category": "Smoothies"
+  },
+  {
+    "name": "Strawberry Smoothie",
+    "cost": 150.00,
+    "category": "Shakes & Smoothies",
+    "sub_category": "Smoothies"
   },
   {
     "name": "Vanilla Bliss",
     "cost": 170.00,
     "category": "Desserts",
-    "subcategory": "Waffles"
+    "sub_category": "Waffles"
+  },
+  {
+    "name": "Chocolux Waffle",
+    "cost": 180.00,
+    "category": "Desserts",
+    "sub_category": "Waffles"
+  },
+  {
+    "name": "Velvet Crave",
+    "cost": 190.00,
+    "category": "Desserts",
+    "sub_category": "Waffles"
+  },
+  {
+    "name": "Pink Perfection",
+    "cost": 180.00,
+    "category": "Desserts",
+    "sub_category": "Waffles"
+  },
+  {
+    "name": "Oreo Dream Layer",
+    "cost": 190.00,
+    "category": "Desserts",
+    "sub_category": "Waffles"
   },
   {
     "name": "Heavenly Blue Toast",
     "cost": 270.00,
     "category": "Desserts",
-    "subcategory": "French Toast"
+    "sub_category": "French Toast"
+  },
+  {
+    "name": "Coco Cloud Toast",
+    "cost": 250.00,
+    "category": "Desserts",
+    "sub_category": "French Toast"
+  },
+  {
+    "name": "Strawberry Cheese Toast",
+    "cost": 240.00,
+    "category": "Desserts",
+    "sub_category": "French Toast"
+  },
+  {
+    "name": "Peanut Swirl Toast",
+    "cost": 250.00,
+    "category": "Desserts",
+    "sub_category": "French Toast"
+  },
+  {
+    "name": "Banana Caramel Toast",
+    "cost": 230.00,
+    "category": "Desserts",
+    "sub_category": "French Toast"
+  },
+  {
+    "name": "Vanilla Snowfall",
+    "cost": 190.00,
+    "category": "Desserts",
+    "sub_category": "Pancakes"
+  },
+  {
+    "name": "Velvet Paradise",
+    "cost": 200.00,
+    "category": "Desserts",
+    "sub_category": "Pancakes"
+  },
+  {
+    "name": "Coco Lush",
+    "cost": 190.00,
+    "category": "Desserts",
+    "sub_category": "Pancakes"
+  },
+  {
+    "name": "Pistachio Bliss",
+    "cost": 200.00,
+    "category": "Desserts",
+    "sub_category": "Pancakes"
+  },
+  {
+    "name": "Berry Explosion",
+    "cost": 195.00,
+    "category": "Desserts",
+    "sub_category": "Pancakes"
   },
   {
     "name": "Jawbreaker Burger",
     "cost": 400.00,
-    "category": "Wraps & Burgers",
-    "subcategory": "Non Veg-Burgers"
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Pikachu Flame Burger",
+    "cost": 299.00,
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Six Eyes Zinger Burger",
+    "cost": 275.00,
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Ranch Burger",
+    "cost": 270.00,
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Hulk Smashed Burger",
+    "cost": 340.00,
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Korean Messy Burger",
+    "cost": 370.00,
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Itachi's Raven Burger",
+    "cost": 320.00,
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Mc Classic Burger",
+    "cost": 160.00,
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Mc Spicy Burger",
+    "cost": 190.00,
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Grilled AMC Burger",
+    "cost": 210.00,
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Grilled Tandoori Burger",
+    "cost": 199.00,
+    "category": "Burgers",
+    "sub_category": "Non Veg-Burgers"
+  },
+  {
+    "name": "Veg Jawbreaker Burger",
+    "cost": 199.00,
+    "category": "Burgers",
+    "sub_category": "Veg-Burgers"
+  },
+  {
+    "name": "Corn and Cheese Burger",
+    "cost": 199.00,
+    "category": "Burgers",
+    "sub_category": "Veg-Burgers"
+  },
+  {
+    "name": "Mc Veggie Burger",
+    "cost": 199.00,
+    "category": "Burgers",
+    "sub_category": "Veg-Burgers"
+  },
+  {
+    "name": "Grilled Tandoori Paneer Burger",
+    "cost": 199.00,
+    "category": "Burgers",
+    "sub_category": "Veg-Burgers"
+  },
+  {
+    "name": "Veg BBQ Burger",
+    "cost": 199.00,
+    "category": "Burgers",
+    "sub_category": "Veg-Burgers"
   },
   {
     "name": "French Fries + Cola/Sprite",
     "cost": 111,
     "category": "Combos",
-    "subcategory": "Meal Deals"
+    "sub_category": "Meal Deals"
+  },
+  {
+    "name": "Potato Wedges + Cola/Sprite",
+    "cost": 111,
+    "category": "Combos",
+    "sub_category": "Meal Deals"
+  },
+  {
+    "name": "1 MC Classic Burger + Cola/Sprite",
+    "cost": 222,
+    "category": "Combos",
+    "sub_category": "Meal Deals"
+  },
+  {
+    "name": "1 Chicken Pop + 1 Float",
+    "cost": 222,
+    "category": "Combos",
+    "sub_category": "Meal Deals"
   }
 ]

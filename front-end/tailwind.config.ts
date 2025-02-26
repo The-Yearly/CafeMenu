@@ -20,7 +20,8 @@ export default {
     },
     fontFamily: {
       times: ["Times New Roman", "serif"],
-      courier:["Courier New, Courier, monospace","cour"]
+      courier:["Courier New, Courier, monospace","cour"],
+      playwrite:["PlayWrite","sans-serif"],
     },
   },
   plugins: [],
