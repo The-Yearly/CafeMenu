@@ -13,8 +13,8 @@ export default function AddButton(props:{item:CartData,location:string}){
         console.log(cart)
         if(cart!=null){
             cartJson=JSON.parse(cart)
-            if(cartJson[props.item.item_id]!=null){
-                setAddItem(cartJson[props.item.item_id])
+            if(cartJson[props.item.itemId]!=null){
+                setAddItem(cartJson[props.item.itemId])
             }else{
                 setAddItem(0)
             }
@@ -34,7 +34,7 @@ export default function AddButton(props:{item:CartData,location:string}){
         if(cart!=null){
             setAddItem(additem+1)
             setItems(items+1)
-            cartJson[props.item.item_id]=additem+1
+            cartJson[props.item.itemId]=additem+1
             sessionStorage.setItem("cart",JSON.stringify(cartJson))
         }
         if(cartDets==null){
@@ -44,7 +44,7 @@ export default function AddButton(props:{item:CartData,location:string}){
             cartDetsJson=JSON.parse(cartDets)
         }
         if(cartDets!=null){
-            const data={"item_id":props.item.item_id,"item_name":props.item.item_name,"item_image":props.item.item_image,"item_bio":props.item.item_bio,"item_cost":props.item.item_cost}
+            const data={"itemId":props.item.itemId,"name":props.item.name,"image":props.item.image,"bio":props.item.bio,"cost":props.item.cost}
             if(additem==0){
                 cartDetsJson.push(data)
                 sessionStorage.setItem("cartDets",JSON.stringify(cartDetsJson))
@@ -60,10 +60,10 @@ export default function AddButton(props:{item:CartData,location:string}){
             cartDetsJson=JSON.parse(cartDets)
             setAddItem(additem-1)
             setItems(items-1)
-            cartJson[props.item.item_id]=additem-1
+            cartJson[props.item.itemId]=additem-1
             if(additem-1==0){
-                delete cartJson[props.item.item_id]
-                cartDetsJson=cartDetsJson.filter(food=>food.item_id!=props.item.item_id)
+                delete cartJson[props.item.itemId]
+                cartDetsJson=cartDetsJson.filter(food=>food.itemId!=props.item.itemId)
                 sessionStorage.setItem("cartDets",JSON.stringify(cartDetsJson))
             }
             sessionStorage.setItem("cart",JSON.stringify(cartJson))

@@ -38,9 +38,9 @@ export default function Cart(){
             <p className="font-times text-gray-500" onClick={()=>{setCartShowing(false)}}>X</p>
             <Swiper className="xl-phone:top-[5vw] xl-phone:h-[200vw] top-[2 vw] h-[175vw]" slidesPerView={6}  direction={"vertical"}>
                 {cartData?.map((food)=>
-                <SwiperSlide key={food.item_id}>
+                <SwiperSlide key={food.itemId}>
                   <AddButton item={food} location="cart"/>
-                  <Image className="absolute xl-phone:w-[30vw] xl-phone:rounded-[30vw] xl-phone:h-[30vw] w-[26vw] rounded-[30vw] h-[26vw] xl-phone:left-0 left-[3vw] " src={food.item_image} width={1000} height={1000} alt="Food"/>
+                  <Image className="absolute xl-phone:w-[30vw] xl-phone:rounded-[30vw] xl-phone:h-[30vw] w-[26vw] rounded-[30vw] h-[26vw] xl-phone:left-0 left-[3vw] " src={food.image} width={1000} height={1000} alt="Food"/>
                 </SwiperSlide>)}
             </Swiper>
         </div>
