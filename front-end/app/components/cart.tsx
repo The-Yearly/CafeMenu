@@ -18,15 +18,15 @@ export default function Cart(props:{tid:number}){
     const [iscartShowing,setCartShowing]=useState(false)
     useEffect(()=>{const sendOrder=async()=>{
       if(data!=null){      
-        console.log(data)
         const res=await axios.post(link+"/orders/",data)}
+        localStorage.setItem("status","true")   
     }
     sendOrder()
     },[data])
     useEffect(()=>{const getCart=()=>{
-        const cart=sessionStorage.getItem("cart")
+        const cart=localStorage.getItem("cart")
         if(cart==null){
-          sessionStorage.setItem("cart","{}")
+          localStorage.setItem("cart","{}")
         }
         }
         getCart()

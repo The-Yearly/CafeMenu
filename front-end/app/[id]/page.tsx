@@ -22,6 +22,10 @@ export default function Home({params}:{params:Promise<{id:number}>}){
   const [data,setData]=useState<Food[]|null>(null)
   const [search,setSearch]=useState("")
   const [filteredData,setFilter]=useState<Food[]|null>(null)
+  const status=localStorage.getItem("status")
+  if(status!=null){
+   sessionStorage.setItem("status","false")   
+  }
   useEffect(()=>{const getCats=async()=>{
     const res=await fetch("http://localhost:3001/api/v1/getCategories")
     const cats:Category=await res.json()
@@ -31,6 +35,7 @@ export default function Home({params}:{params:Promise<{id:number}>}){
   useEffect(()=>{const fetchdata=async()=>{
     const link="http://localhost:3001/api/v1/category/"
     setSearch("")
+    setFilter(null)
     let res
     if(route=="all"){
       res=await fetch("http://localhost:3001/api/v1/menu")
