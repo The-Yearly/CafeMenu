@@ -4,7 +4,7 @@ import { CartData } from "../assets/interface/CartData";
 import { useButton } from "../itemContext";;
 export default function AddButton(props:{item:CartData,location:string}){
     let cartJson
-    const {price,setPrice}=useButton()
+    const {items,setItems}=useButton()
     const item=props.item
     const [additem,setAddItem]=useState(0)
     const loc=props.location
@@ -19,7 +19,7 @@ export default function AddButton(props:{item:CartData,location:string}){
             }
         }
     }
-    fetchdata()},[price])
+    fetchdata()},[items])
     function AddItem(){
         const cart=sessionStorage.getItem("cart")
         if(cart==null){
@@ -31,13 +31,13 @@ export default function AddButton(props:{item:CartData,location:string}){
         if(cart!=null){
             if(cartJson[item.itemId]!=undefined){
                 setAddItem(additem+1)
-                setPrice(price+item.cost)
+                setItems(items+item.cost)
                 cartJson[item.itemId].quantity+=1
                 sessionStorage.setItem("cart",JSON.stringify(cartJson))
             }else{
                 cartJson[item.itemId]=item
                 cartJson[item.itemId].quantity=1
-                setPrice(price+item.cost)
+                setItems(items+item.cost)
                 sessionStorage.setItem("cart",JSON.stringify(cartJson))
             }
         }
@@ -53,7 +53,7 @@ export default function AddButton(props:{item:CartData,location:string}){
         if(cart!=null){
             if(cartJson[item.itemId]!=undefined){
                 setAddItem(additem-1)
-                setPrice(price+item.cost)
+                setItems(items+item.cost)
                 cartJson[item.itemId].quantity-=1
                 if(cartJson[item.itemId].quantity==0){
                     delete cartJson[item.itemId]

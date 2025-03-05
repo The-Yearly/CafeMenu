@@ -2,8 +2,8 @@
 'use client'
 import React, { createContext,useContext,useState } from "react";
 interface ContextTypes {
-    price: number;
-    setPrice: React.Dispatch<React.SetStateAction<number>>
+    items: number;
+    setItems: React.Dispatch<React.SetStateAction<number>>
 }
 
 const ItemsContext=createContext<ContextTypes | undefined>(undefined)
@@ -18,14 +18,9 @@ export const useButton = (): ContextTypes =>{
 }
 
 export const ItemsContextProvider=({children}:{children:React.ReactNode})=>{
-    let tprice=Number(sessionStorage.getItem("price"))
-    if(tprice==null){
-        sessionStorage.setItem("price","0")
-        tprice=0
-    }
-    const [price,setPrice]=useState(tprice)
+    const [items,setItems]=useState(0)
     return(
-        <ItemsContext.Provider value={{price,setPrice}}>
+        <ItemsContext.Provider value={{items,setItems}}>
             {children}
         </ItemsContext.Provider>
     )

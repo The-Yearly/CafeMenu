@@ -24,24 +24,21 @@ router.get('/menu',async (req,res) =>{
 
 
 //placing an order
-router.post('/orders/:id',async (req,res) =>{
+router.post('/orders/',async (req,res) =>{
     const parsedResponse = OrderSchema.safeParse(req.body);
-    console.log(parsedResponse)
     if(!parsedResponse.success){
         res.status(400).json({
             message:"Validation failed"
         })
         return
     }
-
-    const tableId = Number(req.params.id);
+    const tableId = parsedResponse.data.tableId;
     if(!tableId){
         res.status(400).json({
             message:"No table found"
         })
         return
     }
-
     let placedOrder = await client.$transaction(async ()=>{
         //transaction for creating order
 
@@ -65,11 +62,9 @@ router.post('/orders/:id',async (req,res) =>{
         return order.orderId
         
     })
-
     res.status(200).json({
         orderId: placedOrder
     })
-
 })
 
 //item with itemId
@@ -106,7 +101,6 @@ router.get('/item',async (req,res) =>{
 //items with category
 router.get('/category/:cat',async (req,res) =>{
     const categoryName=req.params.cat
-    console.log(categoryName)
     if(!categoryName || Array.isArray(categoryName)){
         res.status(400).json({
             message:"No such category found"

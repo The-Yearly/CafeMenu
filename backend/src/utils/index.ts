@@ -2,6 +2,13 @@ import z from 'zod'
 
 export const cart = z.object({
     itemId:z.number(),
+    name:z.string(),
+    bio:z.string(),
+    image:z.string(),
+    category:z.string(),
+    subcategory:z.string(),
+    isvegan:z.boolean(),
+    cost:z.number().positive(),
     quantity:z.number().positive(),
 })
 export const OrderSchema = z.object({
