@@ -8,4 +8,5 @@ export interface Food{
     isVegan:Boolean
     cost:number
     availability: Boolean
+    quantity:number
 }

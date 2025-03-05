@@ -4,4 +4,5 @@ export interface CartData{
     bio:string
     image:string
     cost:number
+    quantity:number
 }

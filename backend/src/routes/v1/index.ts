@@ -24,8 +24,9 @@ router.get('/menu',async (req,res) =>{
 
 
 //placing an order
-router.post('/orders/',async (req,res) =>{
+router.post('/orders/:id',async (req,res) =>{
     const parsedResponse = OrderSchema.safeParse(req.body);
+    console.log(parsedResponse)
     if(!parsedResponse.success){
         res.status(400).json({
             message:"Validation failed"
@@ -33,7 +34,7 @@ router.post('/orders/',async (req,res) =>{
         return
     }
 
-    const tableId = Number(req.query.id);
+    const tableId = Number(req.params.id);
     if(!tableId){
         res.status(400).json({
             message:"No table found"
@@ -103,8 +104,9 @@ router.get('/item',async (req,res) =>{
 
 
 //items with category
-router.get('/category',async (req,res) =>{
-    const categoryName = req.query.category;
+router.get('/category/:cat',async (req,res) =>{
+    const categoryName=req.params.cat
+    console.log(categoryName)
     if(!categoryName || Array.isArray(categoryName)){
         res.status(400).json({
             message:"No such category found"
@@ -130,7 +132,7 @@ router.get('/category',async (req,res) =>{
 
 //routes for getting category
 router.get('/getCategories',async (req,res) =>{
-    console.log("fn hit")
+    console.log("Cat hit")
     const response = await client.category.findMany({})
     if(!response){
         console.log("NO response")
@@ -138,7 +140,7 @@ router.get('/getCategories',async (req,res) =>{
             message:"No categories found"
         })
     }
-
+    console.log(response)
     res.status(200).json({
         categories:response
     })
