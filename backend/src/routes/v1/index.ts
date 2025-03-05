@@ -16,7 +16,7 @@ router.get('/menu',async (req,res) =>{
             message:"No items found"
         })
     }
-    console.log(response)
+    
     res.status(200).json({
         items:response
     })

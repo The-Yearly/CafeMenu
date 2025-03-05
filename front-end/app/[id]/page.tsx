@@ -34,8 +34,8 @@ export default function Home({params}:{params:Promise<{id:number}>}){
   getCats()},[])
   useEffect(()=>{const fetchdata=async()=>{
     const link="http://localhost:3001/api/v1/category/"
-    setSearch("")
     setFilter(null)
+  
     let res
     if(route=="all"){
       res=await fetch("http://localhost:3001/api/v1/menu")
