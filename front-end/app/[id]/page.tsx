@@ -17,7 +17,7 @@ interface Category{
 export default function Home({params}:{params:Promise<{id:number}>}){
   const id=use(params)
   const tid=id.id
-  const [route,setRoute]=useState("Fast Food")
+  const [route,setRoute]=useState("all")
   const [cats,setCats]=useState<Categories[]|null>()
   const [data,setData]=useState<Food[]|null>(null)
   const [search,setSearch]=useState("")
@@ -30,7 +30,12 @@ export default function Home({params}:{params:Promise<{id:number}>}){
   getCats()},[])
   useEffect(()=>{const fetchdata=async()=>{
     const link="http://localhost:3001/api/v1/category/"
-    const res=await fetch(link+route)
+    let res
+    if(route=="all"){
+      res=await fetch("http://localhost:3001/api/v1/menu")
+    }else{
+      res=await fetch(link+route)
+    }
     const item:Items=await res.json()
     setData(item.items)
   }
@@ -59,7 +64,7 @@ export default function Home({params}:{params:Promise<{id:number}>}){
           <input className="absolute sm:h-[15vw] sm:top-[35vw] sm:left-[2vw] sm:w-[96vw] sm:pl-[5vw] sm:rounded-[3vw] xl-phone:h-[15vw] xl-phone:top-[35vw] xl-phone:left-[2vw] xl-phone:w-[96vw] xl-phone:pl-[5vw] xl-phone:rounded-[3vw] h-[15vw] top-[35vw] left-[2vw] w-[96vw] pl-[5vw] rounded-[3vw] bg-white p-[1vw]" value={search} onChange={gotInput} placeholder="Search"/>
           <p className="absolute sm:text-[5vw] sm:left-[5vw] sm:top-[55vw] xl-phone:text-[5vw] xl-phone:left-[5vw] xl-phone:top-[55vw] text-[5vw] left-[5vw] top-[55vw] font-playwrite ">Categories</p>
           <Swiper loop={true} className="absolute sm:top-[66vw] sm:w-[96vw] sm:left-[0vw] xl-phone:top-[66vw] xl-phone:w-[96vw] xl-phone:left-[0vw] top-[66vw] w-[96vw] left-[0vw]" spaceBetween={10} slidesPerView={4}>
-          <SwiperSlide><p onClick={()=>{setRoute("")}} className={(route!="")?"flex text-black justify-center font-playwrite items-center bg-white sm:w-[25vw] sm:h-[8vw] sm:rounded-[5vw] xl-phone:w-[25vw] xl-phone:h-[8vw] xl-phone:rounded-[4vw] w-[25vw] h-[8vw] rounded-[4vw]":"flex justify-center font-playwrite text-white items-center bg-black sm:w-[25vw] sm:h-[8vw] sm:rounded-[4vw] xl-phone:w-[25vw] xl-phone:h-[8vw] xl-phone:rounded-[4vw] w-[25vw] h-[8vw] rounded-[4vw]"}>All</p></SwiperSlide>
+          <SwiperSlide><p onClick={()=>{setRoute("all")}} className={(route!="all")?"flex text-black justify-center font-playwrite items-center bg-white sm:w-[25vw] sm:h-[8vw] sm:rounded-[5vw] xl-phone:w-[25vw] xl-phone:h-[8vw] xl-phone:rounded-[4vw] w-[25vw] h-[8vw] rounded-[4vw]":"flex justify-center font-playwrite text-white items-center bg-black sm:w-[25vw] sm:h-[8vw] sm:rounded-[4vw] xl-phone:w-[25vw] xl-phone:h-[8vw] xl-phone:rounded-[4vw] w-[25vw] h-[8vw] rounded-[4vw]"}>All</p></SwiperSlide>
             {cats.map((category)=><SwiperSlide key={category.name}><p onClick={()=>{setRoute(category.name)}} className={(route!=category.name)?"flex text-black justify-center font-playwrite items-center bg-white sm:w-[25vw] sm:h-[8vw] sm:rounded-[5vw] xl-phone:w-[25vw] xl-phone:h-[8vw] xl-phone:rounded-[4vw] w-[25vw] h-[8vw] rounded-[4vw]":"flex justify-center font-playwrite text-white items-center bg-black sm:w-[25vw] sm:h-[8vw] sm:rounded-[4vw] xl-phone:w-[25vw] xl-phone:h-[8vw] xl-phone:rounded-[4vw] w-[25vw] h-[8vw] rounded-[4vw]"}>{category.name}</p></SwiperSlide>)}
           </Swiper>
         </div>

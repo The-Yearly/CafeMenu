@@ -8,7 +8,7 @@ export const router = Router();
 
 //getting the menu
 router.get('/menu',async (req,res) =>{
-    console.log("fn hit")
+    console.log("e hit")
     const response = await client.items.findMany({})
     if(!response){
         console.log("NO response")
@@ -16,7 +16,7 @@ router.get('/menu',async (req,res) =>{
             message:"No items found"
         })
     }
-
+    console.log(response)
     res.status(200).json({
         items:response
     })
@@ -101,6 +101,7 @@ router.get('/item',async (req,res) =>{
 //items with category
 router.get('/category/:cat',async (req,res) =>{
     const categoryName=req.params.cat
+
     if(!categoryName || Array.isArray(categoryName)){
         res.status(400).json({
             message:"No such category found"
