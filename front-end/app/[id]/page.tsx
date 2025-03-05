@@ -30,6 +30,7 @@ export default function Home({params}:{params:Promise<{id:number}>}){
   getCats()},[])
   useEffect(()=>{const fetchdata=async()=>{
     const link="http://localhost:3001/api/v1/category/"
+    setSearch("")
     let res
     if(route=="all"){
       res=await fetch("http://localhost:3001/api/v1/menu")
@@ -56,6 +57,7 @@ export default function Home({params}:{params:Promise<{id:number}>}){
   }
   if(data!=null && cats!=null){
     const top5=data.slice(0,5)
+    console.log(data)
     return(
       <>
       <Cart tid={tid}/>
