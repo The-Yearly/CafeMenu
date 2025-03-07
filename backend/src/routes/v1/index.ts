@@ -234,6 +234,14 @@ router.get('/allitems',async (req,res) =>{
 })
 router.get("/deleteItem/:id",async(req,res)=>{
     console.log("delete hit")
+    const resDelete=await client.cart.deleteMany({
+        where: { orderId: Number(req.params.id) }
+    });
+    if(!resDelete){
+        res.status(400).json({
+            message:"Failed To Delete"
+        })
+    }
     const response=await client.orders.delete({
         where:{
             orderId:Number(req.params.id)

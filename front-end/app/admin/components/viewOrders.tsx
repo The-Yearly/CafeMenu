@@ -1,6 +1,5 @@
 'use client';
 import { useState,useEffect } from 'react';
-import { Food } from '@/app/assets/interface/food';
 interface Orders{
     orderId:number;
     tableId:number;
@@ -21,6 +20,7 @@ export default function ViewOrders() {
   useEffect(()=>{const deleteId=async()=>{
     if(deleId!=0){
       const res=await fetch("http://localhost:3001/api/v1/deleteItem/"+deleId)
+      console.log(res)
       if(res.status==200){
         setTrackDelete(trackDelete+1)
       }
