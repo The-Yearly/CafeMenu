@@ -40,7 +40,7 @@ model cart {
   itemId   Int
   quantity Int
   iid      items  @relation(fields: [itemId], references: [itemId])
-  oid      orders @relation(fields: [orderId], references: [orderId])
+  oid      orders @relation(fields: [orderId], references: [orderId],onDelete: Cascade)
 
   @@id([orderId, itemId])
 }
