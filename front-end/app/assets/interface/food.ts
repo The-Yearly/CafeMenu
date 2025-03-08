@@ -5,7 +5,7 @@ export interface Food{
     image:string
     category:string
     subcategory:string
-    isVegan:Boolean
+    isvegan:Boolean
     cost:number
     availability: Boolean
     quantity:number

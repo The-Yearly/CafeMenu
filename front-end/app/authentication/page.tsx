@@ -15,6 +15,7 @@ export default function Login() {
         const res=await axios.post("http://localhost:3001/api/v1/userAuth",data)
         toast(res.data.message)
         if(res.status==200){
+          localStorage.setItem("isAdmin","true")
           router.push("/admin")
         }
     }
