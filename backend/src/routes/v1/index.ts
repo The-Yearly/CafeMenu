@@ -141,7 +141,6 @@ router.get('/getCategories',async (req,res) =>{
             message:"No categories found"
         })
     }
-    console.log(response)
     res.status(200).json({
         categories:response
     })
@@ -232,7 +231,6 @@ router.get('/allitems',async (req,res) =>{
     for(let g in response){
         newres[response[g].itemId]=response[g].name
     }
-    console.log(newres)
     res.status(200).json({
         items:newres
     })
@@ -305,7 +303,6 @@ router.get('/adminmenu',async (req,res) =>{
 router.post('/addCat',async (req,res) =>{
     console.log("item hit")
     const parsedResponse = categories.safeParse(req.body);
-    console.log(parsedResponse,req.body)
     if(!parsedResponse.success){
         res.status(400).json({
             message:"Validation failed"
@@ -325,4 +322,17 @@ router.post('/addCat',async (req,res) =>{
     res.status(200).json({
         message:"Category Has Been Added"
     })
+})
+
+router.post('/deleteItem',async (req,res) =>{
+    const itemId=req.body.id
+    const response=await client.items.delete({
+        where:{
+            itemId:itemId
+        }
+    })
+    if(!response){
+        res.json({message:"Error Deleting Item"})
+    }
+    res.json({message:"Item Has Been Deleted"})
 })
