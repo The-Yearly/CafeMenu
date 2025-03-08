@@ -2,8 +2,9 @@
 import React from "react";
 import { UtensilsCrossed } from "lucide-react";
 import { motion } from "framer-motion";
+import ThemeToggle from "./ThemeToggle";
 
-const Navbar: React.FC = () => {
+const Navbar = ({ id }: { id: number }) => {
   return (
     <motion.div
       className="glassmorphism sticky top-0 z-50 py-4 px-6"
@@ -13,10 +14,17 @@ const Navbar: React.FC = () => {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <UtensilsCrossed className="h-8 w-8 " color="#4f46e5" />
-          <h1 className="text-xl font-bold tracking-tight">Cookie</h1>
+          <UtensilsCrossed className="h-8 w-8 text-accent" />
+          <h1 className="text-xl font-bold tracking-tight text-primary dark:text-text ">
+            Cookie
+          </h1>
         </div>
-        <div className="text-sm text-[var(--text)]">Table #42</div>
+        <div className="flex items-center space-x-4">
+          <div className="text-sm text-gray-600 dark:text-gray-300">
+            Table #{`${id}`}
+          </div>
+          <ThemeToggle />
+        </div>
       </div>
     </motion.div>
   );
