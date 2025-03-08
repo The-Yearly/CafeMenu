@@ -9,9 +9,7 @@ export const router = Router();
 router.get("/menu", async (req, res) => {
   console.log("e hit");
   const response = await client.items.findMany({
-    where: {
-      availability: true,
-    },
+    where: {},
   });
   if (!response) {
     console.log("NO response");
@@ -108,21 +106,37 @@ router.post("/category", async (req, res) => {
     });
     return;
   }
-  const response = await client.items.findMany({
-    where: {
-      category: categoryName,
-      availability: true,
-    },
-  });
 
-  if (!response) {
-    res.status(400).json({
-      message: "No item with that category found",
+  if (categoryName == "All") {
+    const response = await client.items.findMany({
+      where: {
+        availability: true,
+      },
+    });
+    if (!response) {
+      res.status(400).json({
+        message: "No item with that category found",
+      });
+    }
+    res.status(200).json({
+      items: response,
+    });
+  } else {
+    const response = await client.items.findMany({
+      where: {
+        category: categoryName,
+        availability: true,
+      },
+    });
+    if (!response) {
+      res.status(400).json({
+        message: "No item with that category found",
+      });
+    }
+    res.status(200).json({
+      items: response,
     });
   }
-  res.status(200).json({
-    items: response,
-  });
 });
 
 //routes for getting category
@@ -254,21 +268,9 @@ router.post("/userAuth", async (req, res) => {
     } else {
       res.status(400).json({ message: "Incorrect Password" });
     }
-    const response = await client.orders.delete({
-      where: {
-        orderId: Number(req.params.id),
-      },
-    });
-    if (!response) {
-      res.status(400).json({
-        message: "Failed To Delete",
-      });
-    }
-    res.status(200).json({
-      message: "Order Has Been Removed",
-    });
   }
 });
+
 router.post("/changeItem", async (req, res) => {
   console.log("update Hit");
   const item = req.body;

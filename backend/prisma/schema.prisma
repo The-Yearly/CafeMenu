@@ -17,6 +17,7 @@ model items {
   isvegan      Boolean
   cost         Int
   availability Boolean
+  tags         String[]
   ingredients String[]
   orders_items cart[]
 }
