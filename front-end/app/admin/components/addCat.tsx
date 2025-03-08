@@ -18,6 +18,8 @@ export default function AddCat() {
   function sendCat(){
     if(name!="" && img!="" && slug!=""){
         setData({name:name,images:img,slug:slug})
+    }else{
+        toast("Fill All")
     }
   }
   return (

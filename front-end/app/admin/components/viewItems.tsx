@@ -1,12 +1,13 @@
 'use client'
 import { Food } from "@/app/assets/interface/food"
 import { useState,useEffect } from "react"
-import Image from "next/image"
+import { deleteButton } from "@/app/itemContext"
 import Item from "./itemcard"
 export default function ViewItems(){
     const [data,setData]=useState<Food[]|null>(null)
     const [search,setSearch]=useState("")
     const [filteredData,setFilter]=useState<Food[]|null>(null)
+    const {del}=deleteButton()
 
     useEffect(()=>{const fetchAllItems=async()=>{
         const res=await fetch("http://localhost:3001/api/v1/adminmenu")
@@ -15,7 +16,7 @@ export default function ViewItems(){
         const i= setInterval(fetchAllItems,30000)
         return()=>clearInterval(i)
     }
-    fetchAllItems()},[])
+    fetchAllItems()},[del])
     useEffect(()=>{const fetchAllItems=async()=>{
         const res=await fetch("http://localhost:3001/api/v1/menu")
         const resjson=await res.json()

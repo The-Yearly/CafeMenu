@@ -3,9 +3,11 @@ import { Food } from "@/app/assets/interface/food"
 import { useEffect, useState} from "react" 
 import Categories from "@/app/assets/interface/categories"
 import axios from "axios"
+import { deleteButton } from "@/app/itemContext"
 import Image from "next/image"
 import { toast } from "react-toastify"
 export default function Item(props:{item:Food}){
+    const {del,setDel}=deleteButton()
     const [item,setItem]=useState(props.item)
     const [cats,setCats]=useState<Categories[]|null>(null)
     const [canINotEdit,setCanINotEdit]=useState(true)
@@ -19,6 +21,7 @@ export default function Item(props:{item:Food}){
     const [desc,setDesc]=useState(item.bio)
     const [showDropDown,setShowDropDown]=useState(false)
     const [data,setData]=useState<Food|null>(null)
+    const [deleteId,setDeleteId]=useState(0)
     function reset(){
         setShowDropDown(false)
         setName(item.name)
@@ -44,9 +47,19 @@ export default function Item(props:{item:Food}){
         }
     }
     sendData()},[data])
+    useEffect(()=>{const deleteItem=async()=>{
+        if(deleteId!=0){
+            const res=await axios.post("http://localhost:3001/api/v1/deleteItem",{id:deleteId})
+            setDel(del+1)
+        }
+    }
+    deleteItem()},[deleteId])
     function submit(itemId:number){
         setData({itemId:item.itemId,name:name,bio:desc,category:cat,subcategory:subCat,availability:isAvailable,cost:cost,image:img,isvegan:isVegan,quantity:1})
     }   
+    function deleteItem(itemId:number){
+        setDeleteId(itemId)
+    }
     if(item!=null && cats!=null){
         return(
             <div key={item.itemId} className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
@@ -79,7 +92,8 @@ export default function Item(props:{item:Food}){
                 </div>
                 <button className={canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit);toast("You Can Edit Item")}}>Edit</button>
                 <button className={!canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit);submit(item.itemId)}}>Done</button>
-                <button className={!canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit);reset()}}>Cancel</button>
+                <button className={!canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[4vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit);deleteItem(item.itemId)}}>Delete</button>
+                <button className={!canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[4vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit);reset()}}>Cancel</button>
             </div>
         )
     }
