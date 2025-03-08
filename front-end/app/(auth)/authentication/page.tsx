@@ -4,14 +4,13 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { User } from "@/app/lib/types";
+import { User } from "@/lib/types";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [data, setData] = useState<User | null>(null);
   const router = useRouter();
-  localStorage.setItem("isAdmin", "false");
   useEffect(() => {
     const sendUser = async () => {
       if (data != null) {
@@ -20,8 +19,7 @@ export default function Login() {
           data
         );
         toast(res.data.message);
-        if (res.data.message == "Succesfully Logged In") {
-          localStorage.setItem("isAdmin", "true");
+        if (res.status == 200) {
           router.push("/admin");
         }
       }
