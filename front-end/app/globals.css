@@ -3,14 +3,22 @@
 @tailwind utilities;
 
 :root {
-  --background: #171717;
-  --foreground: rgb(223, 223, 223);
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #0a0a0a;
+  --secondary: #1a1a1a;
+  --accent: #4f46e5;
+  --text: #000308;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: rgb(245, 248, 255);
-    --foreground: black;
+    --background: #ffffff;
+    --foreground: #171717;
+    --primary: #0a0a0a;
+    --secondary: #1a1a1a;
+    --accent: #4f46e5;
+    --text: #000308;
   }
 }
 
@@ -21,8 +29,16 @@ body {
 }
 
 @font-face {
-  font-family: 'PlayWrite';
+  font-family: "PlayWrite";
   src: url("assets/fonts//PlaywriteITModerna-VariableFont_wght.ttf");
   font-weight: normal;
   font-style: normal;
+}
+
+.glassmorphism {
+  background: rgba(26, 26, 26, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
