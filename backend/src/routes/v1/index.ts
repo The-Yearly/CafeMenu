@@ -1,4 +1,4 @@
-import { Router } from "express";
+import e, { Router } from "express";
 import { client } from "../../utils/client";
 import { ItemSchema, OrderSchema } from "../../utils";
 import { ParseStatus } from "zod";
@@ -255,4 +255,28 @@ router.get("/deleteItem/:id",async(req,res)=>{
     res.status(200).json({
         message:"Order Has Been Removed"
     })
+})
+router.post("/changeItem",async(req,res)=>{
+    console.log("update Hit")
+    const item=req.body
+    const response=await client.items.update({
+        where:{
+            itemId:item.itemId
+        },  
+        data:{
+            name:item.name,
+            bio:item.bio,
+            cost:item.cost,
+            image:item.image,
+            category:item.category,
+            subcategory:item.subcategory,
+            isvegan:item.isvegan,
+            availability:item.availability
+        }
+    })
+    if(!response){
+        res.status(400).json({message:"Could Not Update Item"})
+    }
+    res.status(200).json({message:"Succesfully Updated"})
+
 })

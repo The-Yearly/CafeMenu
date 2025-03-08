@@ -1,10 +1,12 @@
 'use client'
 import { Food } from "@/app/assets/interface/food"
-import { useState,useEffect } from "react"
+import { useEffect, useState} from "react"
+import axios from "axios"
 import Image from "next/image"
 export default function Item(props:{item:Food}){
     const [item,setItem]=useState(props.item)
     const [canINotEdit,setCanINotEdit]=useState(true)
+    const [img,setImg]=useState(item.image)
     const [name,setName]=useState(item.name)
     const [cost,setCost]=useState(item.cost)
     const [isVegan,setIsVegan]=useState(item.isvegan)
@@ -12,6 +14,26 @@ export default function Item(props:{item:Food}){
     const [cat,setCat]=useState(item.category)
     const [subCat,setSubCat]=useState(item.subcategory)
     const [desc,setDesc]=useState(item.bio)
+    const [data,setData]=useState<Food|null>(null)
+    function reset(){
+        setName(item.name)
+        setCost(item.cost)
+        setImg(item.image)
+        setIsVegan(item.isvegan)
+        setIsAvailable(item.availability)
+        setCat(item.category)
+        setSubCat(item.subcategory)
+        setDesc(item.bio)
+    }
+    useEffect(()=>{const sendData=async()=>{
+        if(data!=null){
+            const res=await axios.post("http://localhost:3001/api/v1/changeItem",data)
+        }
+    }
+    sendData()},[data])
+    function submit(itemId:number){
+        setData({itemId:item.itemId,name:name,bio:desc,category:cat,subcategory:subCat,availability:isAvailable,cost:cost,image:img,isvegan:isVegan,quantity:1})
+    }   
     if(item!=null){
         return(
             <div key={item.itemId} className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
@@ -19,24 +41,27 @@ export default function Item(props:{item:Food}){
                 <div className="p-4">
                     <input className="text-xl bg-white font-semibold text-gray-800 mb-2" value={name} disabled={canINotEdit} onChange={(e)=>{setName(e.target.value)}}/>
                     <p className="text-lg font-medium text-gray-600 bg-white">Cost: <input type="number" disabled={canINotEdit}  onChange={(e)=>{setCost(parseInt(e.target.value))}} value={cost} className="text-green-600 bg-white"/></p>
+                    <p className="text-lg font-medium text-gray-600 bg-white">Img Url: <input disabled={canINotEdit}  onChange={(e)=>{setImg(e.target.value)}} value={img} className="text-blue-400 bg-white"/></p>
                     <div className="my-2">
                         <p className="text-gray-700">Is Vegan</p>
-                        <input type="checkbox" checked={Boolean(isVegan)} disabled={canINotEdit} className="mr-2"/>
+                        <input type="checkbox" checked={Boolean(isVegan)} disabled={canINotEdit} onClick={()=>{setIsVegan(!isVegan)}} className="mr-2"/>
                     </div>
                     <div className="my-2">
                         <p className="text-gray-700">Is Available</p>
-                        <input type="checkbox"  checked={Boolean(isAvailable)} disabled={canINotEdit} className="mr-2"/>
+                        <input type="checkbox"  checked={Boolean(isAvailable)} onClick={()=>{setIsAvailable(!isAvailable)}} disabled={canINotEdit} className="mr-2"/>
                     </div>
                     <div className="my-2">
-                        <p className="text-gray-700">Category: <input className="font-medium text-gray-800 bg-white" value={cat} disabled={canINotEdit}/></p>
-                        <p className="text-gray-700">Sub-Category: <input className="bg-white font-medium text-gray-800" value={subCat} disabled={canINotEdit}/></p>
+                        <p className="text-gray-700">Category: <input className="font-medium text-gray-800 bg-white" value={cat} onChange={(e)=>{setCat(e.target.value)}} disabled={canINotEdit}/></p>
+                        <p className="text-gray-700">Sub-Category: <input className="bg-white font-medium text-gray-800" value={subCat} onChange={(e)=>{setSubCat(e.target.value)}} disabled={canINotEdit}/></p>
                     </div>
                     <div className="my-2">
                         <p className="text-gray-700">Description</p>
-                        <textarea value={desc} disabled={canINotEdit} className="w-full p-2 border rounded-md text-gray-700" rows={3}/>
+                        <textarea value={desc} disabled={canINotEdit} className="w-full p-2 border rounded-md text-gray-700" onChange={(e)=>{setDesc(e.target.value)}} rows={3}/>
                     </div>
                 </div>
-                <button className="my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600" onClick={()=>{setCanINotEdit(!canINotEdit)}}>Edit</button>
+                <button className={canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit)}}>Edit</button>
+                <button className={!canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit);submit(item.itemId)}}>Done</button>
+                <button className={!canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit);reset()}}>Cancel</button>
             </div>
         )
     }
