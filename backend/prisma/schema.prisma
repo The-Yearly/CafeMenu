@@ -17,6 +17,7 @@ model items {
   isvegan      Boolean
   cost         Int
   availability Boolean
+  ingredients String[]
   orders_items cart[]
 }
 
@@ -41,10 +42,9 @@ model cart {
   quantity Int
   iid      items  @relation(fields: [itemId], references: [itemId])
   oid      orders @relation(fields: [orderId], references: [orderId])
-
+  
   @@id([orderId, itemId])
 }
-
 model users {
   userId   Int     @id @default(autoincrement())
   username String
