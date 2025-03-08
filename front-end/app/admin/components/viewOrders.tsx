@@ -33,6 +33,8 @@ export default function ViewOrders() {
         const resjson=await res.json()
         setOrders(resjson.orders)
         setOrderItem(resjson.items)
+        const i= setInterval(getOrders,30000)
+        return()=>clearInterval(i)
        }
     getOrders()
   },[trackDelete])

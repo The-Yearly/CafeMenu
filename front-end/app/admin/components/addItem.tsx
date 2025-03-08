@@ -1,6 +1,7 @@
 'use client'
 import {useEffect, useState } from "react";
 import axios from "axios";
+import { image } from "motion/react-client";
 interface addItem{
   name:string,
   bio:string,
@@ -27,7 +28,9 @@ export default function AddFoodItem() {
   }
   sendItem()},[data])
   function sendData(){
-    setData({name:name,bio:bio,image:img,category:cat,subcategory:subcat,isvegan:isVegan,cost:cost,avalability:true})
+    if(name!="" && bio!="" && img!="" && cat!="" && subcat!="" && cost!=0){
+      setData({name:name,bio:bio,image:img,category:cat,subcategory:subcat,isvegan:isVegan,cost:cost,avalability:true})
+    }
   }
   return (
     <div className="absolute left-[35vw] top-[10vw] w-[30vw] mx-auto p-6 bg-white shadow-md rounded-md">
