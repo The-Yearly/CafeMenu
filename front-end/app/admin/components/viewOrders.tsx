@@ -29,14 +29,24 @@ export default function ViewOrders() {
   deleteId()},[deleId])
   useEffect(()=>{
     const getOrders=async()=>{
+      console.log("s")
         const res=await fetch("http://localhost:3001/api/v1/orders")
         const resjson=await res.json()
         setOrders(resjson.orders)
         setOrderItem(resjson.items)
-        const i= setInterval(getOrders,30000)
-        return()=>clearInterval(i)
        }
-    getOrders()
+       getOrders()
+  },[trackDelete])
+  useEffect(()=>{
+    const getOrders=async()=>{
+      console.log("s")
+        const res=await fetch("http://localhost:3001/api/v1/orders")
+        const resjson=await res.json()
+        setOrders(resjson.orders)
+        setOrderItem(resjson.items)
+       }
+       const i= setInterval(getOrders,30000)
+       return()=>clearInterval(i)
   },[trackDelete])
   useEffect(()=>{const fetchFood=async()=>{
     const res=await fetch("http://localhost:3001/api/v1/allitems")

@@ -4,6 +4,7 @@ import AddFoodItem from "./components/addItem"
 import ViewOrders from "./components/viewOrders"
 import ViewItems from "./components/viewItems";
 import { useRouter } from "next/navigation";
+import { ToastContainer } from "react-toastify";
 export default function admin(){
   const isAdmin=localStorage.getItem("isAdmin")
   const [route,setRoute]=useState(0)
@@ -28,6 +29,7 @@ export default function admin(){
   checkAdmin()},[])
   return(
     <>
+    <ToastContainer/>
     <div className="flex justify-center">
       <button onClick={()=>{setRoute(0)}} className={(route!=0)?"font-playwrite text-[1.5vw] text-black px-5":"text-[1.5vw] border-b-[0.2vw] font-playwrite px-1 rounded-sm border-blue-500"}>See Orders</button>
       <button onClick={()=>{setRoute(1)}} className={(route!=1)?"text-black font-playwrite px-5 text-[1.5vw]":"text-[1.5vw] border-b-[0.2vw] px-1 rounded-sm font-playwrite border-blue-500"}>Add Items</button>

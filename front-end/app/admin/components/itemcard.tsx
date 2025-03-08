@@ -3,6 +3,7 @@ import { Food } from "@/app/assets/interface/food"
 import { useEffect, useState} from "react"
 import axios from "axios"
 import Image from "next/image"
+import { toast } from "react-toastify"
 export default function Item(props:{item:Food}){
     const [item,setItem]=useState(props.item)
     const [canINotEdit,setCanINotEdit]=useState(true)
@@ -24,10 +25,12 @@ export default function Item(props:{item:Food}){
         setCat(item.category)
         setSubCat(item.subcategory)
         setDesc(item.bio)
+        toast("No Changes Were Made")
     }
     useEffect(()=>{const sendData=async()=>{
         if(data!=null){
             const res=await axios.post("http://localhost:3001/api/v1/changeItem",data)
+            toast(res.data.message)
         }
     }
     sendData()},[data])
@@ -59,7 +62,7 @@ export default function Item(props:{item:Food}){
                         <textarea value={desc} disabled={canINotEdit} className="w-full p-2 border rounded-md text-gray-700" onChange={(e)=>{setDesc(e.target.value)}} rows={3}/>
                     </div>
                 </div>
-                <button className={canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit)}}>Edit</button>
+                <button className={canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit);toast("You Can Edit Item")}}>Edit</button>
                 <button className={!canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit);submit(item.itemId)}}>Done</button>
                 <button className={!canINotEdit?("my-2 mx-5 text-[1vw] bg-blue-500 text-white 2xl:w-[3vw] xl:w-[4vw] lg:w-[5vw] md:w-[6vw] rounded-sm hover:bg-blue-600"):"hidden"} onClick={()=>{setCanINotEdit(!canINotEdit);reset()}}>Cancel</button>
             </div>
