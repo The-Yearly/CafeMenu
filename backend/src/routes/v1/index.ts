@@ -152,12 +152,12 @@ router.post("/userAuth",async(req,res)=>{
     })
     if(response!=null){
         if(password==response.password){
-            res.status(200).json({message:"Succesfully Logged In"})
+            res.json({message:"Succesfully Logged In"})
         }else{
-            res.status(400).json({message:"Incorrect Password"})
+            res.json({message:"Incorrect Password"})
         }
     }else{
-        res.status(400).json({massage:"User Not Found"})
+        res.json({message:"User Not Found"})
     }
  })
 

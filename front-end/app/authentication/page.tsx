@@ -10,11 +10,12 @@ export default function Login() {
   const [password, setPassword] = useState("")
   const [data,setData]=useState<User|null>(null)
   const router = useRouter();
+  localStorage.setItem("isAdmin","false")
   useEffect(()=>{const sendUser=async()=>{
     if(data!=null){
         const res=await axios.post("http://localhost:3001/api/v1/userAuth",data)
         toast(res.data.message)
-        if(res.status==200){
+        if(res.data.message=="Succesfully Logged In"){
           localStorage.setItem("isAdmin","true")
           router.push("/admin")
         }
