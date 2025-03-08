@@ -1,5 +1,6 @@
 'use client';
 import { useState,useEffect } from 'react';
+import { toast } from 'react-toastify';
 interface Orders{
     orderId:number;
     tableId:number;
@@ -19,10 +20,11 @@ export default function ViewOrders() {
   const [trackDelete,setTrackDelete]=useState(0)
   useEffect(()=>{const deleteId=async()=>{
     if(deleId!=0){
-      const res=await fetch("http://localhost:3001/api/v1/deleteItem/"+deleId)
-      console.log(res)
+      const res=await fetch("http://localhost:3001/api/v1/completeOrder/"+deleId)
+      console.log(res)  
       if(res.status==200){
         setTrackDelete(trackDelete+1)
+        toast("Order Has Been Completed")
       }
     }
   }
@@ -39,7 +41,6 @@ export default function ViewOrders() {
   },[trackDelete])
   useEffect(()=>{
     const getOrders=async()=>{
-      console.log("s")
         const res=await fetch("http://localhost:3001/api/v1/orders")
         const resjson=await res.json()
         setOrders(resjson.orders)
@@ -54,7 +55,7 @@ export default function ViewOrders() {
     setFoodData(data.items)
   }
   fetchFood()},[])
-if(orders!=null && orderItem!=null && foodData!=null){
+if(orders!=null && orderItem!=null && foodData!=null &&orders.length!=0){
     console.log(orders)
     return (
         <div className="p-4">
@@ -74,5 +75,9 @@ if(orders!=null && orderItem!=null && foodData!=null){
         </div>
         </div>
     );
+    }else{
+      return(
+        <h2 className="font-semibold">No Active Orders</h2>
+      )
     }
 }

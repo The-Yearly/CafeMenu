@@ -1,6 +1,6 @@
 import e, { Router } from "express";
 import { client } from "../../utils/client";
-import { ItemSchema, OrderSchema } from "../../utils";
+import { categories, ItemSchema, OrderSchema } from "../../utils";
 import { ParseStatus } from "zod";
 
 
@@ -10,7 +10,11 @@ export const router = Router();
 //getting the menu
 router.get('/menu',async (req,res) =>{
     console.log("e hit")
-    const response = await client.items.findMany({})
+    const response = await client.items.findMany({
+        where:{
+            availability:true
+        }
+    })
     if(!response){
         console.log("NO response")
         res.status(400).json({
@@ -111,7 +115,8 @@ router.get('/category/:cat',async (req,res) =>{
     }
     const response = await client.items.findMany({
         where:{
-            category:categoryName
+            category:categoryName,
+            availability:true
         }
     })
 
@@ -232,7 +237,7 @@ router.get('/allitems',async (req,res) =>{
         items:newres
     })
 })
-router.get("/deleteItem/:id",async(req,res)=>{
+router.get("/completeOrder/:id",async(req,res)=>{
     console.log("delete hit")
     const resDelete=await client.cart.deleteMany({
         where: { orderId: Number(req.params.id) }
@@ -279,4 +284,45 @@ router.post("/changeItem",async(req,res)=>{
     }
     res.status(200).json({message:"Succesfully Updated"})
 
+})
+
+router.get('/adminmenu',async (req,res) =>{
+    console.log("e hit")
+    const response = await client.items.findMany({})
+    if(!response){
+        console.log("NO response")
+        res.status(400).json({
+            message:"No items found"
+        })
+    }
+    
+    res.status(200).json({
+        items:response
+    })
+})
+
+
+router.post('/addCat',async (req,res) =>{
+    console.log("item hit")
+    const parsedResponse = categories.safeParse(req.body);
+    console.log(parsedResponse,req.body)
+    if(!parsedResponse.success){
+        res.status(400).json({
+            message:"Validation failed"
+        })
+        return
+    }
+    let Cat = await client.$transaction(async ()=>{
+        const cat = await client.category.create({
+            data:{
+                images:parsedResponse.data.images,
+                name:parsedResponse.data.name,
+                slug:parsedResponse.data.slug
+            }
+        })
+        
+    })
+    res.status(200).json({
+        message:"Category Has Been Added"
+    })
 })

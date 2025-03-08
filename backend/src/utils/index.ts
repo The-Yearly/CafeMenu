@@ -36,3 +36,9 @@ export const users = z.object ({
     password:z.string().min(8),
     isAdmin:z.boolean()
 })
+ 
+export const categories = z.object ({
+    name:z.string(),
+    images:z.string(),
+    slug:z.string()
+})
