@@ -19,6 +19,7 @@ model items {
   availability Boolean
   tags         String[]
   ingredients String[]
+  createdAt    DateTime @default(now())
   orders_items cart[]
 }
 
