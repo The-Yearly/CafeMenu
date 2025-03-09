@@ -12,22 +12,33 @@ export default function CategorySelector({
   selectedCategory,
   onSelectCategory,
 }: CategorySelectorProps) {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     console.log("Component rendered 2");
     const getCategories = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.109.8:3001/api/v1/getCategories`,
-          {}
+          `http://192.168.109.8:3001/api/v1/getCategories`
         );
         if (!response || response.status != 200) {
           console.log("No categories found");
           return;
         }
 
-        setCategories(response.data.categories || []);
+        // Prepend the "All" category to the fetched categories
+        const allCategory = {
+          id: "all",
+          name: "All",
+          images: "/assets/All.jpg",
+          slug: "all",
+        };
+        const allCategories = [
+          allCategory,
+          ...(response.data.categories || []),
+        ];
+
+        setCategories(allCategories);
       } catch (error) {
         console.log("error getting categories", error);
       }
@@ -69,9 +80,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   return (
     <motion.div
       className={`relative flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${
-        isSelected
-          ? "ring-2 ring-[var(--accent)] shadow-lg scale-105"
-          : "opacity-70"
+        isSelected ? "ring-2 ring-accent shadow-lg scale-105" : "opacity-70"
       }`}
       whileTap={{ scale: 0.95 }}
       onClick={onSelect}

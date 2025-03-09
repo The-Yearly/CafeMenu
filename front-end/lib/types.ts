@@ -25,7 +25,6 @@ export interface Cart {
 }
 
 export interface Category {
-  id: string;
   name: string;
   slug: string;
   images: string;

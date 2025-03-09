@@ -84,12 +84,12 @@ const MenuItemDetail: React.FC<MenuItemDetailProps> = ({
                   Ingredients
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {["dairy", "good", "vegan"].map((tag, i) => (
+                  {item.ingredients.map((ind, i) => (
                     <span
                       key={i}
                       className="px-3 py-1 text-sm rounded-full bg-gray-800 text-text "
                     >
-                      {tag}
+                      {ind}
                     </span>
                   ))}
                 </div>

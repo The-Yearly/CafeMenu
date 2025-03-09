@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Item } from "../lib/types";
+import axios from "axios";
 
 interface SearchBarProps {
   onSelectItem: (category: string) => void;
@@ -32,12 +33,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSelectItem }) => {
   useEffect(() => {
     console.log("Component rendered 4");
     const items = async () => {
-      const response = await fetch("http://192.168.109.8:3001/api/v1/menu");
-      const data = await response.json();
+      const response = await axios.get("http://192.168.109.8:3001/api/v1/menu");
       if (response.status != 200) {
         return [];
       } else {
-        setMenuItems(data.items);
+        setMenuItems(response.data.items);
       }
     };
 

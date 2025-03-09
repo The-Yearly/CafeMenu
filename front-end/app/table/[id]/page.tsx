@@ -47,7 +47,7 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
 
   return (
     <>
-      <div className="min-h-screen text-[var(--text)] bg-[var(--background)] ">
+      <div className="min-h-screen text-text bg-background ">
         <Navbar id={id.id} />
         <SearchBar onSelectItem={setSelectedCategory} />
         <main>
