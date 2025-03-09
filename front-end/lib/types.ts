@@ -1,5 +1,5 @@
 export interface Item {
-  itemId: number;
+  itemId?: number;
   name: string;
   bio: string;
   image: string;
@@ -8,8 +8,9 @@ export interface Item {
   tags: string[];
   isvegan: boolean;
   cost: number;
-  availability: Boolean;
+  availability: boolean;
   ingredients: string[];
+  createdAt?: string;
 }
 
 export interface Cart {

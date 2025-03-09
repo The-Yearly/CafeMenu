@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Search, Edit2, Trash2, X, Menu } from "lucide-react";
+import axios from "axios";
+import { CategorySkeletonLoader } from "./skeleton";
 
 interface Category {
   id: number;
   name: string;
   description: string;
-  imageUrl: string;
-  productCount: number;
+  images: string;
 }
 
 interface ModalProps {
@@ -88,7 +89,7 @@ const CategoryForm: React.FC<{
   const [formData, setFormData] = useState({
     name: category?.name || "",
     description: category?.description || "",
-    imageUrl: category?.imageUrl || "",
+    imageUrl: category?.images || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -170,62 +171,30 @@ const CategoryForm: React.FC<{
   );
 };
 
-const initialCategories: Category[] = [
-  {
-    id: 1,
-    name: "Electronics",
-    description: "Smartphones, laptops, and gadgets",
-    imageUrl:
-      "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500&q=80",
-    productCount: 156,
-  },
-  {
-    id: 2,
-    name: "Fashion",
-    description: "Clothing, shoes, and accessories",
-    imageUrl:
-      "https://images.unsplash.com/photo-1445205170230-053b83016050?w=500&q=80",
-    productCount: 243,
-  },
-  {
-    id: 3,
-    name: "Home & Living",
-    description: "Furniture, decor, and kitchenware",
-    imageUrl:
-      "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=500&q=80",
-    productCount: 189,
-  },
-  {
-    id: 4,
-    name: "Sports",
-    description: "Equipment, clothing, and accessories",
-    imageUrl:
-      "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500&q=80",
-    productCount: 94,
-  },
-];
-
 function CategoryComponent() {
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setIsSidebarOpen(false);
-      }
-    };
+    const getCategories = async () => {
+      const response = await axios.get(
+        "http://localhost:3001/api/v1/getCategories"
+      );
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+      if (!response || response.status !== 200) {
+        setCategories([]);
+      } else {
+        setCategories(response.data.categories);
+      }
+      setIsLoading(false);
+    };
+    getCategories();
   }, []);
 
-  const filteredCategories = categories.filter((category) =>
+  const filteredCategories = categories?.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -234,8 +203,7 @@ function CategoryComponent() {
       id: Math.max(...categories.map((c) => c.id)) + 1,
       name: data.name!,
       description: data.description!,
-      imageUrl: data.imageUrl!,
-      productCount: 0,
+      images: data.images!,
     };
     setCategories([...categories, newCategory]);
   };
@@ -250,23 +218,17 @@ function CategoryComponent() {
   };
 
   const handleDeleteCategory = (id: number) => {
-    setCategories(categories.filter((category) => category.id !== id));
+    setCategories(categories?.filter((category) => category.id !== id));
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 mt-12 w-full border border-red-500">
+    <div className="flex h-screen bg-background  text-primary dark:text-text  mt-12 w-full">
       {/* Main Content */}
       <div className="flex-1 overflow-auto w-full">
         <div className="p-4  md:p-8">
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => setIsSidebarOpen(true)}
-                className="p-2 hover:bg-gray-100 rounded-lg md:hidden"
-              >
-                <Menu className="w-6 h-6" />
-              </button>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              <h1 className="text-2xl md:text-3xl font-bold  text-primary dark:text-text ">
                 Categories
               </h1>
             </div>
@@ -293,58 +255,63 @@ function CategoryComponent() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             <AnimatePresence>
-              {filteredCategories.map((category) => (
-                <motion.div
-                  key={category.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-                >
-                  <div className="relative h-36 md:h-48">
-                    <img
-                      src={category.imageUrl}
-                      alt={category.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-2 right-2 flex gap-2">
-                      <button
-                        onClick={() => setEditingCategory(category)}
-                        className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
-                      >
-                        <Edit2 className="w-4 h-4 text-gray-700" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteCategory(category.id)}
-                        className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4 text-red-500" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {category.name}
-                    </h3>
-                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                      {category.description}
-                    </p>
-                    <div className="mt-4 flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-600">
-                        {category.productCount} Products
-                      </span>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                      >
-                        View Details
-                      </motion.button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+              {/* Show skeletons when loading */}
+              {isLoading
+                ? Array(6)
+                    .fill(0)
+                    .map((_, index) => <CategorySkeletonLoader key={index} />)
+                : filteredCategories?.map((category) => (
+                    <motion.div
+                      key={category.id}
+                      layout
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                    >
+                      <div className="relative h-36 md:h-48">
+                        <img
+                          src={category.images}
+                          alt={category.name}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute top-2 right-2 flex gap-2">
+                          <button
+                            onClick={() => setEditingCategory(category)}
+                            className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+                          >
+                            <Edit2 className="w-4 h-4 text-gray-700" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteCategory(category.id)}
+                            className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-500" />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {category.name}
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                          {category.description}
+                        </p>
+                        <div className="mt-4 flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-600">
+                            {155} Products
+                          </span>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            View Details
+                          </motion.button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
             </AnimatePresence>
           </div>
         </div>
