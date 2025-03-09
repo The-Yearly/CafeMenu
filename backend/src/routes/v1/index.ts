@@ -183,23 +183,23 @@ router.post("/addItem", async (req, res) => {
     });
     return;
   }
-
-  let Item = await client.$transaction(async () => {
-    const item = await client.items.create({
-      data: {
-        name: parsedResponse.data.name,
-        image: parsedResponse.data.image,
-        bio: parsedResponse.data.bio,
-        availability: true,
-        category: parsedResponse.data.category,
-        subcategory: parsedResponse.data.subcategory,
-        cost: parsedResponse.data.cost,
-        isvegan: true,
-      },
-    });
+  const item = await client.items.create({
+    data: {
+      name: parsedResponse.data.name,
+      image: parsedResponse.data.image,
+      bio: parsedResponse.data.bio,
+      availability: true,
+      category: parsedResponse.data.category,
+      subcategory: parsedResponse.data.subcategory,
+      cost: parsedResponse.data.cost,
+      isvegan: true,
+      tags: parsedResponse.data.tags,
+      ingredients: parsedResponse.data.ingredients,
+    },
   });
   res.status(200).json({
     message: "Item Has Been Added",
+    itemID: item.itemId,
   });
 });
 
