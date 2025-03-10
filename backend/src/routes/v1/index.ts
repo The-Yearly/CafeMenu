@@ -66,6 +66,85 @@ router.post("/orders/", async (req, res) => {
   });
 });
 
+//getting orders
+router.get("/orders", async (req, res) => {
+  console.log("orders hit");
+  const ordersWithItems = await client.orders.findMany({
+    include: {
+      orders_items: {
+        include: {
+          iid: true,
+        },
+      },
+    },
+  });
+  if (ordersWithItems.length == 0) {
+    console.log("NO response");
+    res.status(400).json({
+      message: "No Orders found",
+    });
+  }
+  const response = ordersWithItems.map((order) => {
+    const items = order.orders_items.map((cartItem) => {
+      return {
+        item: cartItem.iid,
+        quantity: cartItem.quantity,
+      };
+    });
+
+    return {
+      tableId: order.tableId,
+      orderId: order.orderId,
+      totalCost: order.totalCost,
+      createdAt: order.createdAt,
+      items: items,
+    };
+  });
+
+  res.status(200).json({
+    response,
+  });
+});
+
+//updating an order
+router.post("/completeOrder", async (req, res) => {
+  const id = req.body.id;
+  
+  const response = await client.orders.update({
+    where: {
+      orderId: id,
+    },
+    data: {
+      status: "COMPLETE",
+    },
+  });
+
+  res.status(200).json({
+    message: "Updated order",
+  });
+});
+
+//updating an order's status
+router.post("/completeOrder", async (req, res) => {
+  const id = req.body.id;
+  console.log("delete hit");
+  const response = await client.orders.update({
+    where: {
+      orderId: id,
+    },
+    data: {
+      status: "COMPLETE",
+    },
+  });
+
+  res.status(200).json({
+    message: "Updated order",
+  });
+});
+
+
+
+
 //item with itemId
 router.get("/item", async (req, res) => {
   const itemId = Number(req.query.id);
@@ -203,29 +282,7 @@ router.post("/addItem", async (req, res) => {
   });
 });
 
-router.get("/orders", async (req, res) => {
-  console.log("orders hit");
-  const ordersres = await client.orders.findMany({});
-  if (!ordersres) {
-    console.log("NO response");
-    res.status(400).json({
-      message: "No Orders found",
-    });
-  }
-  const itemsordersres = await client.cart.findMany({});
-  if (!itemsordersres) {
-    console.log("NO response");
-    res.status(400).json({
-      message: "No items_orders found",
-    });
-  }
-  res.status(200).json({
-    orders: ordersres,
-    items: itemsordersres,
-  });
-});
 router.get("/allitems", async (req, res) => {
-  console.log("aa hit");
   const response = await client.items.findMany({});
   if (!response) {
     console.log("NO response");
@@ -239,18 +296,6 @@ router.get("/allitems", async (req, res) => {
   }
   res.status(200).json({
     items: newres,
-  });
-});
-
-router.get("/completeOrder/:id", async (req, res) => {
-  console.log("delete hit");
-  const resDelete = await client.cart.deleteMany({
-    where: { orderId: Number(req.params.id) },
-  });
-
-  console.log(resDelete);
-  res.status(200).json({
-    message: "deleted",
   });
 });
 

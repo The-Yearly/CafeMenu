@@ -13,6 +13,7 @@ import { Category, Item } from "@/lib/types";
 import { ProductForm } from "./ProductForm";
 import { DeleteConfirmationModal, Modal } from "./Modal";
 import axios from "axios";
+import ProductSkeleton from "./ProductSkeleton";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -29,6 +30,7 @@ export default function Products() {
     min: 0,
     max: 1000,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -57,6 +59,7 @@ export default function Products() {
 
     getCategories();
     getProducts();
+    setLoading(false);
   }, []);
 
   const filteredProducts = products?.filter((product) => {
@@ -192,12 +195,12 @@ export default function Products() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-8">
-        <AnimatePresence>
-          {paginatedProducts?.length === 0 ? (
-            <p>No products available</p>
-          ) : (
-            paginatedProducts?.map((product) => (
+      {loading ? (
+        <ProductSkeleton />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-8">
+          <AnimatePresence>
+            {paginatedProducts?.map((product) => (
               <motion.div
                 key={product.itemId}
                 layout
@@ -264,11 +267,10 @@ export default function Products() {
                   </div>
                 </div>
               </motion.div>
-            ))
-          )}
-        </AnimatePresence>
-      </div>
-
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2">
           <button

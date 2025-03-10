@@ -10,10 +10,13 @@ export const cart = z.object({
   isvegan: z.boolean(),
   cost: z.number().positive(),
   quantity: z.number().positive(),
+  tags: z.array(z.string()),
+  ingredients: z.array(z.string()),
 });
 export const OrderSchema = z.object({
   tableId: z.number().positive(),
   totalCost: z.number().positive(),
+  status: z.enum(["PENDING", "COMPLETE"]),
   cartItems: cart.array(),
 });
 
