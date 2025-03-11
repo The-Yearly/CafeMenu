@@ -23,7 +23,7 @@ export const ProductForm: React.FC<{
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   useEffect(()=>{const updateItem=async()=>{
-    const link="http://localhost:3001/api/v1"
+    const link="https://cafe-menu-sigma.vercel.app/api/v1"
     if(isSubmitted==true){
       //let res todo add validation
       if(product!=undefined){

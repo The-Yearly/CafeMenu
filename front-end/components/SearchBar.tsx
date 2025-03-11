@@ -33,7 +33,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSelectItem }) => {
   useEffect(() => {
     console.log("Component rendered 4");
     const items = async () => {
-      const response = await axios.get("http://localhost:3001/api/v1/menu");
+      const response = await axios.get("https://cafe-menu-sigma.vercel.app/api/v1/menu");
       console.log(response.data)
       if (response.status != 200) {
         return [];
