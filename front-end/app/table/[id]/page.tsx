@@ -30,7 +30,7 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
     console.log("Component rendered 1");
     const getMenuItems = async () => {
       const items = await axios.post(
-        "http://192.168.109.8:3001/api/v1/category",
+        "http://localhost:3001/api/v1/category",
         {
           category: selectedCategory,
         }

@@ -2,11 +2,27 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/context/ItemContext";
-
-
+import axios from "axios";
+interface orderItem{
+  itemId:number;
+  quantity:number;
+}
+interface order{
+  orders:orderItem[];
+  tableId:number;
+  totalCost:number;
+}
 const CartSidebar: React.FC = () => {
-  const [placeOrder, setPlaceOrder] = useState();
-
+  const [placeOrder, setPlaceOrder] = useState<order|null>(null);
+  useEffect(()=>{const sendOrder=async()=>{
+    if(placeOrder!=null){
+      const res=await axios.post("http://localhost:3001/api/v1/orders/",placeOrder)
+    }  
+  }
+  sendOrder()},[placeOrder])
+  function Buy(){
+    setPlaceOrder({tableId:cart.tableId,totalCost:totalPrice,orders:cart.orders})
+  }
   const {
     cart,
     removeFromCart,
@@ -151,7 +167,7 @@ const CartSidebar: React.FC = () => {
                     </span>
                   </div>
                   <button
-                    onClick={placeOrder}
+                    onClick={Buy}
                     className="floating-button w-full py-3 rounded-lg  text-primary dark:text-text  font-medium"
                   >
                     Place Order

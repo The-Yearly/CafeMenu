@@ -34,6 +34,7 @@ model orders {
   orderId      Int      @id @default(autoincrement())
   tableId      Int
   totalCost    Int
+  status String
   createdAt    DateTime @default(now())
   orders_items cart[]
 }

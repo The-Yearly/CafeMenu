@@ -35,18 +35,19 @@ VALUES
 ('Beverages', '/assets/Beverages.jpeg', 'beverages');
 
 -- Insert bulk data into 'orders' table
-INSERT INTO orders ("tableId", "totalCost", "createdAt")
+-- Insert bulk data into 'orders' table
+INSERT INTO orders ("tableId", "totalCost", "createdAt", status)
 VALUES
-(1, 95, '2025-03-09T14:30:00.000Z'),
-(2, 78, '2025-03-09T15:00:00.000Z'),
-(3, 85, '2025-03-09T16:00:00.000Z'),
-(4, 98, '2025-03-09T17:00:00.000Z'),
-(5, 120, '2025-03-09T18:00:00.000Z'),
-(6, 68, '2025-03-09T19:00:00.000Z'),
-(7, 90, '2025-03-09T20:00:00.000Z'),
-(8, 112, '2025-03-09T21:00:00.000Z'),
-(9, 64, '2025-03-09T22:00:00.000Z'),
-(10, 98, '2025-03-09T23:00:00.000Z');
+(1, 95, '2025-03-09T14:30:00.000Z', 'Pending'),
+(2, 78, '2025-03-09T15:00:00.000Z', 'Pending'),
+(3, 85, '2025-03-09T16:00:00.000Z', 'Pending'),
+(4, 98, '2025-03-09T17:00:00.000Z', 'Pending'),
+(5, 120, '2025-03-09T18:00:00.000Z', 'Pending'),
+(6, 68, '2025-03-09T19:00:00.000Z', 'Pending'),
+(7, 90, '2025-03-09T20:00:00.000Z', 'Pending'),
+(8, 112, '2025-03-09T21:00:00.000Z', 'Pending'),
+(9, 64, '2025-03-09T22:00:00.000Z', 'Pending'),
+(10, 98, '2025-03-09T23:00:00.000Z', 'Pending');
 
 -- Insert bulk data into 'cart' table (mapping orders and items)
 -- Order 1
@@ -68,25 +69,6 @@ VALUES
 (2, 10, 1), -- Vegan Burger
 (2, 11, 1), -- Mashed Potatoes
 (2, 12, 1); -- Cheesecake
-
--- Order 3
-INSERT INTO cart ("orderId", "itemId", quantity)
-VALUES
-(3, 13, 2), -- Fried Calamari
-(3, 14, 1), -- Chicken Noodle Soup
-(3, 15, 1), -- Caprese Salad
-(3, 16, 1), -- Steak
-(3, 17, 1), -- Onion Rings
-(3, 18, 1); -- Tiramisu
-
--- Order 4
-INSERT INTO cart ("orderId", "itemId", quantity)
-VALUES
-(4, 19, 1), -- Hot Chocolate
-(4, 20, 1), -- Vegan Spring Rolls
-(4, 21, 1), -- Tomato Soup
-(4, 22, 1), -- Caesar Salad
-(4, 23, 1), -- Grilled Chicken;
 
 
 

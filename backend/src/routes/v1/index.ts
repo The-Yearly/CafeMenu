@@ -47,11 +47,12 @@ router.post("/orders/", async (req, res) => {
       data: {
         tableId: tableId,
         totalCost: parsedResponse.data?.totalCost,
+        status:"Pending"
       },
     });
 
     const cartItems = await client.cart.createMany({
-      data: parsedResponse.data.cartItems.map((item) => ({
+      data: parsedResponse.data.orders.map((item) => ({
         orderId: order.orderId,
         itemId: item.itemId,
         quantity: item.quantity,
@@ -91,7 +92,7 @@ router.get("/orders", async (req, res) => {
         quantity: cartItem.quantity,
       };
     });
-
+    console.log(order.orders_items)
     return {
       tableId: order.tableId,
       orderId: order.orderId,
@@ -228,6 +229,7 @@ router.get("/getCategories", async (req, res) => {
       message: "No categories found",
     });
   }
+  console.log(response)
   res.status(200).json({
     categories: response,
   });
@@ -319,6 +321,7 @@ router.post("/userAuth", async (req, res) => {
 router.post("/changeItem", async (req, res) => {
   console.log("update Hit");
   const item = req.body;
+  console.log(item)
   const response = await client.items.update({
     where: {
       itemId: item.itemId,

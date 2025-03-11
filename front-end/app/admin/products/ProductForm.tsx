@@ -1,16 +1,19 @@
 import { Category, Item } from "@/lib/types";
-import { useState } from "react";
+import axios from "axios";
+import { useState,useEffect } from "react";
 
 export const ProductForm: React.FC<{
   product?: Item;
-  onSubmit: (data: Partial<Item>) => void;
+  onSubmit: (data: Partial<Item>) => void;  
   onClose: () => void;
   categories: Category[];
 }> = ({ product, onSubmit, onClose, categories }) => {
   const [formData, setFormData] = useState({
+    itemId:product?.itemId,
     name: product?.name || "",
     image: product?.image || "",
     bio: product?.bio || "",
+    isvegan:false,
     cost: product?.cost || 0,
     availability: product?.availability ?? true,
     category: product?.category || "",
@@ -18,10 +21,25 @@ export const ProductForm: React.FC<{
     tags: product?.tags || [],
     ingredients: product?.ingredients || [],
   });
-
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  useEffect(()=>{const updateItem=async()=>{
+    const link="http://localhost:3001/api/v1"
+    if(isSubmitted==true){
+      let res
+      if(product!=undefined){
+        res=axios.post(link+"/changeItem",formData)
+      }
+      else{
+        res=axios.post(link+"/addItem",formData)
+      }
+    }
+  }
+  updateItem()},[isSubmitted]) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(formData);
     onSubmit(formData);
+    setIsSubmitted(true)
     onClose();
   };
 

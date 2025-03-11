@@ -19,7 +19,7 @@ export default function CategorySelector({
     const getCategories = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.109.8:3001/api/v1/getCategories`
+          `http://localhost:3001/api/v1/getCategories`
         );
         if (!response || response.status != 200) {
           console.log("No categories found");
@@ -55,7 +55,7 @@ export default function CategorySelector({
       >
         {categories.map((category: Category) => (
           <CategoryCard
-            key={category.id}
+            key={category.name}
             category={category}
             isSelected={selectedCategory === category.name}
             onSelect={() => onSelectCategory(category.name)}
