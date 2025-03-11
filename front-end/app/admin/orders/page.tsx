@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import {  AnimatePresence } from "framer-motion";
 import {
   Search,
   AlertCircle,
@@ -13,11 +13,17 @@ import { Modal } from "./Modal";
 import axios from "axios";
 import { Item } from "@/lib/types";
 
+enum Status {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+}
+
 export interface Order {
   tableId: number;
   orderId: number;
   totalCost: number;
   createdAt: string;
+  status: Status;
   items: [
     {
       item: Item;
@@ -31,9 +37,9 @@ const ITEMS_PER_PAGE = 8;
 export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  // const [statusFilter, setStatusFilter] = useState<
-  //   "all" | "active" | "completed"
-  // >("all");
+  const [statusFilter, setStatusFilter] = useState<Status | string>(
+    Status.PENDING
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -41,12 +47,19 @@ export default function Orders() {
 
   useEffect(() => {
     const getOrders = async () => {
-      const response = await axios.get("http://localhost:3001/api/v1/orders");
-      console.log(response.data.response)
-      if (response.status != 200) {
+      setIsLoading(true);
+      try {
+        const response = await axios.get("http://localhost:3001/api/v1/orders");
+        if (response.status === 200) {
+          setOrders(response.data.response);
+        } else {
+          setOrders([]);
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
         setOrders([]);
-      } else {
-        setOrders(response.data.response);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -57,9 +70,11 @@ export default function Orders() {
     const matchesSearch =
       String(order.orderId).toLowerCase().includes(searchTerm.toLowerCase()) ||
       String(order.tableId).toLowerCase().includes(searchTerm.toLowerCase());
-    // const matchesStatus =
-    //   statusFilter === "all" || order.createdAt === statusFilter;
-    return matchesSearch;
+    const matchesStatus =
+      statusFilter === Status.PENDING
+        ? order.status === Status.PENDING
+        : order.status === Status.COMPLETED;
+    return matchesSearch && matchesStatus;
   });
 
   const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
@@ -72,22 +87,42 @@ export default function Orders() {
     setSelectedOrder(order);
   };
 
-  const confirmCompleteOrder = () => {
+  const confirmCompleteOrder = async () => {
     if (!selectedOrder) return;
 
-    setOrders(
-      orders.map((order) =>
-        order.orderId === selectedOrder.orderId
-          ? {
-              ...order,
-              status: "completed",
-              completedAt: new Date().toISOString(),
-            }
-          : order
-      )
-    );
-    setSelectedOrder(null);
-    setToast("Order marked as completed");
+    try {
+      // Send a PUT or PATCH request to update the status of the order
+      const response = await axios.post(
+        `http://localhost:3001/api/v1/completeOrder`,
+        {
+          data: {
+            id: selectedOrder.orderId,
+          }, // The status we're updating to
+        }
+      );
+
+      // If the response status is 200, update the local state
+      if (response.status === 200) {
+        setOrders(
+          orders.map((order) =>
+            order.orderId === selectedOrder.orderId
+              ? {
+                  ...order,
+                  status: Status.COMPLETED, // Update the status in the local state
+                  completedAt: new Date().toISOString(), // Set the completed date
+                }
+              : order
+          )
+        );
+        setSelectedOrder(null); // Close the modal
+        setToast("Order marked as completed"); // Show success toast
+      } else {
+        setToast("Failed to complete the order");
+      }
+    } catch (error) {
+      console.error("Error completing order:", error);
+      setToast("An error occurred while completing the order");
+    }
   };
 
   return (
@@ -114,17 +149,14 @@ export default function Orders() {
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  text-primary"
             />
           </div>
-          {/* <select
+          <select
             value={statusFilter}
-            onChange={(e) =>
-              setStatusFilter(e.target.value as "all" | "active" | "completed")
-            }
-            className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  text-primary "
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  text-primary"
           >
-            <option value="all">All Orders</option>
-            <option value="active">Active Orders</option>
-            <option value="completed">Completed Orders</option>
-          </select> */}
+            <option value={Status.PENDING}>Active Orders</option>
+            <option value={Status.COMPLETED}>Completed Orders</option>
+          </select>
         </div>
       </div>
 
@@ -135,11 +167,11 @@ export default function Orders() {
               key={order.orderId}
               order={order}
               totalCost={order.totalCost}
-              // onComplete={
-              //   order.status === "active"
-              //     ? () => handleCompleteOrder(order)
-              //     : undefined
-              // }
+              onComplete={
+                order.status === Status.PENDING
+                  ? () => handleCompleteOrder(order)
+                  : undefined
+              }
             />
           ))}
         </AnimatePresence>

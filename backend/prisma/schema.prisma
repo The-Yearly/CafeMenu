@@ -35,7 +35,7 @@ model orders {
   orderId      Int      @id @default(autoincrement())
   tableId      Int
   totalCost    Int
-  status String
+  status  Status
   createdAt    DateTime @default(now())
   orders_items cart[]
 }
@@ -54,4 +54,9 @@ model users {
   username String
   password String
   isAdmin  Boolean
+}
+
+enum Status {
+  PENDING
+  COMPLETE
 }

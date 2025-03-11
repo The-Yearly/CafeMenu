@@ -4,6 +4,11 @@ import { Order } from "./page";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 
+enum Status {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+}
+
 export const OrderCard: React.FC<{
   order: Order;
   onComplete?: () => void;
@@ -25,17 +30,18 @@ export const OrderCard: React.FC<{
             </h3>
             <p className="text-sm text-gray-600">Table #{order.tableId}</p>
           </div>
-          {/* <div
+          <div
             className={`px-3 py-1 rounded-full text-sm font-medium ${
-              order.status === "active"
+              order.status === Status.PENDING
                 ? "bg-blue-100 text-blue-800"
-                : order.status === "completed"
+                : order.status === Status.COMPLETED
                 ? "bg-green-100 text-green-800"
                 : "bg-red-100 text-red-800"
             }`}
           >
-            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-          </div> */}
+            {String(order.status).charAt(0).toUpperCase() +
+              String(order.status).slice(1)}
+          </div>
         </div>
 
         <div className="space-y-2 mb-4">
@@ -66,7 +72,7 @@ export const OrderCard: React.FC<{
             <span className="font-semibold text-gray-900">
               Total: ${totalCost.toFixed(2)}
             </span>
-            {/* {isActive && (
+            {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -76,7 +82,7 @@ export const OrderCard: React.FC<{
                 <CheckCircle2 className="w-4 h-4" />
                 Complete
               </motion.button>
-            )} */}
+            }
           </div>
         </div>
       </div>

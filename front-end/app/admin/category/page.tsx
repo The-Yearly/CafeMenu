@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Edit2, Trash2, X, Menu, Car } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, X } from "lucide-react";
 import axios from "axios";
 import { CategorySkeletonLoader } from "./skeleton";
 
@@ -85,31 +85,33 @@ const CategoryForm: React.FC<{
   onClose: () => void;
 }> = ({ category, onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
-    categoryId:category?.id,
+    categoryId: category?.id,
     name: category?.name || "",
     description: category?.description || "",
     images: category?.images || "",
-    slug:""
+    slug: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-    setIsSubmitted(true)
+    setIsSubmitted(true);
     onClose();
   };
-  useEffect(()=>{const sendCat=async()=>{
-    let link="http://localhost:3001/api/v1"
-    if(isSubmitted==true){
-      let res
-      if(category!=undefined){
-        res=axios.post(link+"/editCat",formData)
-      }else{
-        res=axios.post(link+"/addCat",formData)
+  useEffect(() => {
+    const sendCat = async () => {
+      const link = "http://localhost:3001/api/v1";
+      if (isSubmitted == true) {
+        let res;
+        if (category != undefined) {
+          res = axios.post(link + "/editCat", formData);
+        } else {
+          res = axios.post(link + "/addCat", formData);
+        }
       }
-    }
-  }
-  sendCat()},[isSubmitted])
+    };
+    sendCat();
+  }, [isSubmitted]);
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
@@ -157,9 +159,7 @@ const CategoryForm: React.FC<{
           type="url"
           id="imageUrl"
           value={formData.images}
-          onChange={(e) =>
-            setFormData({ ...formData, images: e.target.value })
-          }
+          onChange={(e) => setFormData({ ...formData, images: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 text-gray-600 focus:ring-blue-500 focus:border-transparent"
           required
         />

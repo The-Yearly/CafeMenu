@@ -149,8 +149,8 @@ export default function Products() {
             className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
           >
             <option value="">All Categories</option>
-            {category.map((category) => (
-              <option key={category.slug} value={category.slug}>
+            {category.map((category,i) => (
+              <option key={i} value={category.slug}>
                 {category.name}
               </option>
             ))}
@@ -200,9 +200,9 @@ export default function Products() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-8">
           <AnimatePresence>
-            {paginatedProducts?.map((product) => (
+            {paginatedProducts?.map((product, i) => (
               <motion.div
-                key={product.itemId}
+                key={i}
                 layout
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

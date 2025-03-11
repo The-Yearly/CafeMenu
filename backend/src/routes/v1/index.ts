@@ -10,7 +10,7 @@ router.get("/menu", async (req, res) => {
   console.log("e hit");
   const response = await client.items.findMany({
     where: {
-      availability:true
+      availability: true,
     },
   });
   if (!response) {
@@ -49,7 +49,7 @@ router.post("/orders/", async (req, res) => {
       data: {
         tableId: tableId,
         totalCost: parsedResponse.data?.totalCost,
-        status:"Pending"
+        status: "PENDING",
       },
     });
 
@@ -80,6 +80,9 @@ router.get("/orders", async (req, res) => {
         },
       },
     },
+    orderBy: {
+      orderId: "asc",
+    },
   });
   if (ordersWithItems.length == 0) {
     console.log("NO response");
@@ -94,12 +97,13 @@ router.get("/orders", async (req, res) => {
         quantity: cartItem.quantity,
       };
     });
-    console.log(order.orders_items)
+    console.log(order.orders_items);
     return {
       tableId: order.tableId,
       orderId: order.orderId,
       totalCost: order.totalCost,
       createdAt: order.createdAt,
+      status: order.status,
       items: items,
     };
   });
@@ -109,27 +113,10 @@ router.get("/orders", async (req, res) => {
   });
 });
 
-//updating an order
-router.post("/completeOrder", async (req, res) => {
-  const id = req.body.id;
-  
-  const response = await client.orders.update({
-    where: {
-      orderId: id,
-    },
-    data: {
-      status: "COMPLETE",
-    },
-  });
-
-  res.status(200).json({
-    message: "Updated order",
-  });
-});
-
 //updating an order's status
 router.post("/completeOrder", async (req, res) => {
-  const id = req.body.id;
+  console.log("body me ", req.body);
+  const { id } = req.body.data;
   console.log("delete hit");
   const response = await client.orders.update({
     where: {
@@ -144,9 +131,6 @@ router.post("/completeOrder", async (req, res) => {
     message: "Updated order",
   });
 });
-
-
-
 
 //item with itemId
 router.get("/item", async (req, res) => {
@@ -231,7 +215,7 @@ router.get("/getCategories", async (req, res) => {
       message: "No categories found",
     });
   }
-  console.log(response)
+  console.log(response);
   res.status(200).json({
     categories: response,
   });
@@ -260,7 +244,7 @@ router.post("/addItem", async (req, res) => {
   console.log("item hit");
   const parsedResponse = ItemSchema.safeParse(req.body);
   console.log(parsedResponse, req.body);
-  console.log(parsedResponse.error?.issues)
+  console.log(parsedResponse.error?.issues);
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",
@@ -324,7 +308,7 @@ router.post("/userAuth", async (req, res) => {
 router.post("/changeItem", async (req, res) => {
   console.log("update Hit");
   const parsedResponse = req.body;
-  console.log(parsedResponse)
+  console.log(parsedResponse);
   const response = await client.items.update({
     where: {
       itemId: parsedResponse.itemId,
@@ -363,9 +347,9 @@ router.get("/adminmenu", async (req, res) => {
 
 router.post("/addCat", async (req, res) => {
   console.log("item hit");
-  console.log(req.body)
+  console.log(req.body);
   const parsedResponse = categories.safeParse(req.body);
-  console.log(parsedResponse.error?.issues)
+  console.log(parsedResponse.error?.issues);
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",
@@ -378,7 +362,7 @@ router.post("/addCat", async (req, res) => {
         images: parsedResponse.data.images,
         name: parsedResponse.data.name,
         slug: parsedResponse.data.slug,
-        description:parsedResponse.data.description
+        description: parsedResponse.data.description,
       },
     });
   });
@@ -400,25 +384,25 @@ router.post("/deleteItem", async (req, res) => {
   res.json({ message: "Item Has Been Deleted" });
 });
 
-router.post("/editCat",async(req,res)=>{
-  const parsedResponse=categories.safeParse(req.body)
-  console.log("updateCat")
+router.post("/editCat", async (req, res) => {
+  const parsedResponse = categories.safeParse(req.body);
+  console.log("updateCat");
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",
     });
     return;
   }
-  console.log(parsedResponse)
-  const response=await client.category.update({
-    where:{
-      id:parsedResponse.data.categoryId
+  console.log(parsedResponse);
+  const response = await client.category.update({
+    where: {
+      id: parsedResponse.data.categoryId,
     },
-    data:{
-      name:parsedResponse.data.name,
-      images:parsedResponse.data.images,
-      description:parsedResponse.data.description,
-      slug:parsedResponse.data.slug
-    }
-  })
-})
+    data: {
+      name: parsedResponse.data.name,
+      images: parsedResponse.data.images,
+      description: parsedResponse.data.description,
+      slug: parsedResponse.data.slug,
+    },
+  });
+});
