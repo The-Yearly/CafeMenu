@@ -9,7 +9,9 @@ export const router = Router();
 router.get("/menu", async (req, res) => {
   console.log("e hit");
   const response = await client.items.findMany({
-    where: {},
+    where: {
+      availability:true
+    },
   });
   if (!response) {
     console.log("NO response");
@@ -258,6 +260,7 @@ router.post("/addItem", async (req, res) => {
   console.log("item hit");
   const parsedResponse = ItemSchema.safeParse(req.body);
   console.log(parsedResponse, req.body);
+  console.log(parsedResponse.error?.issues)
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",
@@ -320,21 +323,21 @@ router.post("/userAuth", async (req, res) => {
 
 router.post("/changeItem", async (req, res) => {
   console.log("update Hit");
-  const item = req.body;
-  console.log(item)
+  const parsedResponse = req.body;
+  console.log(parsedResponse)
   const response = await client.items.update({
     where: {
-      itemId: item.itemId,
+      itemId: parsedResponse.itemId,
     },
     data: {
-      name: item.name,
-      bio: item.bio,
-      cost: item.cost,
-      image: item.image,
-      category: item.category,
-      subcategory: item.subcategory,
-      isvegan: item.isvegan,
-      availability: item.availability,
+      name: parsedResponse.name,
+      bio: parsedResponse.bio,
+      cost: parsedResponse.cost,
+      image: parsedResponse.image,
+      category: parsedResponse.category,
+      subcategory: parsedResponse.subcategory,
+      isvegan: parsedResponse.isvegan,
+      availability: parsedResponse.availability,
     },
   });
   if (!response) {
@@ -360,7 +363,9 @@ router.get("/adminmenu", async (req, res) => {
 
 router.post("/addCat", async (req, res) => {
   console.log("item hit");
+  console.log(req.body)
   const parsedResponse = categories.safeParse(req.body);
+  console.log(parsedResponse.error?.issues)
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",
@@ -373,6 +378,7 @@ router.post("/addCat", async (req, res) => {
         images: parsedResponse.data.images,
         name: parsedResponse.data.name,
         slug: parsedResponse.data.slug,
+        description:parsedResponse.data.description
       },
     });
   });
@@ -393,3 +399,26 @@ router.post("/deleteItem", async (req, res) => {
   }
   res.json({ message: "Item Has Been Deleted" });
 });
+
+router.post("/editCat",async(req,res)=>{
+  const parsedResponse=categories.safeParse(req.body)
+  console.log("updateCat")
+  if (!parsedResponse.success) {
+    res.status(400).json({
+      message: "Validation failed",
+    });
+    return;
+  }
+  console.log(parsedResponse)
+  const response=await client.category.update({
+    where:{
+      id:parsedResponse.data.categoryId
+    },
+    data:{
+      name:parsedResponse.data.name,
+      images:parsedResponse.data.images,
+      description:parsedResponse.data.description,
+      slug:parsedResponse.data.slug
+    }
+  })
+})

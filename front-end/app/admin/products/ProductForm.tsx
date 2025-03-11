@@ -13,7 +13,7 @@ export const ProductForm: React.FC<{
     name: product?.name || "",
     image: product?.image || "",
     bio: product?.bio || "",
-    isvegan:false,
+    isvegan:product?.isvegan|| false,
     cost: product?.cost || 0,
     availability: product?.availability ?? true,
     category: product?.category || "",
@@ -37,7 +37,6 @@ export const ProductForm: React.FC<{
   updateItem()},[isSubmitted]) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
     onSubmit(formData);
     setIsSubmitted(true)
     onClose();
@@ -146,6 +145,24 @@ export const ProductForm: React.FC<{
           required
         />
       </div>
+
+      <div>
+
+        <div className="flex gap-4">
+          <label className="flex items-center">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+          Is Vegan
+        </label>
+            <input
+              type="checkbox"
+              checked={formData.isvegan}
+              onChange={() => setFormData({ ...formData, isvegan: !formData.isvegan })}
+              className="ml-2 w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+            />
+          </label>
+        </div>
+      </div>
+
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">

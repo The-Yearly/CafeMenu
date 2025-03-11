@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Edit2, Trash2, X, Menu } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, X, Menu, Car } from "lucide-react";
 import axios from "axios";
 import { CategorySkeletonLoader } from "./skeleton";
 
@@ -21,7 +21,6 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -30,7 +29,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -87,17 +85,31 @@ const CategoryForm: React.FC<{
   onClose: () => void;
 }> = ({ category, onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
+    categoryId:category?.id,
     name: category?.name || "",
     description: category?.description || "",
-    imageUrl: category?.images || "",
+    images: category?.images || "",
+    slug:""
   });
-
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
+    setIsSubmitted(true)
     onClose();
   };
-
+  useEffect(()=>{const sendCat=async()=>{
+    let link="http://localhost:3001/api/v1"
+    if(isSubmitted==true){
+      let res
+      if(category!=undefined){
+        res=axios.post(link+"/editCat",formData)
+      }else{
+        res=axios.post(link+"/addCat",formData)
+      }
+    }
+  }
+  sendCat()},[isSubmitted])
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
@@ -112,7 +124,7 @@ const CategoryForm: React.FC<{
           id="name"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full  px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 text-gray-600 focus:ring-blue-500 focus:border-transparent"
           required
         />
       </div>
@@ -129,7 +141,7 @@ const CategoryForm: React.FC<{
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
           }
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border text-gray-600 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           rows={3}
           required
         />
@@ -144,11 +156,11 @@ const CategoryForm: React.FC<{
         <input
           type="url"
           id="imageUrl"
-          value={formData.imageUrl}
+          value={formData.images}
           onChange={(e) =>
-            setFormData({ ...formData, imageUrl: e.target.value })
+            setFormData({ ...formData, images: e.target.value })
           }
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 text-gray-600 focus:ring-blue-500 focus:border-transparent"
           required
         />
       </div>
@@ -249,7 +261,7 @@ function CategoryComponent() {
               placeholder="Search categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 text-gray-600 focus:ring-blue-500"
             />
           </div>
 

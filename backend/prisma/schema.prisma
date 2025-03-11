@@ -28,6 +28,7 @@ model category {
   name   String
   images String
   slug   String
+  description String
 }
 
 model orders {

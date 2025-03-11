@@ -14,6 +14,7 @@ export const OrderSchema = z.object({
 });
 
 export const ItemSchema = z.object({
+  itemId:z.number().optional(),
   name: z.string(),
   bio: z.string(),
   image: z.string(),
@@ -23,7 +24,7 @@ export const ItemSchema = z.object({
   ingredients: z.array(z.string()).optional(),
   isvegan: z.boolean(),
   cost: z.number().positive(),
-  avalability: z.boolean(),
+  availability: z.boolean(),
 });
 
 export const users = z.object({
@@ -33,7 +34,9 @@ export const users = z.object({
 });
 
 export const categories = z.object({
+  categoryId:z.number().optional(),
   name: z.string(),
   images: z.string(),
+  description: z.string(),
   slug: z.string(),
 });

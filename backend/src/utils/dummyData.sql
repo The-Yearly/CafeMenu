@@ -24,15 +24,15 @@ VALUES
 ('Hot Chocolate', 'Warm and creamy hot chocolate with whipped cream.', '/assets/Hot-Chocolate.jpg', 'Beverages', 'Non-Vegan', false, 4, true, ARRAY['beverage', 'chocolate', 'warm'], ARRAY['chocolate', 'milk', 'sugar', 'whipped cream']);
 
 -- Insert bulk data into 'category' table
-INSERT INTO category (name, images, slug)
+INSERT INTO category (name, images, slug, description)
 VALUES
-('Appetizers', '/assets/Appetizers.jpg', 'appetizers'),
-('Soups', '/assets/Soups.jpg', 'soups'),
-('Salads', '/assets/Salads.jpg', 'salads'),
-('Entrees', '/assets/Entrees.jpg', 'entrees'),
-('Sides', '/assets/Sides.jpg', 'sides'),
-('Desserts', '/assets/Desserts.jpg', 'desserts'),
-('Beverages', '/assets/Beverages.jpeg', 'beverages');
+('Appetizers', '/assets/Appetizers.jpg', 'appetizers',''),
+('Soups', '/assets/Soups.jpg', 'soups',''),
+('Salads', '/assets/Salads.jpg', 'salads',''),
+('Entrees', '/assets/Entrees.jpg', 'entrees',''),
+('Sides', '/assets/Sides.jpg', 'sides',''),
+('Desserts', '/assets/Desserts.jpg', 'desserts',''),
+('Beverages', '/assets/Beverages.jpeg', 'beverages','');
 
 -- Insert bulk data into 'orders' table
 -- Insert bulk data into 'orders' table
