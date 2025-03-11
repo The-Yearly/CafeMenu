@@ -5,7 +5,6 @@ import {
   ShoppingBag,
   Users,
   DollarSign,
-  TrendingUp,
   Package,
   Clock,
   ArrowUpRight,
@@ -63,7 +62,7 @@ const RecentOrder: React.FC<RecentOrderProps> = ({
   customer,
   amount,
   status,
-  date,
+  
 }) => {
   const statusColors = {
     pending:
@@ -164,7 +163,7 @@ export const Dashboard: React.FC = () => {
       <div>
         <h1 className="text-2xl font-bold">Dashboard Overview</h1>
         <p className="text-gray-500 dark:text-gray-400 ">
-          Welcome back, here's what's happening today.
+          Welcome back, here&apos;s what&apos;s happening today.
         </p>
       </div>
 

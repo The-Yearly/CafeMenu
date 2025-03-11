@@ -1,7 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -16,17 +16,25 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
 }) => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
+   const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  
+    useEffect(() => {
+      const handleResize = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+  
+      if(typeof window !== undefined){
+        setIsMobile(window.innerWidth < 768)
+        window.addEventListener("resize", handleResize);
+      }
+      return () =>{
+        if(typeof window !== undefined){
+          window.removeEventListener("resize", handleResize);
+        }
+      }
+    }, []);
+  
+  
   return (
     <AnimatePresence>
       {isOpen && (

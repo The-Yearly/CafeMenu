@@ -25,16 +25,16 @@ export const ProductForm: React.FC<{
   useEffect(()=>{const updateItem=async()=>{
     const link="http://localhost:3001/api/v1"
     if(isSubmitted==true){
-      let res
+      //let res todo add validation
       if(product!=undefined){
-        res=axios.post(link+"/changeItem",formData)
+        axios.post(link+"/changeItem",formData)
       }
       else{
-        res=axios.post(link+"/addItem",formData)
+        axios.post(link+"/addItem",formData)
       }
     }
   }
-  updateItem()},[isSubmitted]) 
+  updateItem()},[isSubmitted,formData,product]) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);

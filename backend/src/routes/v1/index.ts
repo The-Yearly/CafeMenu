@@ -288,6 +288,7 @@ router.post("/addItem", async (req, res) => {
 });
 
 router.get("/allitems", async (req, res) => {
+  console.log("e hit");
   const response = await client.items.findMany({});
   if (!response) {
     console.log("NO response");
@@ -295,13 +296,10 @@ router.get("/allitems", async (req, res) => {
       message: "No items found",
     });
   }
-  const newres: { [key: number]: string } = {};
-  for (let g in response) {
-    newres[response[g].itemId] = response[g].name;
-  }
   res.status(200).json({
-    items: newres,
+    items: response,
   });
+
 });
 
 router.post("/userAuth", async (req, res) => {

@@ -34,7 +34,7 @@ export default function Products() {
 
   useEffect(() => {
     const getProducts = async () => {
-      const response = await axios.get("http://localhost:3001/api/v1/menu");
+      const response = await axios.get("http://localhost:3001/api/v1/allitems");
       if (!response || response.status !== 200) {
         setProducts([]);
         console.log("Call1");

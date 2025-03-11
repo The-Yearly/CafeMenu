@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Edit2, Trash2, X, Menu, Car } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, X } from "lucide-react";
 import axios from "axios";
 import { CategorySkeletonLoader } from "./skeleton";
 
@@ -20,15 +20,25 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+   const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  
+    useEffect(() => {
+      const handleResize = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+  
+      if(typeof window !== undefined){
+        setIsMobile(window.innerWidth < 768)
+        window.addEventListener("resize", handleResize);
+      }
+      return () =>{
+        if(typeof window !== undefined){
+          window.removeEventListener("resize", handleResize);
+        }
+      }
+    }, []);
+  
+ 
   return (
     <AnimatePresence>
       {isOpen && (
@@ -99,17 +109,16 @@ const CategoryForm: React.FC<{
     onClose();
   };
   useEffect(()=>{const sendCat=async()=>{
-    let link="http://localhost:3001/api/v1"
+    const link="http://localhost:3001/api/v1"
     if(isSubmitted==true){
-      let res
       if(category!=undefined){
-        res=axios.post(link+"/editCat",formData)
+       await axios.post(link+"/editCat",formData)
       }else{
-        res=axios.post(link+"/addCat",formData)
+        await axios.post(link+"/addCat",formData)
       }
     }
   }
-  sendCat()},[isSubmitted])
+  sendCat()},[isSubmitted,category,formData])
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>

@@ -16,7 +16,7 @@ const CartSidebar: React.FC = () => {
   const [placeOrder, setPlaceOrder] = useState<order|null>(null);
   useEffect(()=>{const sendOrder=async()=>{
     if(placeOrder!=null){
-      const res=await axios.post("http://localhost:3001/api/v1/orders/",placeOrder)
+      axios.post("http://localhost:3001/api/v1/orders/",placeOrder)
     }  
   }
   sendOrder()},[placeOrder])

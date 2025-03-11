@@ -1,5 +1,5 @@
 "use client";
-import { CheckCircle, CheckCircle2, Clock } from "lucide-react";
+import { CheckCircle,Clock } from "lucide-react";
 import { Order } from "./page";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
@@ -8,7 +8,7 @@ export const OrderCard: React.FC<{
   order: Order;
   onComplete?: () => void;
   totalCost: number;
-}> = ({ order, onComplete, totalCost }) => {
+}> = ({ order,totalCost }) => {
   return (
     <motion.div
       layout

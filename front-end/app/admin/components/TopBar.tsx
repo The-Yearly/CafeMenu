@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Bell, Search } from "lucide-react";
+import { Menu } from "lucide-react";
 import { motion } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 import { UserMenu } from "./UserMenu";

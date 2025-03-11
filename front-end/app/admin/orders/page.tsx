@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
   Search,
   AlertCircle,
@@ -35,7 +35,7 @@ export default function Orders() {
   //   "all" | "active" | "completed"
   // >("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
@@ -67,11 +67,11 @@ export default function Orders() {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-
+/*
   const handleCompleteOrder = (order: Order) => {
     setSelectedOrder(order);
   };
-
+*/
   const confirmCompleteOrder = () => {
     if (!selectedOrder) return;
 

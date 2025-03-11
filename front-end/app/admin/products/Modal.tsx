@@ -15,15 +15,22 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
 }) => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    if(typeof window !== undefined){
+      setIsMobile(window.innerWidth < 768)
+      window.addEventListener("resize", handleResize);
+    }
+    return () =>{
+      if(typeof window !== undefined){
+        window.removeEventListener("resize", handleResize);
+      }
+    }
   }, []);
 
   return (
@@ -92,11 +99,11 @@ export const DeleteConfirmationModal: React.FC<{
               Are you sure you want to delete this product?
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-700 mt-1">
-              You are about to delete "
+              You are about to delete &apos;
               <span className="font-medium text-gray-600 dark:text-gray-700">
                 {productName}
               </span>
-              ". This action cannot be undone.
+              &apos;. This action cannot be undone.
             </p>
           </div>
         </div>
