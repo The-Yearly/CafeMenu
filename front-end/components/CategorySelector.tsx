@@ -19,7 +19,7 @@ export default function CategorySelector({
     const getCategories = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getCategories`
+          `http://localhost:3001/api/v1/getCategories`
         );
         if (!response || response.status != 200) {
           console.log("No categories found");

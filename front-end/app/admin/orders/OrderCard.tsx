@@ -1,5 +1,5 @@
 "use client";
-import { CheckCircle,Clock } from "lucide-react";
+import { CheckCircle,CheckCircle2,Clock } from "lucide-react";
 import { Order } from "./page";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
@@ -13,7 +13,7 @@ export const OrderCard: React.FC<{
   order: Order;
   onComplete?: () => void;
   totalCost: number;
-}> = ({ order,totalCost }) => {
+}> = ({ order,onComplete,totalCost }) => {
   return (
     <motion.div
       layout
@@ -79,6 +79,7 @@ export const OrderCard: React.FC<{
                 onClick={onComplete}
                 className="ml-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
               >
+
                 <CheckCircle2 className="w-4 h-4" />
                 Complete
               </motion.button>
