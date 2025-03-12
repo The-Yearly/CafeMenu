@@ -41,7 +41,7 @@ export default function Orders() {
 
   useEffect(() => {
     const getOrders = async () => {
-      const response = await axios.get("https://cafe-menu-sigma.vercel.app/api/v1/orders");
+      const response = await axios.get("https://cafe-menu-green.vercel.app/orders");
       console.log(response.data.response)
       if (response.status != 200) {
         setOrders([]);

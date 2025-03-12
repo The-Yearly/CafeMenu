@@ -19,7 +19,7 @@ export default function CategorySelector({
     const getCategories = async () => {
       try {
         const response = await axios.get(
-          `https://cafe-menu-sigma.vercel.app/api/v1/getCategories`
+          `https://cafe-menu-green.vercel.app/getCategories`
         );
         if (!response || response.status != 200) {
           console.log("No categories found");

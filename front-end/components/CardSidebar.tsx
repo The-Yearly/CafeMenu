@@ -16,7 +16,7 @@ const CartSidebar: React.FC = () => {
   const [placeOrder, setPlaceOrder] = useState<order|null>(null);
   useEffect(()=>{const sendOrder=async()=>{
     if(placeOrder!=null){
-      axios.post("https://cafe-menu-sigma.vercel.app/api/v1/orders/",placeOrder)
+      axios.post("https://cafe-menu-green.vercel.app/orders/",placeOrder)
     }  
   }
   sendOrder()},[placeOrder])

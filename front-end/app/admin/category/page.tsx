@@ -109,7 +109,7 @@ const CategoryForm: React.FC<{
     onClose();
   };
   useEffect(()=>{const sendCat=async()=>{
-    const link="https://cafe-menu-sigma.vercel.app/api/v1"
+    const link="https://cafe-menu-green.vercel.app/"
     if(isSubmitted==true){
       if(category!=undefined){
        await axios.post(link+"/editCat",formData)
@@ -202,7 +202,7 @@ function CategoryComponent() {
   useEffect(() => {
     const getCategories = async () => {
       const response = await axios.get(
-        "https://cafe-menu-sigma.vercel.app/api/v1/getCategories"
+        "https://cafe-menu-green.vercel.app/getCategories"
       );
 
       if (!response || response.status !== 200) {
