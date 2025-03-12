@@ -33,6 +33,7 @@ export default function OrdersPage({
   params: Promise<{ id: number }>;
 }) {
   const id = use(params);
+  console.log("sss"+params)
   const [pastOrders, setPastOrders] = useState<Order[]>([]);
   const router = useRouter();
 
@@ -82,10 +83,10 @@ export default function OrdersPage({
         {pastOrders.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-xl text-gray-600 dark:text-gray-400 mb-6">
-              You don't have any orders yet
+              You don&apos;t have any orders yet
             </p>
             <button
-              onClick={() => router.push("/")}
+              onClick={() =>router.back()}
               className="floating-button px-6 py-3 rounded-lg text-primary dark:text-text"
             >
               Browse Menu
@@ -95,7 +96,7 @@ export default function OrdersPage({
           <div className="space-y-6">
             {pastOrders.map((order, index) => (
               <motion.div
-                key={order.orderId}
+                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}

@@ -26,11 +26,10 @@ export const ProductForm: React.FC<{
     const updateItem = async () => {
       const link = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
       if (isSubmitted == true) {
-        let res;
         if (product != undefined) {
-          res = axios.post(link + "/changeItem", formData);
+          axios.post(link + "/changeItem", formData);
         } else {
-          res = axios.post(link + "/addItem", formData);
+          axios.post(link + "/addItem", formData);
         }
       }
     };

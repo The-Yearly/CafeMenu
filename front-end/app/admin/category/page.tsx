@@ -102,11 +102,11 @@ const CategoryForm: React.FC<{
     const sendCat = async () => {
       const link = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
       if (isSubmitted == true) {
-        let res;
+       //add toast
         if (category != undefined) {
-          res = axios.post(link + "/editCat", formData);
+          axios.post(link + "/editCat", formData);
         } else {
-          res = axios.post(link + "/addCat", formData);
+          axios.post(link + "/addCat", formData);
         }
       }
     };

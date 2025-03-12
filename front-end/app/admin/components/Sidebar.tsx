@@ -3,9 +3,6 @@ import { motion } from "framer-motion";
 import {
   LayoutGrid,
   ShoppingBag,
-  Users,
-  FileText,
-  Settings,
   Cat as Categories,
   Package,
   BarChart3,

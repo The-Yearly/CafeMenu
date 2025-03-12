@@ -92,11 +92,11 @@ export const DeleteConfirmationModal: React.FC<{
               Are you sure you want to delete this product?
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-700 mt-1">
-              You are about to delete "
+              You are about to delete &apos;
               <span className="font-medium text-gray-600 dark:text-gray-700">
                 {productName}
               </span>
-              ". This action cannot be undone.
+              &apos;. This action cannot be undone.
             </p>
           </div>
         </div>
