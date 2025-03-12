@@ -146,8 +146,6 @@ router.post("/completeOrder", async (req, res) => {
 });
 
 
-
-
 //item with itemId
 router.get("/item", async (req, res) => {
   const itemId = Number(req.query.id);
