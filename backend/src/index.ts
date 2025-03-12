@@ -11,5 +11,7 @@ app.use(cors())
 app.use('/api/v1', router)
 
 app.listen(process.env.PORT || port)
-
+app.get("/test",(req,res)=>{
+    res.json("Hello")
+})
 console.log('Server started at http://localhost:' + port);
