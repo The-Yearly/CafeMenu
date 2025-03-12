@@ -35,7 +35,7 @@ export default function Products() {
   useEffect(() => {
     const getProducts = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_BACKEND_URL}/api/v1/menu`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menu`
       );
       if (!response || response.status !== 200) {
         setProducts([]);
@@ -48,7 +48,7 @@ export default function Products() {
     };
     const getCategories = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_BACKEND_URL}/api/v1/getCategories`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getCategories`
       );
 
       if (!response || response.status !== 200) {

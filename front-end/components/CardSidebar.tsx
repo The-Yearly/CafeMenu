@@ -29,7 +29,7 @@ const CartSidebar = () => {
       if (placeOrder != null) {
         try {
           const res = await axios.post(
-            `${process.env.NEXT_BACKEND_URL}/api/v1/orders`,
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders`,
             placeOrder
           );
 

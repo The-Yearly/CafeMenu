@@ -50,7 +50,7 @@ export default function Orders() {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `${process.env.NEXT_BACKEND_URL}/api/v1/orders`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders`
         );
         if (response.status === 200) {
           setOrders(response.data.response);
@@ -95,7 +95,7 @@ export default function Orders() {
     try {
       // Send a PUT or PATCH request to update the status of the order
       const response = await axios.post(
-        `${process.env.NEXT_BACKEND_URL}/api/v1/completeOrder`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/completeOrder`,
         {
           data: {
             id: selectedOrder.orderId,

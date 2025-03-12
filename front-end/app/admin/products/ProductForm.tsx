@@ -24,7 +24,7 @@ export const ProductForm: React.FC<{
   const [isSubmitted, setIsSubmitted] = useState(false);
   useEffect(() => {
     const updateItem = async () => {
-      const link = `${process.env.NEXT_BACKEND_URL}/api/v1`;
+      const link = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
       if (isSubmitted == true) {
         let res;
         if (product != undefined) {
