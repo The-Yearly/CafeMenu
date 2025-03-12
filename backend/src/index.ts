@@ -6,11 +6,7 @@ const port  = 3001
 const app = express();
 
 app.use(express.json())
-app.use(cors({ 
-    origin: "https://cafe-menu-i7m5.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+app.use(cors());
 
 app.use('/api/v1', router)
 

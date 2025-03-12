@@ -62,7 +62,6 @@ const RecentOrder: React.FC<RecentOrderProps> = ({
   customer,
   amount,
   status,
-  
 }) => {
   const statusColors = {
     pending:

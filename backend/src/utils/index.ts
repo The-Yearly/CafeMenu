@@ -10,11 +10,12 @@ export const cart = z.object({
 export const OrderSchema = z.object({
   tableId: z.number().positive(),
   totalCost: z.number().positive(),
-  orders:cart.array(),
+  status: z.enum(["PENDING", "COMPLETED"]),
+  orders: cart.array(),
 });
 
 export const ItemSchema = z.object({
-  itemId:z.number().optional(),
+  itemId: z.number().optional(),
   name: z.string(),
   bio: z.string(),
   image: z.string(),
@@ -34,7 +35,7 @@ export const users = z.object({
 });
 
 export const categories = z.object({
-  categoryId:z.number().optional(),
+  categoryId: z.number().optional(),
   name: z.string(),
   images: z.string(),
   description: z.string(),

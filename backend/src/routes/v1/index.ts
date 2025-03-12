@@ -1,7 +1,6 @@
 import e, { Router } from "express";
 import { client } from "../../utils/client";
 import { categories, ItemSchema, OrderSchema } from "../../utils";
-import { ParseStatus } from "zod";
 
 export const router = Router();
 
@@ -10,7 +9,7 @@ router.get("/menu", async (req, res) => {
   console.log("e hit");
   const response = await client.items.findMany({
     where: {
-      availability:true
+      availability: true,
     },
   });
   if (!response) {
@@ -26,11 +25,12 @@ router.get("/menu", async (req, res) => {
 });
 
 //placing an order
-router.post("/orders/", async (req, res) => {
+router.post("/orders", async (req, res) => {
   const parsedResponse = OrderSchema.safeParse(req.body);
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",
+      error: parsedResponse.error,
     });
     return;
   }
@@ -49,7 +49,7 @@ router.post("/orders/", async (req, res) => {
       data: {
         tableId: tableId,
         totalCost: parsedResponse.data?.totalCost,
-        status:"Pending"
+        status: "PENDING",
       },
     });
 
@@ -61,13 +61,75 @@ router.post("/orders/", async (req, res) => {
       })),
     });
 
-    console.log("order added");
+    // const fullOrder = await client.orders.findUnique({
+    //   where: { orderId: order.orderId },
+    //   include: {
+    //     orders_items: true, // Assuming 'cart' is the correct relation name in your schema
+    //   },
+    // });
+
     return order.orderId;
   });
   res.status(200).json({
-    orderId: placedOrder,
+    fullOrder: placedOrder,
   });
 });
+
+// router.post("/orders", async (req, res) => {
+//   const parsedResponse = OrderSchema.safeParse(req.body);
+
+//   if (!parsedResponse.success) {
+//     return res.status(400).json({
+//       message: "Validation failed",
+//       error: parsedResponse.error,
+//     });
+//   }
+
+//   const { tableId, totalCost, orders } = parsedResponse.data;
+
+//   if (!tableId) {
+//     return res.status(400).json({
+//       message: "No table found",
+//     });
+//   }
+
+//   try {
+//     const placedOrder = await client.$transaction(async (tx) => {
+//       // Creating the order
+//       const order = await tx.orders.create({
+//         data: {
+//           tableId,
+//           totalCost,
+//           status: "PENDING",
+//         },
+//       });
+
+//       // Creating cart items
+//       await tx.cart.createMany({
+//         data: orders.map((item) => ({
+//           orderId: order.orderId,
+//           itemId: item.itemId,
+//           quantity: item.quantity,
+//         })),
+//       });
+
+//       // Fetch the full order details, including cart items
+//       const fullOrder = await tx.orders.findUnique({
+//         where: { orderId: order.orderId },
+//         include: {
+//           orders_items: true, // Assuming 'cart' is the correct relation name in your schema
+//         },
+//       });
+
+//       return fullOrder;
+//     });
+
+//     return res.status(200).json(placedOrder);
+//   } catch (error) {
+//     console.error("Error placing order:", error);
+//     return res.status(500).json({ message: "Internal Server Error" });
+//   }
+// });
 
 //getting orders
 router.get("/orders", async (req, res) => {
@@ -79,6 +141,9 @@ router.get("/orders", async (req, res) => {
           iid: true,
         },
       },
+    },
+    orderBy: {
+      orderId: "asc",
     },
   });
   if (ordersWithItems.length == 0) {
@@ -94,9 +159,9 @@ router.get("/orders", async (req, res) => {
         quantity: cartItem.quantity,
       };
     });
-    console.log(order.orders_items)
     return {
       tableId: order.tableId,
+      status: order.status,
       orderId: order.orderId,
       totalCost: order.totalCost,
       createdAt: order.createdAt,
@@ -109,34 +174,17 @@ router.get("/orders", async (req, res) => {
   });
 });
 
-//updating an order
-router.post("/completeOrder", async (req, res) => {
-  const id = req.body.id;
-  
-  const response = await client.orders.update({
-    where: {
-      orderId: id,
-    },
-    data: {
-      status: "COMPLETE",
-    },
-  });
-
-  res.status(200).json({
-    message: "Updated order",
-  });
-});
-
 //updating an order's status
 router.post("/completeOrder", async (req, res) => {
-  const id = req.body.id;
+  console.log("body me ", req.body);
+  const { id } = req.body.data;
   console.log("delete hit");
   const response = await client.orders.update({
     where: {
       orderId: id,
     },
     data: {
-      status: "COMPLETE",
+      status: "COMPLETED",
     },
   });
 
@@ -144,7 +192,6 @@ router.post("/completeOrder", async (req, res) => {
     message: "Updated order",
   });
 });
-
 
 //item with itemId
 router.get("/item", async (req, res) => {
@@ -229,7 +276,7 @@ router.get("/getCategories", async (req, res) => {
       message: "No categories found",
     });
   }
-  console.log(response)
+  console.log(response);
   res.status(200).json({
     categories: response,
   });
@@ -258,7 +305,7 @@ router.post("/addItem", async (req, res) => {
   console.log("item hit");
   const parsedResponse = ItemSchema.safeParse(req.body);
   console.log(parsedResponse, req.body);
-  console.log(parsedResponse.error?.issues)
+  console.log(parsedResponse.error?.issues);
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",
@@ -320,7 +367,7 @@ router.post("/userAuth", async (req, res) => {
 router.post("/changeItem", async (req, res) => {
   console.log("update Hit");
   const parsedResponse = req.body;
-  console.log(parsedResponse)
+  console.log(parsedResponse);
   const response = await client.items.update({
     where: {
       itemId: parsedResponse.itemId,
@@ -359,9 +406,9 @@ router.get("/adminmenu", async (req, res) => {
 
 router.post("/addCat", async (req, res) => {
   console.log("item hit");
-  console.log(req.body)
+  console.log(req.body);
   const parsedResponse = categories.safeParse(req.body);
-  console.log(parsedResponse.error?.issues)
+  console.log(parsedResponse.error?.issues);
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",
@@ -374,7 +421,7 @@ router.post("/addCat", async (req, res) => {
         images: parsedResponse.data.images,
         name: parsedResponse.data.name,
         slug: parsedResponse.data.slug,
-        description:parsedResponse.data.description
+        description: parsedResponse.data.description,
       },
     });
   });
@@ -396,25 +443,25 @@ router.post("/deleteItem", async (req, res) => {
   res.json({ message: "Item Has Been Deleted" });
 });
 
-router.post("/editCat",async(req,res)=>{
-  const parsedResponse=categories.safeParse(req.body)
-  console.log("updateCat")
+router.post("/editCat", async (req, res) => {
+  const parsedResponse = categories.safeParse(req.body);
+  console.log("updateCat");
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",
     });
     return;
   }
-  console.log(parsedResponse)
-  const response=await client.category.update({
-    where:{
-      id:parsedResponse.data.categoryId
+  console.log(parsedResponse);
+  const response = await client.category.update({
+    where: {
+      id: parsedResponse.data.categoryId,
     },
-    data:{
-      name:parsedResponse.data.name,
-      images:parsedResponse.data.images,
-      description:parsedResponse.data.description,
-      slug:parsedResponse.data.slug
-    }
-  })
-})
+    data: {
+      name: parsedResponse.data.name,
+      images: parsedResponse.data.images,
+      description: parsedResponse.data.description,
+      slug: parsedResponse.data.slug,
+    },
+  });
+});

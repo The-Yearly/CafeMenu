@@ -95,30 +95,33 @@ const CategoryForm: React.FC<{
   onClose: () => void;
 }> = ({ category, onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
-    categoryId:category?.id,
+    categoryId: category?.id,
     name: category?.name || "",
     description: category?.description || "",
     images: category?.images || "",
-    slug:""
+    slug: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-    setIsSubmitted(true)
+    setIsSubmitted(true);
     onClose();
   };
-  useEffect(()=>{const sendCat=async()=>{
-    const link="https://cafe-menu-green.vercel.app/api/v1"
-    if(isSubmitted==true){
-      if(category!=undefined){
-       await axios.post(link+"/editCat",formData)
-      }else{
-        await axios.post(link+"/addCat",formData)
+  useEffect(() => {
+    const sendCat = async () => {
+      const link = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
+      if (isSubmitted == true) {
+       //add toast
+        if (category != undefined) {
+          axios.post(link + "/editCat", formData);
+        } else {
+          axios.post(link + "/addCat", formData);
+        }
       }
-    }
-  }
-  sendCat()},[isSubmitted,category,formData])
+    };
+    sendCat();
+  }, [isSubmitted]);
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
@@ -166,9 +169,7 @@ const CategoryForm: React.FC<{
           type="url"
           id="imageUrl"
           value={formData.images}
-          onChange={(e) =>
-            setFormData({ ...formData, images: e.target.value })
-          }
+          onChange={(e) => setFormData({ ...formData, images: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 text-gray-600 focus:ring-blue-500 focus:border-transparent"
           required
         />
@@ -202,7 +203,7 @@ function CategoryComponent() {
   useEffect(() => {
     const getCategories = async () => {
       const response = await axios.get(
-        "https://cafe-menu-green.vercel.app/api/v1/getCategories"
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getCategories`
       );
 
       if (!response || response.status !== 200) {
