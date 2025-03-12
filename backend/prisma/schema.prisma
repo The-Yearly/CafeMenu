@@ -34,8 +34,8 @@ model category {
 model orders {
   orderId      Int      @id @default(autoincrement())
   tableId      Int
+  status     Status
   totalCost    Int
-  status  Status
   createdAt    DateTime @default(now())
   orders_items cart[]
 }
