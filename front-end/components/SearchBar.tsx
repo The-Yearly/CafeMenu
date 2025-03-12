@@ -43,7 +43,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSelectItem }) => {
     };
 
     items();
-  }, [menuItems]);
+  }, []);
 
   useEffect(() => {
     console.log("Component rendered 5");
