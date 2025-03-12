@@ -109,7 +109,7 @@ const CategoryForm: React.FC<{
     onClose();
   };
   useEffect(()=>{const sendCat=async()=>{
-    const link="https://cafe-menu-green.vercel.app/api/v1/"
+    const link="https://cafe-menu-green.vercel.app/api/v1"
     if(isSubmitted==true){
       if(category!=undefined){
        await axios.post(link+"/editCat",formData)
