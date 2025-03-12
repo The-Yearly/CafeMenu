@@ -100,7 +100,7 @@ const CategoryForm: React.FC<{
   };
   useEffect(() => {
     const sendCat = async () => {
-      const link = "http://localhost:3001/api/v1";
+      const link = `${process.env.NEXT_BACKEND_URL}/api/v1`;
       if (isSubmitted == true) {
         let res;
         if (category != undefined) {
@@ -193,7 +193,7 @@ function CategoryComponent() {
   useEffect(() => {
     const getCategories = async () => {
       const response = await axios.get(
-        "http://localhost:3001/api/v1/getCategories"
+        `${process.env.NEXT_BACKEND_URL}/api/v1/getCategories`
       );
 
       if (!response || response.status !== 200) {

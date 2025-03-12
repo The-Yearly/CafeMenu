@@ -29,7 +29,7 @@ const CartSidebar = () => {
       if (placeOrder != null) {
         try {
           const res = await axios.post(
-            "http://192.168.109.8:3001/api/v1/orders",
+            `${process.env.NEXT_BACKEND_URL}/api/v1/orders`,
             placeOrder
           );
 

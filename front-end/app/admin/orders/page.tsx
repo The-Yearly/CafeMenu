@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {  AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
   Search,
   AlertCircle,
@@ -49,7 +49,9 @@ export default function Orders() {
     const getOrders = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get("http://localhost:3001/api/v1/orders");
+        const response = await axios.get(
+          `${process.env.NEXT_BACKEND_URL}/api/v1/orders`
+        );
         if (response.status === 200) {
           setOrders(response.data.response);
         } else {
@@ -93,7 +95,7 @@ export default function Orders() {
     try {
       // Send a PUT or PATCH request to update the status of the order
       const response = await axios.post(
-        `http://localhost:3001/api/v1/completeOrder`,
+        `${process.env.NEXT_BACKEND_URL}/api/v1/completeOrder`,
         {
           data: {
             id: selectedOrder.orderId,
