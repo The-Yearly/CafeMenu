@@ -26,11 +26,12 @@ router.get("/menu", async (req, res) => {
 });
 
 //placing an order
-router.post("/orders/", async (req, res) => {
+router.post("/orders", async (req, res) => {
   const parsedResponse = OrderSchema.safeParse(req.body);
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",
+      error: parsedResponse.error,
     });
     return;
   }
@@ -61,13 +62,75 @@ router.post("/orders/", async (req, res) => {
       })),
     });
 
-    console.log("order added");
+    // const fullOrder = await client.orders.findUnique({
+    //   where: { orderId: order.orderId },
+    //   include: {
+    //     orders_items: true, // Assuming 'cart' is the correct relation name in your schema
+    //   },
+    // });
+
     return order.orderId;
   });
   res.status(200).json({
-    orderId: placedOrder,
+    fullOrder: placedOrder,
   });
 });
+
+// router.post("/orders", async (req, res) => {
+//   const parsedResponse = OrderSchema.safeParse(req.body);
+
+//   if (!parsedResponse.success) {
+//     return res.status(400).json({
+//       message: "Validation failed",
+//       error: parsedResponse.error,
+//     });
+//   }
+
+//   const { tableId, totalCost, orders } = parsedResponse.data;
+
+//   if (!tableId) {
+//     return res.status(400).json({
+//       message: "No table found",
+//     });
+//   }
+
+//   try {
+//     const placedOrder = await client.$transaction(async (tx) => {
+//       // Creating the order
+//       const order = await tx.orders.create({
+//         data: {
+//           tableId,
+//           totalCost,
+//           status: "PENDING",
+//         },
+//       });
+
+//       // Creating cart items
+//       await tx.cart.createMany({
+//         data: orders.map((item) => ({
+//           orderId: order.orderId,
+//           itemId: item.itemId,
+//           quantity: item.quantity,
+//         })),
+//       });
+
+//       // Fetch the full order details, including cart items
+//       const fullOrder = await tx.orders.findUnique({
+//         where: { orderId: order.orderId },
+//         include: {
+//           orders_items: true, // Assuming 'cart' is the correct relation name in your schema
+//         },
+//       });
+
+//       return fullOrder;
+//     });
+
+//     return res.status(200).json(placedOrder);
+//   } catch (error) {
+//     console.error("Error placing order:", error);
+//     return res.status(500).json({ message: "Internal Server Error" });
+//   }
+// });
 
 //getting orders
 router.get("/orders", async (req, res) => {
@@ -97,13 +160,12 @@ router.get("/orders", async (req, res) => {
         quantity: cartItem.quantity,
       };
     });
-    console.log(order.orders_items);
     return {
       tableId: order.tableId,
+      status: order.status,
       orderId: order.orderId,
       totalCost: order.totalCost,
       createdAt: order.createdAt,
-      status: order.status,
       items: items,
     };
   });
@@ -123,7 +185,7 @@ router.post("/completeOrder", async (req, res) => {
       orderId: id,
     },
     data: {
-      status: "COMPLETE",
+      status: "COMPLETED",
     },
   });
 

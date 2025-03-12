@@ -38,16 +38,11 @@ VALUES
 -- Insert bulk data into 'orders' table
 INSERT INTO orders ("tableId", "totalCost", "createdAt", status)
 VALUES
-(1, 95, '2025-03-09T14:30:00.000Z', 'Pending'),
-(2, 78, '2025-03-09T15:00:00.000Z', 'Pending'),
-(3, 85, '2025-03-09T16:00:00.000Z', 'Pending'),
-(4, 98, '2025-03-09T17:00:00.000Z', 'Pending'),
-(5, 120, '2025-03-09T18:00:00.000Z', 'Pending'),
-(6, 68, '2025-03-09T19:00:00.000Z', 'Pending'),
-(7, 90, '2025-03-09T20:00:00.000Z', 'Pending'),
-(8, 112, '2025-03-09T21:00:00.000Z', 'Pending'),
-(9, 64, '2025-03-09T22:00:00.000Z', 'Pending'),
-(10, 98, '2025-03-09T23:00:00.000Z', 'Pending');
+(1, 95, '2025-03-09T14:30:00.000Z', 'PENDING'),
+(2, 78, '2025-03-09T15:00:00.000Z', 'PENDING'),
+(3, 85, '2025-03-09T16:00:00.000Z', 'PENDING'),
+(4, 98, '2025-03-09T17:00:00.000Z', 'PENDING'),
+(5, 120, '2025-03-09T18:00:00.000Z', 'PENDING');
 
 -- Insert bulk data into 'cart' table (mapping orders and items)
 -- Order 1
