@@ -2,12 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "dist/src/index.js",
-  "scripts": {
-    "build": "tsc",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "start": "nodemon src/index.ts",
-    "postinstall": "prisma generate"
-  },
+"scripts": {
+  "build": "tsc",
+  "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+  "start": "node dist/src/index.js",
+  "postinstall": "prisma generate"
+},
   "dependencies": {
     "@prisma/client": "^6.4.1",
     "@types/express": "^5.0.0",
