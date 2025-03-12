@@ -58,5 +58,5 @@ model users {
 
 enum Status {
   PENDING
-  COMPLETE
+  COMPLETED
 }
