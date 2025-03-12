@@ -34,7 +34,7 @@ export default function Products() {
 
   useEffect(() => {
     const getProducts = async () => {
-      const response = await axios.get("https://cafe-menu-green.vercel.app/allitems");
+      const response = await axios.get("https://cafe-menu-green.vercel.app/api/v1/allitems");
       if (!response || response.status !== 200) {
         setProducts([]);
         console.log("Call1");
@@ -46,7 +46,7 @@ export default function Products() {
     };
     const getCategories = async () => {
       const response = await axios.get(
-        "https://cafe-menu-green.vercel.app/getCategories"
+        "https://cafe-menu-green.vercel.app/api/v1/getCategories"
       );
 
       if (!response || response.status !== 200) {

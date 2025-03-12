@@ -15,7 +15,7 @@ export default function Login() {
     const sendUser = async () => {
       if (data != null) {
         const res = await axios.post(
-          "https://cafe-menu-green.vercel.app/userAuth",
+          "https://cafe-menu-green.vercel.app/api/v1/userAuth",
           data
         );
         toast(res.data.message);

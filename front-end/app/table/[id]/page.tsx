@@ -30,7 +30,7 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
     console.log("Component rendered 1");
     const getMenuItems = async () => {
       const items = await axios.post(
-        "https://cafe-menu-green.vercel.app/category",
+        "https://cafe-menu-green.vercel.app/api/v1/category",
         {
           category: selectedCategory,
         }
