@@ -30,10 +30,10 @@ interface Order {
 export default function OrdersPage({
   params,
 }: {
-  params: Promise<{ id: number }>;
+  params: Promise<{ id: number ,tid: number }>;
 }) {
   const id = use(params);
-  console.log("sss"+params)
+  console.log(id)
   const [pastOrders, setPastOrders] = useState<Order[]>([]);
   const router = useRouter();
 
@@ -68,7 +68,7 @@ export default function OrdersPage({
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center mb-6">
           <button
-            onClick={() => router.push(`/table/${id}`)}
+            onClick={() => router.push(`/table/${id.id}`)}
             className="flex items-center text-accent hover:text-accent/80"
           >
             <ChevronLeft size={20} />

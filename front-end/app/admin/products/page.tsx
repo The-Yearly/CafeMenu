@@ -25,11 +25,13 @@ export default function Products() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Item | null>(null);
   const [deletingProduct, setDeletingProduct] = useState<Item | null>(null);
+  const [paginatedProducts,setPaginatedProducts]=useState<Item[]>([])
   const [currentPage, setCurrentPage] = useState(1);
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: 0,
     max: 1000,
   });
+  const [filteredProducts,setFilteredProducts]=useState<Item[]>([])
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -63,29 +65,36 @@ export default function Products() {
     getProducts();
     setLoading(false);
   }, []);
-
-  const filteredProducts = products?.filter((product) => {
-    console.log("Filtering:", product); // Log each product while filtering
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.bio.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      !selectedCategory || product.category === selectedCategory;
-    const matchesPrice =
-      product.cost >= priceRange.min && product.cost <= priceRange.max;
-
-    return matchesSearch && matchesCategory && matchesPrice;
-  });
-
+  useEffect(() => {
+    const setFilters = () => {
+      console.log("Applying filters:", { searchTerm, selectedCategory, priceRange, products });
+      setCurrentPage(1)
+      console.log(selectedCategory)
+      setFilteredProducts(
+        products.filter((product) => {
+          const matchesSearch =
+            product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.bio.toLowerCase().includes(searchTerm.toLowerCase());
+          const matchesCategory = !selectedCategory || product.category === selectedCategory;
+          const matchesPrice = product.cost >= priceRange.min && product.cost <= priceRange.max;
+  
+          return matchesSearch && matchesCategory && matchesPrice;
+        })
+      );
+    };
+    setFilters();
+  }, [searchTerm, priceRange, selectedCategory, products]);
   console.log("Filtered Products:", filteredProducts); // Log the filtered results
-
   const totalPages = Math.ceil(filteredProducts!.length / ITEMS_PER_PAGE);
   console.log("fli", filteredProducts);
-  const paginatedProducts = filteredProducts?.slice(
+  console.log(filteredProducts?.length)
+  useEffect(()=>{const setPages=()=>{
+    setPaginatedProducts(filteredProducts?.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
-  );
-
+  ))}
+  setPages()},
+  [filteredProducts,currentPage])
   const handleAddProduct = (data: Partial<Item>) => {
     const newProduct: Item = {
       itemId: Math.max(...products.map((p) => p.itemId!)) + 1,
@@ -152,7 +161,7 @@ export default function Products() {
           >
             <option value="">All Categories</option>
             {category.map((category, i) => (
-              <option key={i} value={category.slug}>
+              <option key={i} value={category.name}>
                 {category.name}
               </option>
             ))}

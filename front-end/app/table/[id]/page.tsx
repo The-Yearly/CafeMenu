@@ -63,7 +63,7 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
             />
             <MenuCarousel items={filteredItems} />
             <FloatingCartButton />
-            <CartSidebar />
+            <CartSidebar tid={id.id}/>
 
             <MenuItemGrid items={filteredItems} />
           </motion.div>

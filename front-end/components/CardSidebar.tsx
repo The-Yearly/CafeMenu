@@ -19,7 +19,8 @@ interface order {
   tableId: number;
   totalCost: number;
 }
-const CartSidebar = () => {
+const CartSidebar = (tid:{tid:number}) => {
+  console.log("HelloCart"+tid.tid)
   const [placeOrder, setPlaceOrder] = useState<order | null>(null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -77,7 +78,7 @@ const CartSidebar = () => {
   } = useCart();
 
   function viewOrder() {
-    router.push(`/table/${placeOrder?.tableId}/orders`);
+    router.push(`/table/${tid.tid}/orders`);
   }
 
   return (

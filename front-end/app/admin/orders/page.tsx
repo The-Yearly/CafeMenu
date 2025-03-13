@@ -44,6 +44,7 @@ export default function Orders() {
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [filteredOrders,setFilteredOrders]=useState<Order[]>([])
 
   useEffect(() => {
     const getOrders = async () => {
@@ -67,8 +68,8 @@ export default function Orders() {
 
     getOrders();
   }, []);
-
-  const filteredOrders = orders.filter((order) => {
+  useEffect(()=>{
+  setFilteredOrders(orders.filter((order) => {
     const matchesSearch =
       String(order.orderId).toLowerCase().includes(searchTerm.toLowerCase()) ||
       String(order.tableId).toLowerCase().includes(searchTerm.toLowerCase());
@@ -77,7 +78,9 @@ export default function Orders() {
         ? order.status === Status.PENDING
         : order.status === Status.COMPLETED;
     return matchesSearch && matchesStatus;
-  });
+  }));
+  setCurrentPage(1)
+  },[searchTerm,orders])
 
   const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
   const paginatedOrders = filteredOrders.slice(
