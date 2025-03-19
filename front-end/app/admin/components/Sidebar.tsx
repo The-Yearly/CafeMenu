@@ -6,6 +6,7 @@ import {
   Cat as Categories,
   Package,
   BarChart3,
+  Clock,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -15,6 +16,7 @@ const menuItems = [
   { icon: Package, label: "Products", href: "/admin/products" },
   { icon: ShoppingBag, label: "Orders", href: "/admin/orders" },
   { icon: BarChart3, label: "Analytics", href: "/admin/analytics" },
+  { icon: Clock, label: "Recent Activity", href: "/admin/activity" },
 ];
 
 export const Sidebar: React.FC = () => {

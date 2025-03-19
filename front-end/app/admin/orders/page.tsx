@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
+import { useOrders } from "@/lib/context/ordersContext";
 import {
   Search,
   AlertCircle,
@@ -40,6 +41,7 @@ export default function Orders() {
   const [statusFilter, setStatusFilter] = useState<Status | string>(
     Status.PENDING
   );
+  const {RefreshOrders}=useOrders()
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -67,9 +69,9 @@ export default function Orders() {
     };
 
     getOrders();
-  }, []);
+  }, [RefreshOrders]);
   useEffect(()=>{
-  setFilteredOrders(orders.filter((order) => {
+    setFilteredOrders(orders.filter((order) => {
     const matchesSearch =
       String(order.orderId).toLowerCase().includes(searchTerm.toLowerCase()) ||
       String(order.tableId).toLowerCase().includes(searchTerm.toLowerCase());
@@ -80,7 +82,7 @@ export default function Orders() {
     return matchesSearch && matchesStatus;
   }));
   setCurrentPage(1)
-  },[searchTerm,orders])
+  },[searchTerm,orders,statusFilter])
 
   const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
   const paginatedOrders = filteredOrders.slice(

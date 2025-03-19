@@ -56,7 +56,24 @@ model users {
   isAdmin  Boolean
 }
 
+
+
+model Activities {
+  activitId  Int    @id @default(autoincrement())
+  activity   Activity
+  createdAt  DateTime @default(now())
+  changedId Int
+}
+
 enum Status {
   PENDING
   COMPLETED
+}
+enum Activity{
+  PLACED_ORDER
+  COMPLETED_ORDER
+  ADDED_ITEM
+  UPDATED_ITEM
+  ADDED_CATEGORY
+  UPDATED_CATEGORY
 }

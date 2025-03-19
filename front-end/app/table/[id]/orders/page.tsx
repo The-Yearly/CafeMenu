@@ -30,7 +30,7 @@ interface Order {
 export default function OrdersPage({
   params,
 }: {
-  params: Promise<{ id: number ,tid: number }>;
+  params: Promise<{ id: number }>;
 }) {
   const id = use(params);
   console.log(id)
@@ -61,7 +61,7 @@ export default function OrdersPage({
       hour12: true,
     });
   };
-
+  console.log(pastOrders)
   return (
     <>
       {/* <Navbar /> */}
@@ -105,7 +105,7 @@ export default function OrdersPage({
                 <div className="bg-gray-900/50 p-4 flex flex-wrap justify-between items-center">
                   <div>
                     <p className="font-bold text-primary dark:text-text">
-                      Order #{String(order.orderId).slice(-4)}
+                      Order #{String(order.orderId)}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
                       <Clock size={14} className="mr-1" />

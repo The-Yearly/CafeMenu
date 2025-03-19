@@ -1,16 +1,66 @@
 "use client";
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { ShoppingCart, CircleCheckBig,CircleFadingPlus, Pencil ,FolderPlus,FolderPen} from "lucide-react"
+import { motion} from "framer-motion";
+import Link from "next/link";
+enum Status {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+}
+export enum ActivityE{
+  PLACED_ORDER="PLACED_ORDER",
+  COMPLETED_ORDER="COMPLETED_ORDER",
+  ADDED_ITEM="ADDED_ITEM",
+  UPDATED_ITEM="UPDATED_ITEM",
+  ADDED_CATEGORY="ADDED_CATEGORY",
+  UPDATED_CATEGORY="UPDATED_CATEGORY"
+}
+export const getImg={"PLACED_ORDER":ShoppingCart,"COMPLETED_ORDER":CircleCheckBig,"ADDED_ITEM":CircleFadingPlus,"UPDATED_ITEM":Pencil,"ADDED_CATEGORY":FolderPlus,"UPDATED_CATEGORY":FolderPen}
+export const messagestatusColors = {
+  PLACED_ORDER:
+    "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+  COMPLETED_ORDER:
+    "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+  ADDED_ITEM:
+    "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300",
+  UPDATED_ITEM:
+    "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
+  ADDED_CATEGORY:
+    "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+  UPDATED_CATEGORY:
+    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+};
+
+export const Activity_messages = {
+  "PLACED_ORDER": "Order has been placed with Order ID: {change_id}.",
+  "COMPLETED_ORDER": "Order with Order ID: {change_id} has been completed.",
+  "ADDED_ITEM": "Item with Id {change_id} has been added successfully.",
+  "UPDATED_ITEM": "Item with Id {change_id} has been updated.",
+  "ADDED_CATEGORY": "Category with Id {change_id} has been added successfully.",
+  "UPDATED_CATEGORY": "Category with ID {change_id} has been updated."
+}
 import {
   ShoppingBag,
   Users,
   DollarSign,
   Package,
-  Clock,
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
-
+import axios from "axios";
+interface Order {
+  tableId: number;
+  orderId: number;
+  totalCost: number;
+  createdAt: string;
+  status: Status;
+}
+export interface ActivityType{
+  activitId:number,
+  activity:ActivityE,
+  createdAt: Date,
+  changedId:number,
+}
 interface StatCardProps {
   title: string;
   value: string;
@@ -20,7 +70,12 @@ interface StatCardProps {
     isPositive: boolean;
   };
 }
-
+interface stats{
+  profit:number;
+  totalOrders:number;
+  totalProd:number
+  totalCat:number
+}
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -50,25 +105,45 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend }) => (
 );
 
 interface RecentOrderProps {
-  id: string;
-  customer: string;
-  amount: string;
-  status: "pending" | "processing" | "completed" | "cancelled";
-  date: string;
+  tableId: number;
+  orderId: number;
+  totalCost: number;
+  createdAt: string;
+  status: Status;
+}
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      when: "beforeChildren",
+      staggerChildren: 0.1,
+    },
+  },
+}
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3 },
+  },
 }
 
 const RecentOrder: React.FC<RecentOrderProps> = ({
-  id,
-  customer,
-  amount,
+  orderId,
+  tableId,
+  totalCost,
   status,
 }) => {
   const statusColors = {
-    pending:
+    PENDING:
       "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
     processing:
       "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
-    completed:
+    COMPLETED:
       "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
     cancelled: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
   };
@@ -80,12 +155,12 @@ const RecentOrder: React.FC<RecentOrderProps> = ({
           <ShoppingBag className="w-5 h-5 text-gray-500 dark:text-gray-400" />
         </div>
         <div>
-          <p className="font-medium">{customer}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Order {id}</p>
+          <p className="font-medium">Table #{tableId}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Order {orderId}</p>
         </div>
       </div>
       <div className="text-right">
-        <p className="font-medium">{amount}</p>
+        <p className="font-medium">${totalCost}</p>
         <span
           className={`inline-block px-2 py-1 text-xs rounded-full ${statusColors[status]}`}
         >
@@ -97,66 +172,54 @@ const RecentOrder: React.FC<RecentOrderProps> = ({
 };
 
 export const Dashboard: React.FC = () => {
-  const stats = [
+  const [stats,setStats]=useState<stats|null>(null)
+  const [recentOrders,setOrders]=useState<Order[]|null>(null)
+  const [recentactivity,setRecentActivity]=useState<ActivityType[]|null>(null)
+  useEffect(()=>{const loadStats=async()=>{
+    const res=await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getDashStats`)
+    setStats(res.data)
+  }
+  loadStats()},[])
+  useEffect(()=>{const getRecentOrders=async()=>{
+    const res=await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getRecentOrders`)
+    setOrders(res.data.recentOrders)
+  }
+  getRecentOrders()},[])
+  useEffect(()=>{const getRecentAct=async()=>{
+    const res=await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getActivity`)
+    setRecentActivity(res.data.recentActivity.slice(0,5))
+  }
+  getRecentAct()},[])
+  const statCards = [
     {
       title: "Total Revenue",
-      value: "$45,231.89",
+      value: String(stats?.profit)||"0",
       icon: <DollarSign className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
       trend: { value: "+20.1%", isPositive: true },
     },
     {
       title: "Total Orders",
-      value: "1,205",
+      value: String(stats?.totalOrders) || "0",
       icon: (
         <ShoppingBag className="w-5 h-5 text-blue-600 dark:text-blue-400" />
       ),
       trend: { value: "+12.5%", isPositive: true },
     },
     {
-      title: "Total Customers",
-      value: "3,456",
+      title: "Total Categories",
+      value: String(stats?.totalCat) || "0",
       icon: <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
       trend: { value: "+8.2%", isPositive: true },
     },
     {
       title: "Total Products",
-      value: "456",
+      value: String(stats?.totalProd) || "0",
       icon: <Package className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
       trend: { value: "-2.4%", isPositive: false },
     },
   ];
 
-  const recentOrders = [
-    {
-      id: "ORD-001",
-      customer: "John Smith",
-      amount: "$235.89",
-      status: "completed" as const,
-      date: "2 minutes ago",
-    },
-    {
-      id: "ORD-002",
-      customer: "Sarah Johnson",
-      amount: "$189.99",
-      status: "processing" as const,
-      date: "15 minutes ago",
-    },
-    {
-      id: "ORD-003",
-      customer: "Michael Brown",
-      amount: "$432.50",
-      status: "pending" as const,
-      date: "1 hour ago",
-    },
-    {
-      id: "ORD-004",
-      customer: "Emily Davis",
-      amount: "$129.99",
-      status: "cancelled" as const,
-      date: "2 hours ago",
-    },
-  ];
-
+  
   return (
     <div className="space-y-6 p-6 mt-14">
       <div>
@@ -167,7 +230,7 @@ export const Dashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
+        {statCards.map((stat, index) => (
           <StatCard key={index} {...stat} />
         ))}
       </div>
@@ -179,47 +242,65 @@ export const Dashboard: React.FC = () => {
           transition={{ delay: 0.2 }}
           className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm"
         >
+          
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold">Recent Orders</h2>
-            <button className="text-blue-600 dark:text-blue-400 text-sm hover:underline">
+            <Link href="/admin/orders" className="text-blue-600 dark:text-blue-400 text-sm hover:underline">
               View all
-            </button>
+            </Link>
           </div>
           <div className="divide-y dark:divide-gray-700">
-            {recentOrders.map((order) => (
-              <RecentOrder key={order.id} {...order} />
+            {recentOrders?.map((order) => (
+              <RecentOrder key={order.orderId} {...order} />
             ))}
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold">Recent Activity</h2>
-            <button className="text-blue-600 dark:text-blue-400 text-sm hover:underline">
+              <motion.div
+                className="w-full  bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700"
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-semibold flex items-center gap-2">
+                    Recent Activity
+                  </h2>
+                  <Link href="/admin/activity" className="text-blue-600 dark:text-blue-400 text-sm hover:underline">
               View all
-            </button>
-          </div>
-          <div className="space-y-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-                  <Clock className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+            </Link>
                 </div>
-                <div>
-                  <p className="font-medium">System Update</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {i + 1} hour{i !== 0 ? "s" : ""} ago
-                  </p>
+        
+                <div className="space-y-4">
+                  {recentactivity?.map((activity) => {
+                    const Icon = getImg[activity.activity]
+        
+                    return (
+                      <motion.div
+                        key={activity.activitId}
+                        className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                        variants={itemVariants}
+                        whileHover={{ x: 5 }}
+                      >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${messagestatusColors[activity.activity]}`}>
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{(Activity_messages[activity.activity]).replace("{change_id}",String(activity.changedId))}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{String(activity.createdAt)}</p>
+                        </div>
+                      </motion.div>
+                    )
+                  })}
                 </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        
+                <motion.div
+                  className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 text-center"
+                  variants={itemVariants}
+                >
+                
+                </motion.div>
+              </motion.div>
       </div>
     </div>
   );

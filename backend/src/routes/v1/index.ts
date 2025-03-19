@@ -67,71 +67,23 @@ router.post("/orders", async (req, res) => {
     //     orders_items: true, // Assuming 'cart' is the correct relation name in your schema
     //   },
     // });
-
+    var datetime= new Date().toLocaleString('en-US', {
+      timeZone: 'Asia/Kolkata'
+    });
+    const isoDatetime = new Date(datetime).toISOString();
+    await client.activities.create({
+      data:{
+        activity:"PLACED_ORDER",
+        changedId:order.orderId,
+        createdAt:isoDatetime
+      }
+    })
     return order.orderId;
   });
   res.status(200).json({
     fullOrder: placedOrder,
   });
 });
-
-// router.post("/orders", async (req, res) => {
-//   const parsedResponse = OrderSchema.safeParse(req.body);
-
-//   if (!parsedResponse.success) {
-//     return res.status(400).json({
-//       message: "Validation failed",
-//       error: parsedResponse.error,
-//     });
-//   }
-
-//   const { tableId, totalCost, orders } = parsedResponse.data;
-
-//   if (!tableId) {
-//     return res.status(400).json({
-//       message: "No table found",
-//     });
-//   }
-
-//   try {
-//     const placedOrder = await client.$transaction(async (tx) => {
-//       // Creating the order
-//       const order = await tx.orders.create({
-//         data: {
-//           tableId,
-//           totalCost,
-//           status: "PENDING",
-//         },
-//       });
-
-//       // Creating cart items
-//       await tx.cart.createMany({
-//         data: orders.map((item) => ({
-//           orderId: order.orderId,
-//           itemId: item.itemId,
-//           quantity: item.quantity,
-//         })),
-//       });
-
-//       // Fetch the full order details, including cart items
-//       const fullOrder = await tx.orders.findUnique({
-//         where: { orderId: order.orderId },
-//         include: {
-//           orders_items: true, // Assuming 'cart' is the correct relation name in your schema
-//         },
-//       });
-
-//       return fullOrder;
-//     });
-
-//     return res.status(200).json(placedOrder);
-//   } catch (error) {
-//     console.error("Error placing order:", error);
-//     return res.status(500).json({ message: "Internal Server Error" });
-//   }
-// });
-
-//getting orders
 router.get("/orders", async (req, res) => {
   console.log("orders hit");
   const ordersWithItems = await client.orders.findMany({
@@ -187,7 +139,17 @@ router.post("/completeOrder", async (req, res) => {
       status: "COMPLETED",
     },
   });
-
+  var datetime= new Date().toLocaleString('en-US', {
+    timeZone: 'Asia/Kolkata'
+  });
+  const isoDatetime = new Date(datetime).toISOString();
+  await client.activities.create({
+    data:{
+      activity:"COMPLETED_ORDER",
+      changedId:response.orderId,
+      createdAt:isoDatetime
+    }
+  })
   res.status(200).json({
     message: "Updated order",
   });
@@ -326,6 +288,17 @@ router.post("/addItem", async (req, res) => {
       ingredients: parsedResponse.data.ingredients,
     },
   });
+  var datetime= new Date().toLocaleString('en-US', {
+    timeZone: 'Asia/Kolkata'
+  });
+  const isoDatetime = new Date(datetime).toISOString();
+  await client.activities.create({
+    data:{
+      activity:"ADDED_ITEM",
+      createdAt:isoDatetime,
+      changedId:item.itemId      
+    }
+  })
   res.status(200).json({
     message: "Item Has Been Added",
     itemID: item.itemId,
@@ -386,6 +359,17 @@ router.post("/changeItem", async (req, res) => {
   if (!response) {
     res.status(400).json({ message: "Could Not Update Item" });
   }
+  var datetime= new Date().toLocaleString('en-US', {
+    timeZone: 'Asia/Kolkata'
+  });
+  const isoDatetime = new Date(datetime).toISOString();
+  await client.activities.create({
+    data:{
+      activity:"UPDATED_ITEM",
+      changedId:parsedResponse.itemId,
+      createdAt:isoDatetime
+    }
+  })
   res.status(200).json({ message: "Succesfully Updated" });
 });
 
@@ -415,32 +399,28 @@ router.post("/addCat", async (req, res) => {
     });
     return;
   }
-  let Cat = await client.$transaction(async () => {
-    const cat = await client.category.create({
-      data: {
-        images: parsedResponse.data.images,
-        name: parsedResponse.data.name,
-        slug: parsedResponse.data.slug,
-        description: parsedResponse.data.description,
-      },
-    });
+  const cat = await client.category.create({
+    data: {
+      images: parsedResponse.data.images,
+      name: parsedResponse.data.name,
+      slug: parsedResponse.data.slug,
+      description: parsedResponse.data.description,
+    },
   });
+  var datetime= new Date().toLocaleString('en-US', {
+    timeZone: 'Asia/Kolkata'
+  });
+  const isoDatetime = new Date(datetime).toISOString();
+  await client.activities.create({
+    data:{
+      activity:"ADDED_CATEGORY",
+      changedId:cat.id,
+      createdAt:isoDatetime
+    }
+  })
   res.status(200).json({
     message: "Category Has Been Added",
   });
-});
-
-router.post("/deleteItem", async (req, res) => {
-  const itemId = req.body.id;
-  const response = await client.items.delete({
-    where: {
-      itemId: itemId,
-    },
-  });
-  if (!response) {
-    res.json({ message: "Error Deleting Item" });
-  }
-  res.json({ message: "Item Has Been Deleted" });
 });
 
 router.post("/editCat", async (req, res) => {
@@ -452,7 +432,6 @@ router.post("/editCat", async (req, res) => {
     });
     return;
   }
-  console.log(parsedResponse);
   const response = await client.category.update({
     where: {
       id: parsedResponse.data.categoryId,
@@ -464,4 +443,49 @@ router.post("/editCat", async (req, res) => {
       slug: parsedResponse.data.slug,
     },
   });
+  var datetime= new Date().toLocaleString('en-US', {
+    timeZone: 'Asia/Kolkata'
+  });
+  console.log(datetime)
+  const isoDatetime = new Date(datetime).toISOString();
+  await client.activities.create({
+    data:{
+      activity:"UPDATED_CATEGORY",
+      changedId:response.id,
+      createdAt:isoDatetime
+    }
+  })
 });
+
+router.get("/getDashStats",async (req,res)=>{
+  const totalProf=await client.orders.aggregate({
+    _sum:{
+      totalCost:true
+    },
+    where:{
+      status:"COMPLETED"
+    }
+  })
+  const totalOrders=await client.orders.count()
+  const totalProd=await client.items.count()
+  const totalCat=await client.category.count()
+  res.json({profit:totalProf._sum.totalCost,totalOrders:totalOrders,totalProd:totalProd,totalCat:totalCat})
+})
+router.get("/getRecentOrders",async(req,res)=>{
+  const recentOrders=await client.orders.findMany({
+    take:5,
+    orderBy:{
+      createdAt:"desc"
+    }
+  })
+  res.json({recentOrders:recentOrders})
+})
+
+router.get("/getActivity",async(req,res)=>{
+  const recentActivity=await client.activities.findMany({
+    orderBy:{
+      createdAt:"desc"
+    }
+  })
+  res.json({recentActivity:recentActivity})
+})

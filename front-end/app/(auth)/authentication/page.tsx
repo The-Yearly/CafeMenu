@@ -5,12 +5,14 @@ import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { User } from "@/lib/types";
-
-export default function Login() {
+import Cookie from "js-cookie"
+export default function Login(){
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading,setLoading]=useState(false);
   const [data, setData] = useState<User | null>(null);
   const router = useRouter();
+  Cookie.set("isAdmin","F",{expires:7})
   useEffect(() => {
     const sendUser = async () => {
       if (data != null) {
@@ -19,15 +21,18 @@ export default function Login() {
           data
         );
         toast(res.data.message);
-        if (res.status == 200) {
+        if (res.data.message=="Succesfully Logged In") {
+          Cookie.set("isAdmin","True",{expires:7})
           router.push("/admin");
-        }
+        }else{
+        setLoading(false)}
       }
     };
     sendUser();
   }, [data,router]);
   function checkUser() {
     if (username != "" && password != "") {
+      setLoading(true)
       setData({ username: username, password: password, isAdmin: true });
     } else {
       if (username == "") {
@@ -42,7 +47,7 @@ export default function Login() {
     <>
       <ToastContainer />
       <Image
-        className="w-[50%] max-h-screen  text-primary dark:text-text "
+        className="w-1/2 h-screen  text-primary dark:text-text "
         src={
           "https://images.unsplash.com/photo-1556742517-fde6c2abbe11?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         }
@@ -83,7 +88,30 @@ export default function Login() {
             className="w-full bg-blue-500  text-primary dark:text-text  py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onClick={checkUser}
           >
-            Login
+            {loading?(<div className="flex items-center justify-center gap-4">
+                          <svg
+                            className="animate-spin h-5 w-5 mr-2 text-white"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8v8H4z"
+                            ></path>
+                          </svg>
+                          Loading...
+                        </div>
+                      ):"Login"}
           </button>
         </div>
       </div>

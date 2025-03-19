@@ -51,6 +51,7 @@ export const OrderCard: React.FC<{
               className="flex justify-between items-center"
             >
               <div className="flex items-center gap-2">
+
                 <span className="text-sm font-medium text-gray-900">
                   {i.quantity}x
                 </span>
@@ -76,12 +77,13 @@ export const OrderCard: React.FC<{
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                disabled={(order.status=="PENDING")?false:true}
                 onClick={onComplete}
                 className="ml-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
               >
 
                 <CheckCircle2 className="w-4 h-4" />
-                Complete
+                {(order.status=="PENDING")?"Complete":"Completed"}
               </motion.button>
             }
           </div>

@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { LogOut, User, Settings } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 export const UserMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const router=useRouter()
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
@@ -39,7 +39,7 @@ export const UserMenu: React.FC = () => {
               <Settings className="w-4 h-4" />
               Settings
             </button>
-            <button className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <button onClick={()=>{router.push("/authentication")}} className="group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
               <LogOut className="w-4 h-4" />
               Logout
             </button>
