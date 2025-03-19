@@ -61,21 +61,11 @@ router.post("/orders", async (req, res) => {
       })),
     });
 
-    // const fullOrder = await client.orders.findUnique({
-    //   where: { orderId: order.orderId },
-    //   include: {
-    //     orders_items: true, // Assuming 'cart' is the correct relation name in your schema
-    //   },
-    // });
-    var datetime= new Date().toLocaleString('en-US', {
-      timeZone: 'Asia/Kolkata'
-    });
-    const isoDatetime = new Date(datetime).toISOString();
+
     await client.activities.create({
       data:{
         activity:"PLACED_ORDER",
         changedId:order.orderId,
-        createdAt:isoDatetime
       }
     })
     return order.orderId;
@@ -139,15 +129,10 @@ router.post("/completeOrder", async (req, res) => {
       status: "COMPLETED",
     },
   });
-  var datetime= new Date().toLocaleString('en-US', {
-    timeZone: 'Asia/Kolkata'
-  });
-  const isoDatetime = new Date(datetime).toISOString();
   await client.activities.create({
     data:{
       activity:"COMPLETED_ORDER",
       changedId:response.orderId,
-      createdAt:isoDatetime
     }
   })
   res.status(200).json({
@@ -288,14 +273,9 @@ router.post("/addItem", async (req, res) => {
       ingredients: parsedResponse.data.ingredients,
     },
   });
-  var datetime= new Date().toLocaleString('en-US', {
-    timeZone: 'Asia/Kolkata'
-  });
-  const isoDatetime = new Date(datetime).toISOString();
   await client.activities.create({
     data:{
       activity:"ADDED_ITEM",
-      createdAt:isoDatetime,
       changedId:item.itemId      
     }
   })
@@ -359,15 +339,10 @@ router.post("/changeItem", async (req, res) => {
   if (!response) {
     res.status(400).json({ message: "Could Not Update Item" });
   }
-  var datetime= new Date().toLocaleString('en-US', {
-    timeZone: 'Asia/Kolkata'
-  });
-  const isoDatetime = new Date(datetime).toISOString();
   await client.activities.create({
     data:{
       activity:"UPDATED_ITEM",
       changedId:parsedResponse.itemId,
-      createdAt:isoDatetime
     }
   })
   res.status(200).json({ message: "Succesfully Updated" });
@@ -407,15 +382,10 @@ router.post("/addCat", async (req, res) => {
       description: parsedResponse.data.description,
     },
   });
-  var datetime= new Date().toLocaleString('en-US', {
-    timeZone: 'Asia/Kolkata'
-  });
-  const isoDatetime = new Date(datetime).toISOString();
   await client.activities.create({
     data:{
       activity:"ADDED_CATEGORY",
       changedId:cat.id,
-      createdAt:isoDatetime
     }
   })
   res.status(200).json({
@@ -443,16 +413,10 @@ router.post("/editCat", async (req, res) => {
       slug: parsedResponse.data.slug,
     },
   });
-  var datetime= new Date().toLocaleString('en-US', {
-    timeZone: 'Asia/Kolkata'
-  });
-  console.log(datetime)
-  const isoDatetime = new Date(datetime).toISOString();
   await client.activities.create({
     data:{
       activity:"UPDATED_CATEGORY",
       changedId:response.id,
-      createdAt:isoDatetime
     }
   })
 });

@@ -45,6 +45,5 @@ export const categories = z.object({
 export const activities=z.object({
   activitId:z.number().optional(),
   activity:z.enum(["PLACED_ORDER","COMPLETED_ORDER","ADDED_ITEM","UPDATED_ITEM","ADDED_CATEGORY","UPDATED_CATEGORY"]),
-  createdAt:z.string().datetime(),
   changedId:z.number()
 })
