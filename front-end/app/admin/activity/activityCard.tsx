@@ -88,6 +88,7 @@ export default function ActivityCard(props:{activity:ActivityType}){
             if(act=="COMPLETED_ORDER" || act=="PLACED_ORDER"){
                 const res=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getOrders/`,{id:activity.changedId})
                 setDetails(res.data.response)
+                setCardLoad(true)
             }
             else if(act=="ADDED_ITEM" || act=="UPDATED_ITEM"){
                 console.log(act)
@@ -99,8 +100,6 @@ export default function ActivityCard(props:{activity:ActivityType}){
                 const res=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getCat/`,{id:activity.changedId})
                 setDetails(res.data.category)
             }
-            console.log(cardload)
-            setCardLoad(true)
         }
     }
     getData()},[load])
