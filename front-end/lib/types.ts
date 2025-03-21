@@ -10,7 +10,7 @@ export interface Item {
   cost: number;
   availability: boolean;
   ingredients: string[];
-  itemcreatedAt?: string;
+  createdAt?: string;
 }
 
 export interface Cart {

@@ -58,7 +58,7 @@ export default function Activities() {
           className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 text-center"
           variants={itemVariants}
         >
-        
+
         </motion.div>
       </motion.div>
     </div>

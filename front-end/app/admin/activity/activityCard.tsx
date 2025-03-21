@@ -35,7 +35,6 @@ interface details{
       cost: number;
       availability: boolean;
       ingredients: string[];
-      itemcreatedAt?: string;
       id: number;
       cname: string;
       description: string;
@@ -71,7 +70,7 @@ export default function ActivityCard(props:{activity:ActivityType}){
         switch (act){
             case "COMPLETED_ORDER":
             case "PLACED_ORDER":
-                return (details!=null?<OrderCard key={activity.changedId} order={details} totalCost={details.totalCost}/>:<CategorySkeletonLoader/>)
+                return <OrderCard key={activity.changedId} order={details} totalCost={details.totalCost}/>
             case "ADDED_ITEM":
             case "UPDATED_ITEM":
                 return <ProductCard item={details}/>
@@ -81,6 +80,9 @@ export default function ActivityCard(props:{activity:ActivityType}){
 
                 
         }
+    }
+    else{
+        return<CategorySkeletonLoader/>
     }
     }
     useEffect(()=>{const getData=async()=>{
