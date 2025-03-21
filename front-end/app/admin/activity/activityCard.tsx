@@ -66,12 +66,12 @@ export default function ActivityCard(props:{activity:ActivityType}){
     const [load,setLoad]=useState(false)
     const [details,setDetails]=useState<details|null>(null)
     function renderCard(){
-        console.log(details)
+        console.log(details,cardload)
         if(details!=null){
         switch (act){
             case "COMPLETED_ORDER":
             case "PLACED_ORDER":
-                return (cardload==true?<OrderCard key={activity.changedId} order={details} totalCost={details.totalCost}/>:<CategorySkeletonLoader/>)
+                return (details!=null?<OrderCard key={activity.changedId} order={details} totalCost={details.totalCost}/>:<CategorySkeletonLoader/>)
             case "ADDED_ITEM":
             case "UPDATED_ITEM":
                 return <ProductCard item={details}/>
