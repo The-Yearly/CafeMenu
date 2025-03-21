@@ -62,11 +62,11 @@ export default function ActivityCard(props:{activity:ActivityType}){
     const activity=props.activity
     const Icon = getImg[activity.activity]
     const [act,setAct]=useState("")
-    const [cardload,setCardLoad]=useState(false)
+
     const [load,setLoad]=useState(false)
     const [details,setDetails]=useState<details|null>(null)
     function renderCard(){
-        console.log(details,cardload)
+        console.log(details)
         if(details!=null){
         switch (act){
             case "COMPLETED_ORDER":
@@ -88,7 +88,6 @@ export default function ActivityCard(props:{activity:ActivityType}){
             if(act=="COMPLETED_ORDER" || act=="PLACED_ORDER"){
                 const res=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getOrders/`,{id:activity.changedId})
                 setDetails(res.data.response)
-                setCardLoad(true)
             }
             else if(act=="ADDED_ITEM" || act=="UPDATED_ITEM"){
                 console.log(act)
