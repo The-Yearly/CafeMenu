@@ -1,7 +1,12 @@
 import e, { Router } from "express";
 import { client } from "../../utils/client";
 import { categories, ItemSchema, OrderSchema } from "../../utils";
-
+import { number } from "zod";
+interface week{
+  year: number, 
+  week: number, 
+  orders: number, 
+  profit: number}
 export const router = Router();
 
 //getting the menu
@@ -216,7 +221,11 @@ router.post("/category", async (req, res) => {
 //routes for getting category
 router.get("/getCategories", async (req, res) => {
   console.log("Cat hit");
-  const response = await client.category.findMany({});
+  const response = await client.category.findMany({
+    orderBy:{
+      id:"asc"
+    }
+  });
   if (!response) {
     console.log("NO response");
     res.status(400).json({
@@ -251,6 +260,7 @@ router.post("/userAuth", async (req, res) => {
 router.post("/addItem", async (req, res) => {
   console.log("item hit");
   const parsedResponse = ItemSchema.safeParse(req.body);
+  console.log(req.body,parsedResponse)
   console.log(parsedResponse, req.body);
   console.log(parsedResponse.error?.issues);
   if (!parsedResponse.success) {
@@ -273,6 +283,20 @@ router.post("/addItem", async (req, res) => {
       ingredients: parsedResponse.data.ingredients,
     },
   });
+  console.log(parsedResponse.data.category)
+  const catId=await client.category.findFirst({
+    where:{
+      name:parsedResponse.data.category
+    }
+  })
+  await client.category.update({
+    where:{
+      id:catId?.id
+    },
+    data:{
+      totalItems:{increment:1}
+    }
+  })
   await client.activities.create({
     data:{
       activity:"ADDED_ITEM",
@@ -430,10 +454,15 @@ router.get("/getDashStats",async (req,res)=>{
       status:"COMPLETED"
     }
   })
+  const week:week[]=await client.$queryRaw `select EXTRACT(YEAR from "createdAt") as Year,EXTRACT(WEEK from "createdAt") as week,sum("totalCost")::INTEGER as profit,count(*)::INTEGER as orders from orders GROUP BY EXTRACT(YEAR from "createdAt"),EXTRACT(WEEK from "createdAt") ;`
+  console.log(week)
+  const profitPerc=(week[0].profit-week[1].profit/week[1].profit)*100
+  const ordersPerc=(week[0].orders-week[1].orders/week[1].orders)*100
+  console.log(profitPerc)
   const totalOrders=await client.orders.count()
   const totalProd=await client.items.count()
   const totalCat=await client.category.count()
-  res.json({profit:totalProf._sum.totalCost,totalOrders:totalOrders,totalProd:totalProd,totalCat:totalCat})
+  res.json({profit:totalProf._sum.totalCost,totalOrders:totalOrders,totalProd:totalProd,totalCat:totalCat,profitPerc:profitPerc.toFixed(2),ordersPerc:ordersPerc.toFixed(2)})
 })
 router.get("/getRecentOrders",async(req,res)=>{
   const recentOrders=await client.orders.findMany({
@@ -452,4 +481,58 @@ router.get("/getActivity",async(req,res)=>{
     }
   })
   res.json({recentActivity:recentActivity})
+})
+router.post("/getOrders/",async(req,res)=>{
+    const orderWithItems = await client.orders.findUnique({   
+        where: {
+            orderId: req.body.id,
+        },
+        include: {       
+            orders_items: {         
+                include: {           
+                    iid: true,         
+                },       
+            },     
+        },    
+    });  
+    if (!orderWithItems) {     
+        console.log("NO response");     
+        res.status(400).json({       
+            message: "Order not found",     
+        });   
+    }else{
+        const response = {       
+            tableId: orderWithItems.tableId,       
+            status: orderWithItems.status,       
+            orderId: orderWithItems.orderId,       
+            totalCost: orderWithItems.totalCost,       
+            createdAt: orderWithItems.createdAt,       
+            items: orderWithItems.orders_items.map((cartItem) => {       
+                return {         
+                    item: cartItem.iid,         
+                    quantity: cartItem.quantity,       
+                };     
+            }),   
+        };    
+
+        res.status(200).json({       
+            response,   
+        });
+    }
+})
+router.post("/getProduct/",async(req,res)=>{
+  const product = await client.items.findUnique({   
+      where: {
+          itemId: req.body.id,
+      },
+  });  
+  res.json({product})
+})
+router.post("/getCat/",async(req,res)=>{
+  const category = await client.category.findUnique({   
+      where: {
+          id: req.body.id,
+      },
+  });  
+  res.json({category})
 })

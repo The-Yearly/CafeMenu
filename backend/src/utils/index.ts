@@ -40,6 +40,7 @@ export const categories = z.object({
   images: z.string(),
   description: z.string(),
   slug: z.string(),
+  totalItems:z.number().optional(),
 });
 
 export const activities=z.object({

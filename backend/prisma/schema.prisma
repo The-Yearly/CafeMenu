@@ -29,6 +29,7 @@ model category {
   images String
   slug   String
   description String
+  totalItems Int @default(0)
 }
 
 model orders {
