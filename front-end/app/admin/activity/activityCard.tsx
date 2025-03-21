@@ -71,7 +71,7 @@ export default function ActivityCard(props:{activity:ActivityType}){
         switch (act){
             case "COMPLETED_ORDER":
             case "PLACED_ORDER":
-                (cardload===true?<OrderCard key={activity.changedId} order={details} totalCost={details.totalCost}/>:<CategorySkeletonLoader/>)
+                return (cardload==true?<OrderCard key={activity.changedId} order={details} totalCost={details.totalCost}/>:<CategorySkeletonLoader/>)
             case "ADDED_ITEM":
             case "UPDATED_ITEM":
                 return <ProductCard item={details}/>
@@ -99,7 +99,8 @@ export default function ActivityCard(props:{activity:ActivityType}){
                 const res=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getCat/`,{id:activity.changedId})
                 setDetails(res.data.category)
             }
-            
+            console.log(cardload)
+            setCardLoad(true)
         }
     }
     getData()},[load])
