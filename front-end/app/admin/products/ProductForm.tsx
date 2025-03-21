@@ -16,7 +16,7 @@ export const ProductForm: React.FC<{
     isvegan: product?.isvegan || false,
     cost: product?.cost || 0,
     availability: product?.availability ?? true,
-    category: product?.category || "",
+    category: product?.category || categories[0].name,
     subcategory: product?.subcategory || "",
     tags: product?.tags || [],
     ingredients: product?.ingredients || [],
@@ -25,6 +25,7 @@ export const ProductForm: React.FC<{
   useEffect(() => {
     const updateItem = async () => {
       const link = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
+      console.log(formData)
       if (isSubmitted == true) {
         if (product != undefined) {
           axios.post(link + "/changeItem", formData);

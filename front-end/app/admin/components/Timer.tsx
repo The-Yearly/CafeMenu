@@ -4,19 +4,14 @@ import { RotateCcw } from 'lucide-react';
 export default function Timer(){
   const [time, setTime] = useState<number>(180);
   const {RefreshOrders,SetOrders}=useOrders()
-  const resetTimer = () => {
+  const resetTimer = () => {  
     setTime(180);
     SetOrders()
   };
-
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-      interval = setInterval(() => {
+      interval=setInterval(() => {
         setTime((prevTime)=>{
-          if (prevTime == 0) {
-            SetOrders()
-            return 180;
-          }
           return prevTime - 1;
         });
       }, 1000);
@@ -26,7 +21,12 @@ export default function Timer(){
       }
     };
   }, [RefreshOrders]);
-
+  useEffect(()=>{
+    if(time==0){
+      SetOrders()
+      setTime(180)
+    }
+  },[time])
   return (
     <div className="flex items-center space-x-4">
         

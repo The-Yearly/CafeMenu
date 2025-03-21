@@ -5,11 +5,12 @@ import { Plus, Search, Edit2, Trash2, X } from "lucide-react";
 import axios from "axios";
 import { CategorySkeletonLoader } from "./skeleton";
 
-interface Category {
+ interface Category {
   id: number;
   name: string;
   description: string;
   images: string;
+  totalItems:number;
 }
 
 interface ModalProps {
@@ -226,6 +227,7 @@ function CategoryComponent() {
       name: data.name!,
       description: data.description!,
       images: data.images!,
+      totalItems:0
     };
     setCategories([...categories, newCategory]);
   };
@@ -321,7 +323,7 @@ function CategoryComponent() {
                         </p>
                         <div className="mt-4 flex items-center justify-between">
                           <span className="text-sm font-medium text-gray-600">
-                            {155} Products
+                            {category.totalItems} Products
                           </span>
                           <motion.button
                             whileHover={{ scale: 1.05 }}

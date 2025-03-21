@@ -72,9 +72,11 @@ interface StatCardProps {
 }
 interface stats{
   profit:number;
-  totalOrders:number;
+  totalOrders:number
   totalProd:number
   totalCat:number
+  profitPerc:number
+  ordersPerc:number
 }
 const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend }) => (
   <motion.div
@@ -193,22 +195,22 @@ export const Dashboard: React.FC = () => {
   const statCards = [
     {
       title: "Total Revenue",
-      value: String(stats?.profit)||"0",
+      value: String(stats?.profit!=null?stats?.profit:"0"),
       icon: <DollarSign className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
-      trend: { value: "+20.1%", isPositive: true },
+      trend: {
+        value: (stats?.profitPerc != undefined) ? stats.profitPerc.toString() : "0",
+        isPositive: (stats?.profitPerc??1)>0}
     },
     {
       title: "Total Orders",
       value: String(stats?.totalOrders) || "0",
-      icon: (
-        <ShoppingBag className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-      ),
-      trend: { value: "+12.5%", isPositive: true },
+      icon: <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />, 
+      trend: { value: String(stats?.ordersPerc), isPositive: (stats?.ordersPerc??1)>0},
     },
     {
       title: "Total Categories",
       value: String(stats?.totalCat) || "0",
-      icon: <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
+      icon: <ShoppingBag className="w-5 h-5 text-blue-600 dark:text-blue-400" />,
       trend: { value: "+8.2%", isPositive: true },
     },
     {
@@ -298,7 +300,6 @@ export const Dashboard: React.FC = () => {
                   className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 text-center"
                   variants={itemVariants}
                 >
-                
                 </motion.div>
               </motion.div>
       </div>

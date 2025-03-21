@@ -55,6 +55,7 @@ export default function Orders() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders`
         );
+        console.log("Helllo",response.data)
         if (response.status === 200) {
           setOrders(response.data.response);
         } else {
