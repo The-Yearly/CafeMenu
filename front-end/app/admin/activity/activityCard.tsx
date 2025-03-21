@@ -66,6 +66,9 @@ export default function ActivityCard(props:{activity:ActivityType}){
     const [details,setDetails]=useState<details|null>(null)
     function renderCard(){
         console.log(details)
+        if (load) {
+            return <CategorySkeletonLoader />;
+          }
         if(details!=null){
         switch (act){
             case "COMPLETED_ORDER":
@@ -80,9 +83,6 @@ export default function ActivityCard(props:{activity:ActivityType}){
 
                 
         }
-    }
-    else{
-        return<CategorySkeletonLoader/>
     }
     }
     useEffect(()=>{const getData=async()=>{
