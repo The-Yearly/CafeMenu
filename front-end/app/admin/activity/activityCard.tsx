@@ -4,6 +4,7 @@ import { ChevronRight, ChevronLeft } from "lucide-react"
 import { OrderCard } from "../orders/OrderCard"
 import CategoryCard from "./categoryCard"
 import { Item } from "@/lib/types"
+import { CategorySkeletonLoader } from "../category/skeleton"
 import ProductCard from "./productCard"
 import { useEffect, useState } from "react"
 import axios from "axios"
@@ -61,19 +62,18 @@ export default function ActivityCard(props:{activity:ActivityType}){
     const activity=props.activity
     const Icon = getImg[activity.activity]
     const [act,setAct]=useState("")
+    const [cardload,setCardLoad]=useState(false)
     const [load,setLoad]=useState(false)
     const [details,setDetails]=useState<details|null>(null)
     function renderCard(){
         console.log(details)
         if(details!=null){
-            console.log("dd",details)
         switch (act){
             case "COMPLETED_ORDER":
             case "PLACED_ORDER":
-                return  <OrderCard key={activity.changedId} order={details} totalCost={details.totalCost}/>
+                (cardload===true?<OrderCard key={activity.changedId} order={details} totalCost={details.totalCost}/>:<CategorySkeletonLoader/>)
             case "ADDED_ITEM":
             case "UPDATED_ITEM":
-                console.log("++")
                 return <ProductCard item={details}/>
             case "ADDED_CATEGORY":
             case "UPDATED_CATEGORY":
