@@ -61,12 +61,11 @@ export default function ActivityCard(props:{activity:ActivityType}){
     const activity=props.activity
     const Icon = getImg[activity.activity]
     const [act,setAct]=useState("")
-
     const [load,setLoad]=useState(false)
     const [details,setDetails]=useState<details|null>(null)
     function renderCard(){
         console.log(details)
-        if (load) {
+        if (details==null) {
             return <CategorySkeletonLoader />;
           }
         if(details!=null){
