@@ -1,8 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useOrders } from "@/lib/context/ordersContext";
 import { ShoppingCart, CircleCheckBig,CircleFadingPlus, Pencil ,FolderPlus,FolderPen} from "lucide-react"
 import { motion} from "framer-motion";
 import Link from "next/link";
+import Loader from "./loader";
 enum Status {
   PENDING = "PENDING",
   COMPLETED = "COMPLETED",
@@ -30,7 +32,6 @@ export const messagestatusColors = {
   UPDATED_CATEGORY:
     "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
 };
-
 export const Activity_messages = {
   "PLACED_ORDER": "Order has been placed with Order ID: {change_id}.",
   "COMPLETED_ORDER": "Order with Order ID: {change_id} has been completed.",
@@ -98,10 +99,10 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend }) => (
         ) : (
           <ArrowDownRight size={16} />
         )}
-        {trend.value}
+        {(trend.value!="undefined")?trend.value:<Loader/>}
       </span>
     </div>
-    <h3 className="mt-4 text-2xl font-semibold">{value}</h3>
+    <h3 className="mt-4 text-2xl font-semibold">{(value!="undefined")?value:<Loader/>}</h3>
     <p className="text-gray-500 dark:text-gray-400 text-sm">{title}</p>
   </motion.div>
 );
@@ -174,6 +175,7 @@ const RecentOrder: React.FC<RecentOrderProps> = ({
 };
 
 export const Dashboard: React.FC = () => {
+  const {RefreshOrders}=useOrders()
   const [stats,setStats]=useState<stats|null>(null)
   const [recentOrders,setOrders]=useState<Order[]|null>(null)
   const [recentactivity,setRecentActivity]=useState<ActivityType[]|null>(null)
@@ -181,17 +183,17 @@ export const Dashboard: React.FC = () => {
     const res=await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getDashStats`)
     setStats(res.data)
   }
-  loadStats()},[])
+  loadStats()},[RefreshOrders])
   useEffect(()=>{const getRecentOrders=async()=>{
     const res=await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getRecentOrders`)
     setOrders(res.data.recentOrders)
   }
-  getRecentOrders()},[])
+  getRecentOrders()},[RefreshOrders])
   useEffect(()=>{const getRecentAct=async()=>{
     const res=await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getActivity`)
     setRecentActivity(res.data.recentActivity.slice(0,5))
   }
-  getRecentAct()},[])
+  getRecentAct()},[RefreshOrders])
   const statCards = [
     {
       title: "Total Revenue",
