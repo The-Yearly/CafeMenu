@@ -32,8 +32,6 @@ export default function Products() {
     max: 1000,
   });
   const [filteredProducts,setFilteredProducts]=useState<Item[]>([])
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const getProducts = async () => {
       const response = await axios.get(
@@ -63,7 +61,6 @@ export default function Products() {
 
     getCategories();
     getProducts();
-    setLoading(false);
   }, []);
   useEffect(() => {
     const setFilters = () => {
@@ -126,7 +123,6 @@ export default function Products() {
   const handleDeleteProduct = (id: number) => {
     setProducts(products.filter((product) => product.itemId !== id));
   };
-
   return (
     <div className="p-4 md:p-8 mt-14 ">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
@@ -206,7 +202,7 @@ export default function Products() {
         </div>
       </div>
 
-      {loading ? (
+      {products.length==0 ? (
         <ProductSkeleton />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-8">
