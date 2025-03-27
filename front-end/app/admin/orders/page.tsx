@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
+import { OrderSkeletonLoader } from "./OrderSkeleton";
 import { useOrders } from "@/lib/context/ordersContext";
 import {
   Search,
@@ -132,7 +133,7 @@ export default function Orders() {
       setToast("An error occurred while completing the order");
     }
   };
-
+  console.log("HelloC",paginatedOrders)
   return (
     <div className="p-4 md:p-8">
       <div className="flex justify-between items-center mb-8">
@@ -170,7 +171,7 @@ export default function Orders() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
         <AnimatePresence>
-          {paginatedOrders.map((order) => (
+           {(paginatedOrders.length!=0)?paginatedOrders.map((order) => (
             <OrderCard
               key={order.orderId}
               order={order}
@@ -181,7 +182,8 @@ export default function Orders() {
                   : undefined
               }
             />
-          ))}
+          ))
+          :[1,2,3,4,5].map((_,i)=><OrderSkeletonLoader key={i}/>)}
         </AnimatePresence>
       </div>
 
