@@ -18,9 +18,9 @@ function LoadingThreeDotsJumping() {
             transition={{ staggerChildren: -0.2, staggerDirection: -1 }}
             className="flex items-center gap-1"
         >
-            <motion.div className="w-1 h-1 rounded-md bg-slate-200" variants={dotVariants} />
-            <motion.div className="w-1 h-1 rounded-md bg-slate-200" variants={dotVariants} />
-            <motion.div className="w-1 h-1 rounded-md bg-slate-200" variants={dotVariants} />
+            <motion.div className="w-1 h-1 rounded-md bg-gray-400 dark:bg-slate-200" variants={dotVariants} />
+            <motion.div className="w-1 h-1 rounded-md bg-gray-400 dark:bg-slate-200" variants={dotVariants} />
+            <motion.div className="w-1 h-1 rounded-md bg-gray-400 dark:bg-slate-200" variants={dotVariants} />
         </motion.div>
     )
 }

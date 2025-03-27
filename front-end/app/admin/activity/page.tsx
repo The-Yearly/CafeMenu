@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import ActivityCard from "./activityCard"
 import axios from "axios"
 import {ActivityType } from "../components/Dashboard"
+import { ActivitySkeleton } from "./activitySkeleton"
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -34,7 +35,7 @@ export default function Activities() {
 
 
   return (
-    <div className="flex justify-center items-center w-full p-4">
+    <div className="flex justify-center items-center w-full pl-8">
       <motion.div
         className="w-full mt-40 max-w-full "
         initial="hidden"
@@ -49,9 +50,11 @@ export default function Activities() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
-          {activities?.map((activity) => {  
+          {(activities!=null)?activities?.map((activity) => {  
               return(<ActivityCard key={activity.activitId} activity={activity}/>)
-          })}
+          }): 
+          [1,2,3,4,5,6,7,8].map((_,i)=><ActivitySkeleton key={i}/>)
+          }
         </div>
 
         <motion.div

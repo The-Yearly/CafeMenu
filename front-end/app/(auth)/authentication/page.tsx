@@ -85,7 +85,7 @@ export default function Login() {
               placeholder="Enter your password"
             />
             <span
-              className="absolute right-3 top-1/2 transform  cursor-pointer"
+              className="absolute right-3 top-1/2 cursor-pointer"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <Eye size={20} color="#555" /> : <EyeClosed size={20} color="#555" />}

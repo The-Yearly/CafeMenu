@@ -149,15 +149,15 @@ const RecentOrderSkeleton: React.FC= () => {
   >
     <div className="flex items-center gap-6 my-3">
       <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-        <ShoppingBag className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+        <ShoppingBag className="w-5 h-5 text-gray-200 dark:text-gray-400" />
       </div>
-      <div className="bg-gray-500 rounded-md h-4 w-16">
-        <div className="relative top-6 h-1 w-12 rounded-sm bg-gray-500 dark:text-gray-400"></div>
+      <div className="bg-gray-200 dark:bg-gray-500 rounded-md h-4 w-16">
+        <div className="relative top-6 h-1 w-12 rounded-sm bg-gray-200 dark:bg-gray-500 dark:text-gray-400"></div>
       </div>
     </div>
     <div className="relative text-right">
-  <div className="absolute right-0 top-0 h-3 w-8 rounded-md bg-gray-500"></div>
-  <div className="relative mt-4 h-4 w-16 rounded-md bg-gray-500"></div>
+  <div className="absolute right-0 top-0 h-3 w-8 rounded-md bg-gray-200 dark:bg-gray-500"></div>
+  <div className="relative mt-4 h-4 w-16 rounded-md bg-gray-200 dark:bg-gray-500"></div>
 </div>
 
   </motion.div>
@@ -285,10 +285,10 @@ export const Dashboard: React.FC = () => {
           <motion.div
           variants={containerVariants}
           className="divide-y dark:divide-gray-700">
-            {(recentOrders!=null)?
+             {(recentOrders!=null)?
             recentOrders?.map((order) => (
               <RecentOrder key={order.orderId} {...order} />   
-            )): 
+            )):
             [1,2,3,4,5].map((_,i)=><RecentOrderSkeleton key={i}/>)}
           </motion.div>
         </motion.div>
@@ -309,7 +309,7 @@ export const Dashboard: React.FC = () => {
                 </div>
         
                 <div className="space-y-4">
-                   {(recentactivity!=null)?recentactivity?.map((activity) => {
+                    {(recentactivity!=null)?recentactivity?.map((activity) => {
                     const Icon = getImg[activity.activity]
         
                     return (
@@ -329,7 +329,7 @@ export const Dashboard: React.FC = () => {
                       </motion.div>
                     )
                   })
-                  :
+                  : 
                       [1,2,3,4,5].map((_,i)=>
                       <motion.div
                           key={i}
@@ -343,9 +343,9 @@ export const Dashboard: React.FC = () => {
                             ease: "easeInOut"
                           }}
                         >
-                          <div className={`w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center `}></div>
-                          <div className="bg-gray-500 rounded-md h-6 w-48">
-                                <div className="relative mt-1 top-6 h-4 w-20 rounded-md bg-gray-500 dark:text-gray-400"></div>
+                          <div className={`w-8 h-8 bg-gray-200 dark:bg-gray-500 rounded-full flex items-center justify-center `}></div>
+                          <div className="bg-gray-200 dark:bg-gray-500 rounded-md h-6 w-48">
+                                <div className="relative mt-1 top-6 h-4 w-20 rounded-md bg-gray-200 dark:bg-gray-500 dark:text-gray-400"></div>
                           </div>
                   </motion.div>
                   )}

@@ -30,7 +30,7 @@ export default function Timer(){
   return (
     <div className="flex items-center space-x-4">
         
-      <div className="text-white font-bold">
+      <div className="text-gray-500 dark:text-white font-bold">
         {new Date(time * 1000).toISOString().substr(11, 8)}
       </div>
       <button onClick={resetTimer}><RotateCcw/></button>
