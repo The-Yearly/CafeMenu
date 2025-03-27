@@ -286,7 +286,7 @@ export const Dashboard: React.FC = () => {
           variants={containerVariants}
           className="divide-y dark:divide-gray-700">
             {(recentOrders!=null)?
-            recentOrders?.map((order,i) => (
+            recentOrders?.map((order) => (
               <RecentOrder key={order.orderId} {...order} />   
             )): 
             [1,2,3,4,5].map((_,i)=><RecentOrderSkeleton key={i}/>)}
