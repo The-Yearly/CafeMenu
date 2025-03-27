@@ -12,7 +12,6 @@ function LoadingThreeDotsJumping() {
             },
         },
     }
-
     return (
         <motion.div
             animate="jump"

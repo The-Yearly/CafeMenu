@@ -134,6 +134,36 @@ const itemVariants = {
     transition: { duration: 0.3 },
   },
 }
+const RecentOrderSkeleton: React.FC= () => {
+  return (
+    <motion.div 
+    className="flex items-center justify-between py-3"
+    animate={{ y: [0, -5, 0] }}
+    variants={itemVariants}
+    transition={{ 
+      duration: 1,
+      repeat: Infinity,
+      repeatType: "loop",
+      ease: "easeInOut"
+    }}
+  >
+    <div className="flex items-center gap-6 my-3">
+      <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+        <ShoppingBag className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+      </div>
+      <div className="bg-gray-500 rounded-md h-4 w-16">
+        <div className="relative top-6 h-1 w-12 rounded-sm bg-gray-500 dark:text-gray-400"></div>
+      </div>
+    </div>
+    <div className="relative text-right">
+  <div className="absolute right-0 top-0 h-3 w-8 rounded-md bg-gray-500"></div>
+  <div className="relative mt-4 h-4 w-16 rounded-md bg-gray-500"></div>
+</div>
+
+  </motion.div>
+  );
+};
+
 
 const RecentOrder: React.FC<RecentOrderProps> = ({
   orderId,
@@ -153,7 +183,7 @@ const RecentOrder: React.FC<RecentOrderProps> = ({
 
   return (
     <div className="flex items-center justify-between py-3">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-6">
         <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
           <ShoppingBag className="w-5 h-5 text-gray-500 dark:text-gray-400" />
         </div>
@@ -223,7 +253,6 @@ export const Dashboard: React.FC = () => {
     },
   ];
 
-  
   return (
     <div className="space-y-6 p-6 mt-14">
       <div>
@@ -253,11 +282,15 @@ export const Dashboard: React.FC = () => {
               View all
             </Link>
           </div>
-          <div className="divide-y dark:divide-gray-700">
-            {recentOrders?.map((order) => (
-              <RecentOrder key={order.orderId} {...order} />
-            ))}
-          </div>
+          <motion.div
+          variants={containerVariants}
+          className="divide-y dark:divide-gray-700">
+            {(recentOrders!=null)?
+            recentOrders?.map((order,i) => (
+              <RecentOrder key={order.orderId} {...order} />   
+            )): 
+            [1,2,3,4,5].map((_,i)=><RecentOrderSkeleton key={i}/>)}
+          </motion.div>
         </motion.div>
 
               <motion.div
@@ -276,7 +309,7 @@ export const Dashboard: React.FC = () => {
                 </div>
         
                 <div className="space-y-4">
-                  {recentactivity?.map((activity) => {
+                   {(recentactivity!=null)?recentactivity?.map((activity) => {
                     const Icon = getImg[activity.activity]
         
                     return (
@@ -295,7 +328,27 @@ export const Dashboard: React.FC = () => {
                         </div>
                       </motion.div>
                     )
-                  })}
+                  })
+                  :
+                      [1,2,3,4,5].map((_,i)=>
+                      <motion.div
+                          key={i}
+                          className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                          variants={itemVariants}
+                          animate={{ y: [0, -5, 0] }}
+                          transition={{ 
+                            duration: 1,
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            ease: "easeInOut"
+                          }}
+                        >
+                          <div className={`w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center `}></div>
+                          <div className="bg-gray-500 rounded-md h-6 w-48">
+                                <div className="relative mt-1 top-6 h-4 w-20 rounded-md bg-gray-500 dark:text-gray-400"></div>
+                          </div>
+                  </motion.div>
+                  )}
                 </div>
         
                 <motion.div
