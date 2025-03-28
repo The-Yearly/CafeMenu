@@ -21,7 +21,6 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
 
   useEffect(() => {
-    console.log("here", id.id);
     if (String(id.id) == "authentication") {
       router.push("/authentication");
     }
@@ -45,7 +44,8 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
     };
     getMenuItems();
   }, [selectedCategory]);
-    if(filteredItems.length!=0){
+  console.log("JJs",selectedCategory)
+    if(filteredItems.length!=0 && selectedCategory.length!=0){
     return (
       <>
         <div className="min-h-screen text-text bg-background ">
@@ -86,6 +86,10 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="lg:container mx-auto pb-24">
+                          <CategorySelector
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+             />
             <TableSkeleton/>
             <FloatingCartButton />
           </motion.div>

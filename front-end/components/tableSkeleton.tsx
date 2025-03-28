@@ -15,21 +15,7 @@ show: { opacity: 1, y: 0 },
 export const TableSkeleton = () => {
   return (
     <>
-        <div className="py-4 overflow-x-auto">
-          <motion.div
-            className="flex space-x-4 px-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-              {
-            [1,2,3,4,5].map((i)=>
-            <motion.div key={i} className={`relative flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden transition-all duration-300 animate-pulse`}>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20 " />
-              <div className="w-full h-full object-cover bg-slate-200 dark:bg-gray-500"/>
-          </motion.div>)}
-          </motion.div>
-        </div>
+
     <div className="px-6 py-8">
 
     <motion.div
