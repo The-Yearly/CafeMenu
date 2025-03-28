@@ -13,7 +13,6 @@ import FloatingCartButton from "@/components/FloatingCartButton";
 import CartSidebar from "@/components/CardSidebar";
 import MenuItemGrid from "@/components/MenuItemGrid";
 import { TableSkeleton } from "@/components/tableSkeleton";
-
 export default function Home({ params }: { params: Promise<{ id: number }> }) {
   const id = use(params);
   const router = useRouter();
@@ -86,10 +85,6 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="lg:container mx-auto pb-24">
-                          <CategorySelector
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-             />
             <TableSkeleton/>
             <FloatingCartButton />
           </motion.div>
