@@ -12,6 +12,8 @@ import { MenuCarousel } from "@/components/MenuCarousel";
 import FloatingCartButton from "@/components/FloatingCartButton";
 import CartSidebar from "@/components/CardSidebar";
 import MenuItemGrid from "@/components/MenuItemGrid";
+import { CategorySkeletonLoader } from "@/app/admin/category/skeleton";
+import { TableSkeleton } from "@/components/tableSkeleton";
 
 export default function Home({ params }: { params: Promise<{ id: number }> }) {
   const id = use(params);
@@ -44,31 +46,54 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
     };
     getMenuItems();
   }, [selectedCategory]);
-  return (
+    if(filteredItems.length!=0){
+    return (
+      <>
+        <div className="min-h-screen text-text bg-background ">
+          <Navbar id={id.id} />
+          <SearchBar onSelectItem={setSelectedCategory} />
+          <main>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="lg:container mx-auto pb-24"
+            >
+              <CategorySelector
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+             />
+
+              <MenuCarousel items={filteredItems} />
+              <FloatingCartButton />
+              <CartSidebar tid={id.id}/>
+
+              <MenuItemGrid items={filteredItems} />
+            </motion.div>
+          </main>
+        </div>
+      </>
+    );
+  }
+  else{
+  return(
     <>
-      <div className="min-h-screen text-text bg-background ">
+    <div className="min-h-screen text-text bg-background ">
         <Navbar id={id.id} />
         <SearchBar onSelectItem={setSelectedCategory} />
         <main>
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="lg:container mx-auto pb-24"
-          >
-            <CategorySelector
-              selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
-            />
-
-            <MenuCarousel items={filteredItems} />
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="lg:container mx-auto pb-24">
+            <TableSkeleton/>
             <FloatingCartButton />
-            <CartSidebar tid={id.id}/>
-
-            <MenuItemGrid items={filteredItems} />
           </motion.div>
         </main>
       </div>
     </>
-  );
+  )
+
+}
 }

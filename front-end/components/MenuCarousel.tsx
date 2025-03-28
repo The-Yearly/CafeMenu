@@ -118,7 +118,6 @@ export const MenuCarousel: React.FC<MenuCarouselProps> = ({ items }) => {
       </div>
     );
   }
-
   return (
     <div className="relative px-6 py-4" {...handlers}>
       <div className="relative h-[350px] overflow-hidden">

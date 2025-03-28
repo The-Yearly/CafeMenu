@@ -1,6 +1,13 @@
 import { motion } from "framer-motion";
 export const CategorySkeletonLoader = () => {
   return (
+    <>
+     <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="lg:container mx-auto pb-24"
+              ></motion.div>
     <motion.div
       className="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse"
       layout
@@ -15,5 +22,6 @@ export const CategorySkeletonLoader = () => {
         <div className="h-5 bg-gray-300 w-1/3 rounded animate-pulse"></div>
       </div>
     </motion.div>
+    </>
   );
 };
