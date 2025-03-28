@@ -44,7 +44,6 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
     };
     getMenuItems();
   }, [selectedCategory]);
-
   return (
     <>
       <div className="min-h-screen text-text bg-background ">
@@ -61,6 +60,7 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
             />
+
             <MenuCarousel items={filteredItems} />
             <FloatingCartButton />
             <CartSidebar tid={id.id}/>

@@ -1,5 +1,5 @@
 "use client";
-
+import { CategorySkeletonLoader } from "@/app/admin/category/skeleton";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -136,11 +136,12 @@ export const MenuCarousel: React.FC<MenuCarouselProps> = ({ items }) => {
             }}
             className="absolute w-full"
           >
-            <MenuCard
+             {(items.length!=0)?<MenuCard
               item={items[safeIndex]}
               onAddToCart={handleAddToCart}
               onViewDetails={() => setSelectedItem(items[safeIndex])}
-            />
+            />: 
+            <CategorySkeletonLoader/>}
           </motion.div>
         </AnimatePresence>
       </div>
