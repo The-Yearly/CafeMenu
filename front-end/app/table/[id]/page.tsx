@@ -12,7 +12,6 @@ import { MenuCarousel } from "@/components/MenuCarousel";
 import FloatingCartButton from "@/components/FloatingCartButton";
 import CartSidebar from "@/components/CardSidebar";
 import MenuItemGrid from "@/components/MenuItemGrid";
-import { CategorySkeletonLoader } from "@/app/admin/category/skeleton";
 import { TableSkeleton } from "@/components/tableSkeleton";
 
 export default function Home({ params }: { params: Promise<{ id: number }> }) {
