@@ -23,6 +23,11 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
     };
     setPages();
   }, [startPagination, itemsPerPage, items]);
+  useEffect(()=>{const resetPage=()=>{
+    setStartPagination(0)
+    setPage(1)
+  }
+  resetPage()},[items])
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -129,7 +134,7 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
               setPage(page-1)
             }}
           > 
-          <ChevronLeft />
+          <ChevronLeft className="text-black dark:text-white"/>
           </button>
           <span className="text-sm text-gray-600">
             Page {page} of {endPagination}
@@ -142,7 +147,7 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
               setPage(page+1)
             }}
           >
-            <ChevronRight/>
+            <ChevronRight className="text-black dark:text-white"/>
           </button>
         </div>
     </div>
