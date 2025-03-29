@@ -63,7 +63,7 @@ export const Modal: React.FC<ModalProps> = ({
               ${
                 isMobile
                   ? "bottom-0 left-0 right-0 rounded-t-xl max-h-[90vh] overflow-y-auto"
-                  : "left-1/3 top-1/4  w-full max-w-lg rounded-xl shadow-xl"
+                  : "left-1/3 top-10 w-full max-w-lg rounded-xl shadow-xl overflow-y-auto"
               }`}
           >
             <div className="sticky top-0 flex justify-between items-center border-b border-gray-200 p-4 bg-white">

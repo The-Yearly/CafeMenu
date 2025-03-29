@@ -1,5 +1,6 @@
 import { Category, Item } from "@/lib/types";
 import axios from "axios";
+import { X } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export const ProductForm: React.FC<{
@@ -22,6 +23,8 @@ export const ProductForm: React.FC<{
     ingredients: product?.ingredients || [],
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [ingredients, setIngredients] = useState("");
+  const [tags, setTags] = useState("");
   useEffect(() => {
     const updateItem = async () => {
       const link = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
@@ -42,7 +45,32 @@ export const ProductForm: React.FC<{
     setIsSubmitted(true);
     onClose();
   };
+  function addIngredient(){
+    if (ingredients.trim() && !formData.ingredients.includes(ingredients.trim())) {
+      setFormData({ ...formData, ingredients: [...formData.ingredients, ingredients.trim()] });
+      setIngredients("");
+    }
+  };
 
+  function removeIngredient(ingredient: string){
+    setFormData({
+      ...formData,
+      ingredients: formData.ingredients.filter((ing) => ing !== ingredient),
+    });
+  };
+  function addTags(){
+    if (tags.trim() && !formData.tags.includes(tags.trim())) {
+      setFormData({ ...formData, tags: [...formData.tags,tags.trim()] });
+      setTags("");
+    }
+  };
+
+  function removeTags(tags: string){
+    setFormData({
+      ...formData,
+      tags: formData.tags.filter((tag) => tag !== tags),
+    });
+  };
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
@@ -147,6 +175,79 @@ export const ProductForm: React.FC<{
         />
       </div>
 
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Ingredients
+        </label>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+            className="flex-1 px-3 py-2 border border-gray-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500"
+            placeholder="Add an ingredient"
+          />
+          <button
+            type="button"
+            onClick={addIngredient}
+            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Add
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {formData.ingredients.map((ingredient, index) => (
+            <span key={index} className="flex items-center bg-blue-500 px-3 py-1 rounded-full">
+              {ingredient}
+              <button
+                type="button"
+                onClick={() => removeIngredient(ingredient)}
+                className="ml-2"
+              >
+                <X/>
+              </button>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Tags
+        </label>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            className="flex-1 px-3 py-2 border border-gray-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500"
+            placeholder="Add Tag"
+          />
+          <button
+            type="button"
+            onClick={addTags}
+            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Add
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {formData.tags.map((tag,i) => (
+            <span key={i} className="flex items-center bg-blue-500 px-3 py-1 rounded-full">
+              {tag}
+              <button
+                type="button"
+                onClick={() => removeTags(tag)}
+                className="ml-2"
+              >
+                <X/>
+              </button>
+            </span>
+          ))}
+        </div>
+      </div>
+      
       <div>
         <div className="flex gap-4">
           <label className="flex items-center">

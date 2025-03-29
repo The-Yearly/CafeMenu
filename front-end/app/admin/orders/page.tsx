@@ -171,7 +171,7 @@ export default function Orders() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
         <AnimatePresence>
-          {(orders.length!=0)?paginatedOrders.map((order) => (
+          {(filteredOrders.length!=0)?paginatedOrders.map((order) => (
             <OrderCard
               key={order.orderId}
               order={order}
@@ -183,7 +183,7 @@ export default function Orders() {
               }
             />
           )):
-          [1,2,3,4,5,6  ].map((_,i)=><OrderSkeletonLoader key={i}/>)}
+          Array(6).fill(0).map((_,i)=><OrderSkeletonLoader key={i}/>)}
         </AnimatePresence>
       </div>
 

@@ -50,13 +50,26 @@ export default function Activities() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
-          {(activities!=null)?activities?.map((activity) => {  
-              return(<ActivityCard key={activity.activitId} activity={activity}/>)
+          <div className="flex flex-col gap-4">
+          {
+            (activities!=null)?activities?.map((activity,i) => {
+              if(i%2==0){  
+                return(<ActivityCard key={activity.activitId} activity={activity}/>)
+              }
           }): 
-          [1,2,3,4,5,6,7,8].map((_,i)=><ActivitySkeleton key={i}/>)
+          Array(4).fill(0).map((_,i)=><ActivitySkeleton key={i}/>)
           }
+          </div>
+          <div className="flex flex-col gap-4">
+          {
+            (activities!=null)?activities?.map((activity,i) => {
+              if(i%2==1){ 
+              return(<ActivityCard key={activity.activitId} activity={activity}/>)
+            }}): 
+          Array(4).fill(0).map((_,i)=><ActivitySkeleton key={i}/>)
+          }
+          </div>
         </div>
-
         <motion.div
           className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 text-center"
           variants={itemVariants}

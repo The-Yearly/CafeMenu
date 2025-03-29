@@ -358,6 +358,8 @@ router.post("/changeItem", async (req, res) => {
       subcategory: parsedResponse.subcategory,
       isvegan: parsedResponse.isvegan,
       availability: parsedResponse.availability,
+      tags:parsedResponse.tags,
+      ingredients:parsedResponse.ingredients
     },
   });
   if (!response) {
