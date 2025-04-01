@@ -18,7 +18,7 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-
+  const [load,setLoad]=useState(true)
   useEffect(() => {
     if (String(id.id) == "authentication") {
       router.push("/authentication");
@@ -40,11 +40,11 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
       }
 
       setFilteredItems(items.data.items);
+      setLoad(false)
     };
     getMenuItems();
   }, [selectedCategory]);
-  console.log("JJs",selectedCategory)
-    if(filteredItems.length!=0 && selectedCategory.length!=0){
+    if(load!=true){
     return (
       <>
         <div className="min-h-screen text-text bg-background ">

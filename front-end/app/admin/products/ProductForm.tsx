@@ -105,7 +105,7 @@ export const ProductForm: React.FC<{
             <input
               type="number"
               id="price"
-              min="0"
+              min="0.1"
               step="0.01"
               value={formData.cost}
               onChange={(e) =>
@@ -189,7 +189,6 @@ export const ProductForm: React.FC<{
             placeholder="Add an ingredient"
           />
           <button
-            type="button"
             onClick={addIngredient}
             className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
@@ -198,10 +197,9 @@ export const ProductForm: React.FC<{
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
           {formData.ingredients.map((ingredient, index) => (
-            <span key={index} className="flex items-center bg-blue-500 px-3 py-1 rounded-full">
+            <span key={index} className="flex items-center bg-blue-500 px-3 py-1 rounded-full text-white">
               {ingredient}
               <button
-                type="button"
                 onClick={() => removeIngredient(ingredient)}
                 className="ml-2"
               >
@@ -225,7 +223,6 @@ export const ProductForm: React.FC<{
             placeholder="Add Tag"
           />
           <button
-            type="button"
             onClick={addTags}
             className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
@@ -234,10 +231,9 @@ export const ProductForm: React.FC<{
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
           {formData.tags.map((tag,i) => (
-            <span key={i} className="flex items-center bg-blue-500 px-3 py-1 rounded-full">
+            <span key={i} className="flex items-center bg-blue-500 px-3 py-1 rounded-full text-white">
               {tag}
               <button
-                type="button"
                 onClick={() => removeTags(tag)}
                 className="ml-2"
               >
@@ -294,7 +290,6 @@ export const ProductForm: React.FC<{
 
       <div className="flex justify-end gap-3 pt-4">
         <button
-          type="button"
           onClick={onClose}
           className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
         >

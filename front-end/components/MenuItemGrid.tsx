@@ -137,11 +137,11 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
           <ChevronLeft className="text-black dark:text-white"/>
           </button>
           <span className="text-sm text-gray-600">
-            Page {page} of {endPagination}
+            Page {page} of {endPagination!=0?endPagination:1}
           </span>
           <button
             className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={(page==endPagination)}
+            disabled={(page>=endPagination)}
             onClick={()=>{
               setStartPagination(startPagination+itemsPerPage);
               setPage(page+1)
