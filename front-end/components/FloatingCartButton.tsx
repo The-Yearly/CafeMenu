@@ -1,7 +1,8 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
-import { useCart } from "../lib/context/ItemContext";
+import { useCart } from "@/lib/context/ItemContext";
+
 const FloatingCartButton: React.FC = () => {
   const { totalItems, setIsCartOpen } = useCart();
 

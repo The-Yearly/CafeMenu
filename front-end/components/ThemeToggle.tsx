@@ -3,7 +3,8 @@
 import React from "react";
 import { Sun, Moon } from "lucide-react";
 import { motion } from "framer-motion";
-import { useTheme } from "../lib/context/ThemeContext";
+import { useTheme } from "@/lib/context/ThemeContext";
+
 
 const ThemeToggle: React.FC = () => {
   const { theme, toggleTheme } = useTheme();

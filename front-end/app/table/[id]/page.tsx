@@ -18,7 +18,7 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-  const [load,setLoad]=useState(true)
+  const [load, setLoad] = useState(true);
   useEffect(() => {
     if (String(id.id) == "authentication") {
       router.push("/authentication");
@@ -40,11 +40,11 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
       }
 
       setFilteredItems(items.data.items);
-      setLoad(false)
+      setLoad(false);
     };
     getMenuItems();
   }, [selectedCategory]);
-    if(load!=true){
+  if (load != true) {
     return (
       <>
         <div className="min-h-screen text-text bg-background ">
@@ -60,11 +60,11 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
               <CategorySelector
                 selectedCategory={selectedCategory}
                 onSelectCategory={setSelectedCategory}
-             />
+              />
 
               <MenuCarousel items={filteredItems} />
               <FloatingCartButton />
-              <CartSidebar tid={id.id}/>
+              <CartSidebar tid={id.id} />
 
               <MenuItemGrid items={filteredItems} />
             </motion.div>
@@ -72,26 +72,25 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
         </div>
       </>
     );
+  } else {
+    return (
+      <>
+        <div className="min-h-screen text-text bg-background ">
+          <Navbar id={id.id} />
+          <SearchBar onSelectItem={setSelectedCategory} />
+          <main>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="lg:container mx-auto pb-24"
+            >
+              <TableSkeleton />
+              <FloatingCartButton />
+            </motion.div>
+          </main>
+        </div>
+      </>
+    );
   }
-  else{
-  return(
-    <>
-    <div className="min-h-screen text-text bg-background ">
-        <Navbar id={id.id} />
-        <SearchBar onSelectItem={setSelectedCategory} />
-        <main>
-          <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="lg:container mx-auto pb-24">
-            <TableSkeleton/>
-            <FloatingCartButton />
-          </motion.div>
-        </main>
-      </div>
-    </>
-  )
-
-}
 }

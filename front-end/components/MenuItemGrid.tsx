@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
-import { Item } from "../lib/types";
-import { useCart } from "../lib/context/ItemContext";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import MenuItemDetail from "./MenuItemDetail";
-import { handleAddToCart } from "./MenuCarousel";
+
+import { Item } from "@/lib/types";
+import { useCart } from "@/lib/context/ItemContext";
+import { useAddToCart } from "@/lib/hooks/useAddToCart";
 interface MenuItemGridProps {
   items: Item[];
 }
@@ -19,6 +21,8 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
     items.slice(startPagination, startPagination + itemsPerPage)
   );
   const [page, setPage] = useState(1);
+  const { handleAddToCart } = useAddToCart();
+
   useEffect(() => {
     const setPages = () => {
       setPaginatedItems(
@@ -66,72 +70,60 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
             variants={item}
             className="menu-card overflow-hidden rounded-xl"
             whileHover={{ y: -5 }}
-            onClick={() => {
-              setSelectedItem(menuItem);
-            }}
           >
-            <div className="relative h-32 sm:h-48 ">
-              <img
-                src={menuItem.image}
-                alt={menuItem.name}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            <div
+              className=""
+              onClick={() => {
+                setSelectedItem(menuItem);
+              }}
+            >
+              <div className="relative h-32 sm:h-48">
+                <img
+                  src={menuItem.image}
+                  alt={menuItem.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
-              {menuItem.tags && menuItem.tags.length > 0 && (
-                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex flex-wrap gap-1 sm:gap-2 ">
-                  {menuItem.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-1.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs rounded-full bg-black/50 backdrop-blur-sm text-white"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="p-3 sm:p-4">
-              <div className="flex justify-between items-start mb-1 sm:mb-2">
-                <h3 className="text-sm sm:text-lg font-semibold  text-primary dark:text-text  line-clamp-1">
-                  {menuItem.name}
-                </h3>
-                <span className="text-accent font-bold text-sm sm:text-base">
-                  ${menuItem.cost.toFixed(2)}
-                </span>
-              </div>
-
-              <p className="text-gray-600 dark:text-gray-300 hidden sm:block sm:text-sm  mb-2 sm:mb-8 line-clamp-2">
-                {menuItem.bio}
-              </p>
-
-              {/* {menuItem.ingredients && (
-                <div className="mb-2 sm:mb-4 hidden sm:block" >
-                  <div className="flex flex-wrap gap-1 sm:gap-2 ">
-                    {menuItem.ingredients.map((ingredient) => (
+                {menuItem.tags && menuItem.tags.length > 0 && (
+                  <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex flex-wrap gap-1 sm:gap-2 ">
+                    {menuItem.tags.map((tag) => (
                       <span
-                        key={ingredient}
-                        className="text-[10px] sm:text-xs text-gray-400"
+                        key={tag}
+                        className="px-1.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs rounded-full bg-black/50 backdrop-blur-sm text-white"
                       >
-                        • {ingredient}
+                        {tag}
                       </span>
                     ))}
                   </div>
-                </div>
-              )} */}
-
-              <div className="flex justify-center mt-2">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.8 }}
-                  onClick={() => addToCart(menuItem, 1)}
-                  className="floating-button flex items-center space-x-1 sm:space-x-2 px-2 py-1 sm:px-4 sm:py-2 rounded-lg text-white"
-                >
-                  <Plus size={16} className="sm:w-[18px] sm:h-[18px]" />
-                  <span className="text-xs sm:text-base">Add to cart</span>
-                </motion.button>
+                )}
               </div>
+
+              <div className="p-3 sm:p-4">
+                <div className="flex justify-between items-start mb-1 sm:mb-2">
+                  <h3 className="text-sm sm:text-lg font-semibold  text-primary dark:text-text  line-clamp-1">
+                    {menuItem.name}
+                  </h3>
+                  <span className="text-accent font-bold text-sm sm:text-base">
+                    ${menuItem.cost.toFixed(2)}
+                  </span>
+                </div>
+
+                <p className="text-gray-600 dark:text-gray-300 hidden sm:block sm:text-sm  mb-2 sm:mb-8 line-clamp-2">
+                  {menuItem.bio}
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-center pb-4">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.8 }}
+                onClick={() => addToCart(menuItem, 1)}
+                className="floating-button flex items-center space-x-1 sm:space-x-2 px-2 py-1 sm:px-4 sm:py-2 rounded-lg text-white"
+              >
+                <Plus size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <span className="text-xs sm:text-base">Add to cart</span>
+              </motion.button>
             </div>
           </motion.div>
         ))}

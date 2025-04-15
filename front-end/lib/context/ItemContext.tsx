@@ -5,7 +5,7 @@ import { Cart, Item } from "../types";
 import { usePathname } from "next/navigation";
 
 interface CartContextType {
-  c: number;
+  tID: number;
   cart: Cart;
   setCart: (cart: Cart) => void;
   addToCart: (item: Item, quantity: number) => void;

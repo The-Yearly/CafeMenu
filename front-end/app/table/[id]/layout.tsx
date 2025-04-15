@@ -1,5 +1,6 @@
 import React from "react";
 import CartProvider from "@/lib/context/ItemContext";
+import { OrderProvider } from "@/lib/context/ordersContext";
 
 export default function TableLayout({
   children,
@@ -9,7 +10,9 @@ export default function TableLayout({
   params: { id: string };
 }) {
   const tableId = Number(params.id);
-  console.log("params here in layout", tableId);
-
-  return <CartProvider tID={tableId}>{children}</CartProvider>;
+  return (
+    <CartProvider tID={tableId}>
+      <OrderProvider>{children}</OrderProvider>
+    </CartProvider>
+  );
 }
