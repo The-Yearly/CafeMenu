@@ -4,13 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Search, Edit2, Trash2, X } from "lucide-react";
 import axios from "axios";
 import { CategorySkeletonLoader } from "./skeleton";
+import { Toast } from "../orders/OrderCard";
 
- interface Category {
+interface Category {
   id: number;
   name: string;
   description: string;
   images: string;
-  totalItems:number;
+  totalItems: number;
 }
 
 interface ModalProps {
@@ -21,25 +22,24 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
-   const [isMobile, setIsMobile] = useState<boolean | null>(null);
-  
-    useEffect(() => {
-      const handleResize = () => {
-        setIsMobile(window.innerWidth < 768);
-      };
-  
-      if(typeof window !== undefined){
-        setIsMobile(window.innerWidth < 768)
-        window.addEventListener("resize", handleResize);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    if (typeof window !== undefined) {
+      setIsMobile(window.innerWidth < 768);
+      window.addEventListener("resize", handleResize);
+    }
+    return () => {
+      if (typeof window !== undefined) {
+        window.removeEventListener("resize", handleResize);
       }
-      return () =>{
-        if(typeof window !== undefined){
-          window.removeEventListener("resize", handleResize);
-        }
-      }
-    }, []);
-  
- 
+    };
+  }, []);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -113,7 +113,7 @@ const CategoryForm: React.FC<{
     const sendCat = async () => {
       const link = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
       if (isSubmitted == true) {
-       //add toast
+        //add toast
         if (category != undefined) {
           axios.post(link + "/editCat", formData);
         } else {
@@ -200,6 +200,7 @@ function CategoryComponent() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
     const getCategories = async () => {
@@ -215,7 +216,7 @@ function CategoryComponent() {
       setIsLoading(false);
     };
     getCategories();
-  }, []);
+  }, [toast]);
 
   const filteredCategories = categories?.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -227,7 +228,7 @@ function CategoryComponent() {
       name: data.name!,
       description: data.description!,
       images: data.images!,
-      totalItems:0
+      totalItems: 0,
     };
     setCategories([...categories, newCategory]);
   };
@@ -241,8 +242,19 @@ function CategoryComponent() {
     );
   };
 
-  const handleDeleteCategory = (id: number) => {
-    setCategories(categories?.filter((category) => category.id !== id));
+  const handleDeleteCategory = async (id: number) => {
+    // setCategories(categories?.filter((category) => category.id !== id));
+    const deleteCategory = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/deleteCat`,
+      {
+        cID: id,
+      }
+    );
+    if (deleteCategory.status == 200) {
+      {
+        setToast("Cat deleted");
+      }
+    }
   };
 
   return (
@@ -264,6 +276,7 @@ function CategoryComponent() {
               <span className="hidden md:inline">Add Category</span>
               <span className="md:hidden">Add</span>
             </button>
+            {toast && <Toast message={toast} onClose={() => setToast(null)} />}
           </div>
 
           <div className="relative mb-6">

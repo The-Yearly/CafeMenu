@@ -8,7 +8,7 @@ export const Toast: React.FC<{ message: string; onClose: () => void }> = ({
   onClose,
 }) => {
   useEffect(() => {
-    const timer = setTimeout(onClose, 3000);
+    const timer = setTimeout(onClose, 2000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
@@ -17,7 +17,7 @@ export const Toast: React.FC<{ message: string; onClose: () => void }> = ({
       initial={{ opacity: 0, x: 30 }}
       animate={{ opacity: 1, x: -30 }}
       exit={{ opacity: 0, y: 50 }}
-      className="fixed top-4 right-0 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50 "
+      className="fixed bottom-0 right-0 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50 "
     >
       <CheckCircle className="w-5 h-5" />
       {message}

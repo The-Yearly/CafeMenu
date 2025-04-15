@@ -14,6 +14,7 @@ import { ProductForm } from "./ProductForm";
 import { DeleteConfirmationModal, Modal } from "./Modal";
 import axios from "axios";
 import ProductSkeleton from "./ProductSkeleton";
+import { Toast } from "../components/Toast";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -25,13 +26,14 @@ export default function Products() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Item | null>(null);
   const [deletingProduct, setDeletingProduct] = useState<Item | null>(null);
-  const [paginatedProducts,setPaginatedProducts]=useState<Item[]>([])
+  const [paginatedProducts, setPaginatedProducts] = useState<Item[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: 0,
     max: 1000,
   });
-  const [filteredProducts,setFilteredProducts]=useState<Item[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<Item[]>([]);
+  const [toast, setToast] = useState<string | null>("dle");
   useEffect(() => {
     const getProducts = async () => {
       const response = await axios.get(
@@ -61,20 +63,27 @@ export default function Products() {
 
     getCategories();
     getProducts();
-  }, []);
+  }, [toast]);
   useEffect(() => {
     const setFilters = () => {
-      console.log("Applying filters:", { searchTerm, selectedCategory, priceRange, products });
-      setCurrentPage(1)
-      console.log(selectedCategory)
+      console.log("Applying filters:", {
+        searchTerm,
+        selectedCategory,
+        priceRange,
+        products,
+      });
+      setCurrentPage(1);
+      console.log(selectedCategory);
       setFilteredProducts(
         products.filter((product) => {
           const matchesSearch =
             product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             product.bio.toLowerCase().includes(searchTerm.toLowerCase());
-          const matchesCategory = !selectedCategory || product.category === selectedCategory;
-          const matchesPrice = product.cost >= priceRange.min && product.cost <= priceRange.max;
-  
+          const matchesCategory =
+            !selectedCategory || product.category === selectedCategory;
+          const matchesPrice =
+            product.cost >= priceRange.min && product.cost <= priceRange.max;
+
           return matchesSearch && matchesCategory && matchesPrice;
         })
       );
@@ -84,14 +93,18 @@ export default function Products() {
   console.log("Filtered Products:", filteredProducts); // Log the filtered results
   const totalPages = Math.ceil(filteredProducts!.length / ITEMS_PER_PAGE);
   console.log("fli", filteredProducts);
-  console.log(filteredProducts?.length)
-  useEffect(()=>{const setPages=()=>{
-    setPaginatedProducts(filteredProducts?.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  ))}
-  setPages()},
-  [filteredProducts,currentPage])
+  console.log(filteredProducts?.length);
+  useEffect(() => {
+    const setPages = () => {
+      setPaginatedProducts(
+        filteredProducts?.slice(
+          (currentPage - 1) * ITEMS_PER_PAGE,
+          currentPage * ITEMS_PER_PAGE
+        )
+      );
+    };
+    setPages();
+  }, [filteredProducts, currentPage]);
   const handleAddProduct = (data: Partial<Item>) => {
     const newProduct: Item = {
       itemId: Math.max(...products.map((p) => p.itemId!)) + 1,
@@ -120,8 +133,19 @@ export default function Products() {
     );
   };
 
-  const handleDeleteProduct = (id: number) => {
-    setProducts(products.filter((product) => product.itemId !== id));
+  const handleDeleteProduct = async (id: number) => {
+    console.log("dlt id ", id);
+    const deleteProduct = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/deleteItem`,
+      {
+        pID: id,
+      }
+    );
+    if (deleteProduct.status == 200) {
+      {
+        setToast("Product deleted");
+      }
+    }
   };
   return (
     <div className="p-4 md:p-8 mt-14 ">
@@ -197,12 +221,15 @@ export default function Products() {
                 }
                 className="w-24 pl-8 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600 dark:text-gray-700"
               />
+              {toast && (
+                <Toast message={toast} onClose={() => setToast(null)} />
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {products.length==0 ? (
+      {products.length == 0 ? (
         <ProductSkeleton />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-8">

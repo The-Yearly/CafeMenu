@@ -2,6 +2,7 @@ import e, { Router } from "express";
 import { client } from "../../utils/client";
 import { categories, ItemSchema, OrderSchema } from "../../utils";
 import { number } from "zod";
+import { error } from "console";
 interface week {
   year: number;
   week: number;
@@ -601,4 +602,47 @@ router.post("/getCat/", async (req, res) => {
     },
   });
   res.json({ category });
+});
+
+router.post("/deleteCat", async (req, res) => {
+  const cID = req.body.cID;
+  const response = await client.category.delete({
+    where: {
+      id: cID,
+    },
+  });
+  if (response) {
+    res.status(200).json({
+      msg: "Cat delete",
+    });
+  } else {
+    res.status(400).json({
+      msg: "Cat not deleted " + error,
+    });
+  }
+});
+
+router.post("/deleteItem", async (req, res) => {
+  const pID = req.body.pID;
+  console.log("pdi", pID);
+  try {
+    const response = await client.items.delete({
+      where: {
+        itemId: pID,
+      },
+    });
+    if (response) {
+      res.status(200).json({
+        msg: "Item deleted",
+      });
+    } else {
+      res.status(400).json({
+        msg: "Item not deleted ",
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      msg: "Item not deleted " + error,
+    });
+  }
 });
