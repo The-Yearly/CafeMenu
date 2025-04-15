@@ -3,31 +3,37 @@ import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { Item } from "../lib/types";
 import { useCart } from "../lib/context/ItemContext";
-import {
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import MenuItemDetail from "./MenuItemDetail";
+import { handleAddToCart } from "./MenuCarousel";
 interface MenuItemGridProps {
   items: Item[];
 }
 const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
   const { addToCart } = useCart();
-  const [startPagination,setStartPagination]=useState(0)
-  const itemsPerPage=9
-  const endPagination=Math.ceil(items.length/itemsPerPage)
-  const [paginatedItems,setPaginatedItems]=useState(items.slice(startPagination,startPagination+itemsPerPage))
-  const [page,setPage]=useState(1)
+  const [startPagination, setStartPagination] = useState(0);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const itemsPerPage = 9;
+  const endPagination = Math.ceil(items.length / itemsPerPage);
+  const [paginatedItems, setPaginatedItems] = useState(
+    items.slice(startPagination, startPagination + itemsPerPage)
+  );
+  const [page, setPage] = useState(1);
   useEffect(() => {
     const setPages = () => {
-      setPaginatedItems(items.slice(startPagination, startPagination + itemsPerPage));
+      setPaginatedItems(
+        items.slice(startPagination, startPagination + itemsPerPage)
+      );
     };
     setPages();
   }, [startPagination, itemsPerPage, items]);
-  useEffect(()=>{const resetPage=()=>{
-    setStartPagination(0)
-    setPage(1)
-  }
-  resetPage()},[items])
+  useEffect(() => {
+    const resetPage = () => {
+      setStartPagination(0);
+      setPage(1);
+    };
+    resetPage();
+  }, [items]);
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -42,6 +48,7 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 },
   };
+
   return (
     <div className="px-6 py-8">
       <h2 className="text-2xl font-bold mb-6  text-primary dark:text-text ">
@@ -58,8 +65,12 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
             key={menuItem.itemId}
             variants={item}
             className="menu-card overflow-hidden rounded-xl"
+            whileHover={{ y: -5 }}
+            onClick={() => {
+              setSelectedItem(menuItem);
+            }}
           >
-            <div className="relative h-32 sm:h-48">
+            <div className="relative h-32 sm:h-48 ">
               <img
                 src={menuItem.image}
                 alt={menuItem.name}
@@ -68,7 +79,7 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
               {menuItem.tags && menuItem.tags.length > 0 && (
-                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex flex-wrap gap-1 sm:gap-2">
+                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex flex-wrap gap-1 sm:gap-2 ">
                   {menuItem.tags.map((tag) => (
                     <span
                       key={tag}
@@ -91,13 +102,13 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
                 </span>
               </div>
 
-              <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm mb-2 sm:mb-4 line-clamp-2">
+              <p className="text-gray-600 dark:text-gray-300 hidden sm:block sm:text-sm  mb-2 sm:mb-8 line-clamp-2">
                 {menuItem.bio}
               </p>
 
-              {menuItem.ingredients && (
-                <div className="mb-2 sm:mb-4 hidden sm:block">
-                  <div className="flex flex-wrap gap-1 sm:gap-2">
+              {/* {menuItem.ingredients && (
+                <div className="mb-2 sm:mb-4 hidden sm:block" >
+                  <div className="flex flex-wrap gap-1 sm:gap-2 ">
                     {menuItem.ingredients.map((ingredient) => (
                       <span
                         key={ingredient}
@@ -108,9 +119,9 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
                     ))}
                   </div>
                 </div>
-              )}
+              )} */}
 
-              <div className="flex justify-center">
+              <div className="flex justify-center mt-2">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.8 }}
@@ -125,31 +136,38 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
           </motion.div>
         ))}
       </motion.div>
+      {selectedItem && (
+        <MenuItemDetail
+          item={selectedItem}
+          onClose={() => setSelectedItem(null)}
+          onAddToCart={handleAddToCart}
+        />
+      )}
       <div className="relative flex top-10 justify-center items-center">
-      <button
-            disabled={(page==1)}
-            className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={()=>{
-              setStartPagination(startPagination-itemsPerPage)
-              setPage(page-1)
-            }}
-          > 
-          <ChevronLeft className="text-black dark:text-white"/>
-          </button>
-          <span className="text-sm text-gray-600">
-            Page {page} of {endPagination!=0?endPagination:1}
-          </span>
-          <button
-            className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={(page>=endPagination)}
-            onClick={()=>{
-              setStartPagination(startPagination+itemsPerPage);
-              setPage(page+1)
-            }}
-          >
-            <ChevronRight className="text-black dark:text-white"/>
-          </button>
-        </div>
+        <button
+          disabled={page == 1}
+          className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={() => {
+            setStartPagination(startPagination - itemsPerPage);
+            setPage(page - 1);
+          }}
+        >
+          <ChevronLeft className="text-black dark:text-white" />
+        </button>
+        <span className="text-sm text-gray-600">
+          Page {page} of {endPagination != 0 ? endPagination : 1}
+        </span>
+        <button
+          className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={page >= endPagination}
+          onClick={() => {
+            setStartPagination(startPagination + itemsPerPage);
+            setPage(page + 1);
+          }}
+        >
+          <ChevronRight className="text-black dark:text-white" />
+        </button>
+      </div>
     </div>
   );
 };
