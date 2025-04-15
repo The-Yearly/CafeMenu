@@ -10,9 +10,5 @@ export default function TableLayout({
   params: { id: string };
 }) {
   const tableId = Number(params.id);
-  return (
-    <CartProvider tID={tableId}>
-      <OrderProvider>{children}</OrderProvider>
-    </CartProvider>
-  );
+  return <CartProvider tID={tableId}>{children}</CartProvider>;
 }
