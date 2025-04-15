@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/context/ItemContext";
@@ -19,8 +19,8 @@ interface order {
   tableId: number;
   totalCost: number;
 }
-const CartSidebar = (tid:{tid:number}) => {
-  console.log("HelloCart"+tid.tid)
+const CartSidebar = (tid: { tid: number }) => {
+  console.log("HelloCart" + tid.tid);
   const [placeOrder, setPlaceOrder] = useState<order | null>(null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -37,17 +37,17 @@ const CartSidebar = (tid:{tid:number}) => {
           if (res.status === 200) {
             setLoading(false);
 
-            const existingOrders = JSON.parse(
-              localStorage.getItem("pastOrders") || "[]"
-            );
+            // const existingOrders = JSON.parse(
+            //   localStorage.getItem("pastOrders") || "[]"
+            // );
 
-            const newOrder = {
-              ...placeOrder,
-              orderId: res.data.fullOrder.orderId,
-            };
+            // const newOrder = {
+            //   ...placeOrder,
+            //   orderId: res.data.fullOrder.orderId,
+            // };
 
-            const updatedOrders = [...existingOrders, newOrder];
-            localStorage.setItem("pastOrders", JSON.stringify(updatedOrders));
+            // const updatedOrders = [...existingOrders, newOrder];
+            // localStorage.setItem("pastOrders", JSON.stringify(updatedOrders));
 
             setToast("Order placed Successfully");
           }
@@ -67,6 +67,11 @@ const CartSidebar = (tid:{tid:number}) => {
       totalCost: totalPrice,
       orders: cart.orders,
     });
+    setCart({
+      tableId: cart.tableId,
+      orders: [],
+      totalCost: 0,
+    });
   }
   const {
     cart,
@@ -75,6 +80,7 @@ const CartSidebar = (tid:{tid:number}) => {
     totalPrice,
     isCartOpen,
     setIsCartOpen,
+    setCart,
   } = useCart();
 
   function viewOrder() {

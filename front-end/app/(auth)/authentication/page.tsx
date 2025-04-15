@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { User } from "@/lib/types";
 import Cookie from "js-cookie";
-import { Eye,EyeClosed } from "lucide-react";
+import { Eye, EyeClosed } from "lucide-react";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,17 +16,17 @@ export default function Login() {
   const router = useRouter();
   Cookie.set("isAdmin", "False", { expires: 7 });
   useEffect(() => {
-    const sendUser=async()=>{
-      if(data!=null){
+    const sendUser = async () => {
+      if (data != null) {
         const res = await axios.post(
           "https://cafe-menu-green.vercel.app/api/v1/userAuth",
           data
         );
         toast(res.data.message);
-        if(res.data.message=="Succesfully Logged In"){
+        if (res.data.message == "Succesfully Logged In") {
           Cookie.set("isAdmin", "True", { expires: 7 });
           router.push("/admin");
-        }else{
+        } else {
           setLoading(false);
         }
       }
@@ -34,14 +34,14 @@ export default function Login() {
     sendUser();
   }, [data]);
   function checkUser() {
-    if(username!="" && password!="") {
+    if (username != "" && password != "") {
       setLoading(true);
-      setData({username:username,password:password,isAdmin:true});
-    }else{
-      if(username=="") {
+      setData({ username: username, password: password, isAdmin: true });
+    } else {
+      if (username == "") {
         toast.warn("User-Name Cant Be Empty");
       }
-      if (password=="") {
+      if (password == "") {
         toast.warn("Password Cant Be Empty");
       }
     }
@@ -88,7 +88,11 @@ export default function Login() {
               className="absolute right-3 top-1/2 cursor-pointer"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <Eye size={20} color="#555" /> : <EyeClosed size={20} color="#555" />}
+              {showPassword ? (
+                <Eye size={20} color="#555" />
+              ) : (
+                <EyeClosed size={20} color="#555" />
+              )}
             </span>
           </div>
           <button

@@ -4,13 +4,16 @@ import React, { use, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface OrderItem {
   itemId: number;
   quantity: number;
-  name: string;
-  cost: number;
-  image: string;
+  iid: {
+    name: string;
+    cost: number;
+    image: string;
+  };
 }
 
 enum Status {
@@ -19,8 +22,8 @@ enum Status {
 }
 
 interface Order {
-  orderId: string;
-  orders: OrderItem[];
+  orderId: number;
+  orders_items: OrderItem[];
   tableId: number;
   status: Status;
   totalCost: number;
@@ -33,21 +36,34 @@ export default function OrdersPage({
   params: Promise<{ id: number }>;
 }) {
   const id = use(params);
-  console.log(id)
   const [pastOrders, setPastOrders] = useState<Order[]>([]);
   const router = useRouter();
 
-  // Load past orders from localStorage
   useEffect(() => {
-    try {
-      const savedOrders = localStorage.getItem("pastOrders");
-      if (savedOrders) {
-        setPastOrders(JSON.parse(savedOrders));
+    const myOrder = async () => {
+      try {
+        const savedOrders = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getOrderWithTID`,
+          {
+            tid: Number(id.id),
+          }
+        );
+
+        if (savedOrders.status === 400 || !savedOrders.data.orders.length) {
+          return;
+        }
+        const orders = savedOrders.data.orders.map((order: any) => ({
+          ...order,
+          timestamp: new Date(order.createdAt), // Convert string to Date object
+        }));
+        setPastOrders(orders);
+      } catch (error) {
+        console.log("Error loading past orders from localStorage", error);
       }
-    } catch (error) {
-      console.log("Error loading past orders from localStorage", error);
-    }
-  }, []);
+    };
+
+    myOrder();
+  }, [id]); // Don't forget to add `id` as a dependency
 
   // Format date
   const formatDate = (dateString: string | Date) => {
@@ -61,7 +77,6 @@ export default function OrdersPage({
       hour12: true,
     });
   };
-  console.log(pastOrders)
   return (
     <>
       {/* <Navbar /> */}
@@ -86,7 +101,7 @@ export default function OrdersPage({
               You don&apos;t have any orders yet
             </p>
             <button
-              onClick={() =>router.back()}
+              onClick={() => router.back()}
               className="floating-button px-6 py-3 rounded-lg text-primary dark:text-text"
             >
               Browse Menu
@@ -133,25 +148,25 @@ export default function OrdersPage({
                     Items:
                   </h3>
                   <div className="space-y-3">
-                    {order.orders.map((item, i) => (
+                    {order.orders_items.map((item, i) => (
                       <div key={i} className="flex items-center">
                         <div className="h-12 w-12 overflow-hidden rounded-md mr-3">
                           <img
-                            src={item.image}
-                            alt={item.name}
+                            src={item.iid.image}
+                            alt={item.iid.name}
                             className="h-full w-full object-cover"
                           />
                         </div>
                         <div className="flex-1">
                           <p className="font-medium text-primary dark:text-text">
-                            {item.name}
+                            {item.iid.name}
                           </p>
                           <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Qty: {item.quantity} × ${item.cost.toFixed(2)}
+                            Qty: {item.quantity} × ${item.iid.cost.toFixed(2)}
                           </p>
                         </div>
                         <p className="font-medium text-accent">
-                          ${(item.quantity * item.cost).toFixed(2)}
+                          ${(item.quantity * item.iid.cost).toFixed(2)}
                         </p>
                       </div>
                     ))}

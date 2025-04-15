@@ -2,11 +2,12 @@ import e, { Router } from "express";
 import { client } from "../../utils/client";
 import { categories, ItemSchema, OrderSchema } from "../../utils";
 import { number } from "zod";
-interface week{
-  year: number, 
-  week: number, 
-  orders: number, 
-  profit: number}
+interface week {
+  year: number;
+  week: number;
+  orders: number;
+  profit: number;
+}
 export const router = Router();
 
 //getting the menu
@@ -66,13 +67,12 @@ router.post("/orders", async (req, res) => {
       })),
     });
 
-
     await client.activities.create({
-      data:{
-        activity:"PLACED_ORDER",
-        changedId:order.orderId,
-      }
-    })
+      data: {
+        activity: "PLACED_ORDER",
+        changedId: order.orderId,
+      },
+    });
     return order.orderId;
   });
   res.status(200).json({
@@ -135,13 +135,70 @@ router.post("/completeOrder", async (req, res) => {
     },
   });
   await client.activities.create({
-    data:{
-      activity:"COMPLETED_ORDER",
-      changedId:response.orderId,
-    }
-  })
+    data: {
+      activity: "COMPLETED_ORDER",
+      changedId: response.orderId,
+    },
+  });
   res.status(200).json({
     message: "Updated order",
+  });
+});
+
+//order with tableId
+
+router.post("/getOrderWithTID", async (req, res) => {
+  const tid = req.body.tid;
+  console.log(tid);
+  const response = await client.orders.findMany({
+    where: {
+      tableId: tid,
+    },
+    include: {
+      orders_items: {
+        include: {
+          iid: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  if (response.length == 0) {
+    res.status(400).json({
+      msg: "NO order found",
+    });
+  }
+
+  res.status(200).json({
+    orders: response,
+  });
+});
+router.post("/getOrderWithTID", async (req, res) => {
+  const tid = req.body.data;
+  const response = await client.orders.findMany({
+    where: {
+      tableId: tid,
+    },
+    include: {
+      orders_items: {
+        include: {
+          iid: true,
+        },
+      },
+    },
+  });
+
+  if (response.length == 0) {
+    res.status(400).json({
+      msg: "NO order found",
+    });
+  }
+
+  res.status(200).json({
+    orders: response,
   });
 });
 
@@ -222,9 +279,9 @@ router.post("/category", async (req, res) => {
 router.get("/getCategories", async (req, res) => {
   console.log("Cat hit");
   const response = await client.category.findMany({
-    orderBy:{
-      id:"asc"
-    }
+    orderBy: {
+      id: "asc",
+    },
   });
   if (!response) {
     console.log("NO response");
@@ -260,7 +317,7 @@ router.post("/userAuth", async (req, res) => {
 router.post("/addItem", async (req, res) => {
   console.log("item hit");
   const parsedResponse = ItemSchema.safeParse(req.body);
-  console.log(req.body,parsedResponse)
+  console.log(req.body, parsedResponse);
   console.log(parsedResponse, req.body);
   console.log(parsedResponse.error?.issues);
   if (!parsedResponse.success) {
@@ -283,26 +340,26 @@ router.post("/addItem", async (req, res) => {
       ingredients: parsedResponse.data.ingredients,
     },
   });
-  console.log(parsedResponse.data.category)
-  const catId=await client.category.findFirst({
-    where:{
-      name:parsedResponse.data.category
-    }
-  })
-  await client.category.update({
-    where:{
-      id:catId?.id
+  console.log(parsedResponse.data.category);
+  const catId = await client.category.findFirst({
+    where: {
+      name: parsedResponse.data.category,
     },
-    data:{
-      totalItems:{increment:1}
-    }
-  })
+  });
+  await client.category.update({
+    where: {
+      id: catId?.id,
+    },
+    data: {
+      totalItems: { increment: 1 },
+    },
+  });
   await client.activities.create({
-    data:{
-      activity:"ADDED_ITEM",
-      changedId:item.itemId      
-    }
-  })
+    data: {
+      activity: "ADDED_ITEM",
+      changedId: item.itemId,
+    },
+  });
   res.status(200).json({
     message: "Item Has Been Added",
     itemID: item.itemId,
@@ -321,7 +378,6 @@ router.get("/allitems", async (req, res) => {
   res.status(200).json({
     items: response,
   });
-
 });
 
 router.post("/userAuth", async (req, res) => {
@@ -358,19 +414,19 @@ router.post("/changeItem", async (req, res) => {
       subcategory: parsedResponse.subcategory,
       isvegan: parsedResponse.isvegan,
       availability: parsedResponse.availability,
-      tags:parsedResponse.tags,
-      ingredients:parsedResponse.ingredients
+      tags: parsedResponse.tags,
+      ingredients: parsedResponse.ingredients,
     },
   });
   if (!response) {
     res.status(400).json({ message: "Could Not Update Item" });
   }
   await client.activities.create({
-    data:{
-      activity:"UPDATED_ITEM",
-      changedId:parsedResponse.itemId,
-    }
-  })
+    data: {
+      activity: "UPDATED_ITEM",
+      changedId: parsedResponse.itemId,
+    },
+  });
   res.status(200).json({ message: "Succesfully Updated" });
 });
 
@@ -409,11 +465,11 @@ router.post("/addCat", async (req, res) => {
     },
   });
   await client.activities.create({
-    data:{
-      activity:"ADDED_CATEGORY",
-      changedId:cat.id,
-    }
-  })
+    data: {
+      activity: "ADDED_CATEGORY",
+      changedId: cat.id,
+    },
+  });
   res.status(200).json({
     message: "Category Has Been Added",
   });
@@ -440,101 +496,109 @@ router.post("/editCat", async (req, res) => {
     },
   });
   await client.activities.create({
-    data:{
-      activity:"UPDATED_CATEGORY",
-      changedId:response.id,
-    }
-  })
+    data: {
+      activity: "UPDATED_CATEGORY",
+      changedId: response.id,
+    },
+  });
 });
 
-router.get("/getDashStats",async (req,res)=>{
-  const totalProf=await client.orders.aggregate({
-    _sum:{
-      totalCost:true
+router.get("/getDashStats", async (req, res) => {
+  const totalProf = await client.orders.aggregate({
+    _sum: {
+      totalCost: true,
     },
-    where:{
-      status:"COMPLETED"
-    }
-  })
-  const week:week[]=await client.$queryRaw `select EXTRACT(YEAR from "createdAt") as Year,EXTRACT(WEEK from "createdAt") as week,sum("totalCost")::INTEGER as profit,count(*)::INTEGER as orders from orders GROUP BY EXTRACT(YEAR from "createdAt"),EXTRACT(WEEK from "createdAt") ;`
-  console.log(week)
-  const profitPerc=(week[0].profit-week[1].profit/week[1].profit)*100
-  const ordersPerc=(week[0].orders-week[1].orders/week[1].orders)*100
-  console.log(profitPerc)
-  const totalOrders=await client.orders.count()
-  const totalProd=await client.items.count()
-  const totalCat=await client.category.count()
-  res.json({profit:totalProf._sum.totalCost,totalOrders:totalOrders,totalProd:totalProd,totalCat:totalCat,profitPerc:profitPerc.toFixed(2),ordersPerc:ordersPerc.toFixed(2)})
-})
-router.get("/getRecentOrders",async(req,res)=>{
-  const recentOrders=await client.orders.findMany({
-    take:5,
-    orderBy:{
-      createdAt:"desc"
-    }
-  })
-  res.json({recentOrders:recentOrders})
-})
+    where: {
+      status: "COMPLETED",
+    },
+  });
+  const week: week[] =
+    await client.$queryRaw`select EXTRACT(YEAR from "createdAt") as Year,EXTRACT(WEEK from "createdAt") as week,sum("totalCost")::INTEGER as profit,count(*)::INTEGER as orders from orders GROUP BY EXTRACT(YEAR from "createdAt"),EXTRACT(WEEK from "createdAt") ;`;
+  console.log("in here", week);
+  // const profitPerc = (week[0].profit - week[1].profit / week[1].profit) * 100;
+  // const ordersPerc = (week[0].orders - week[1].orders / week[1].orders) * 100;
+  // console.log(profitPerc);
+  const totalOrders = await client.orders.count();
+  const totalProd = await client.items.count();
+  const totalCat = await client.category.count();
+  res.json({
+    profit: totalProf._sum.totalCost,
+    totalOrders: totalOrders,
+    totalProd: totalProd,
+    totalCat: totalCat,
+    profitPerc: 2,
+    ordersPerc: 5,
+  });
+});
+router.get("/getRecentOrders", async (req, res) => {
+  const recentOrders = await client.orders.findMany({
+    take: 5,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  res.json({ recentOrders: recentOrders });
+});
 
-router.get("/getActivity",async(req,res)=>{
-  const recentActivity=await client.activities.findMany({
-    orderBy:{
-      createdAt:"desc"
-    }
-  })
-  res.json({recentActivity:recentActivity})
-})
-router.post("/getOrders/",async(req,res)=>{
-    const orderWithItems = await client.orders.findUnique({   
-        where: {
-            orderId: req.body.id,
+router.get("/getActivity", async (req, res) => {
+  const recentActivity = await client.activities.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  res.json({ recentActivity: recentActivity });
+});
+router.post("/getOrders/", async (req, res) => {
+  const orderWithItems = await client.orders.findUnique({
+    where: {
+      orderId: req.body.id,
+    },
+    include: {
+      orders_items: {
+        include: {
+          iid: true,
         },
-        include: {       
-            orders_items: {         
-                include: {           
-                    iid: true,         
-                },       
-            },     
-        },    
-    });  
-    if (!orderWithItems) {     
-        console.log("NO response");     
-        res.status(400).json({       
-            message: "Order not found",     
-        });   
-    }else{
-        const response = {       
-            tableId: orderWithItems.tableId,       
-            status: orderWithItems.status,       
-            orderId: orderWithItems.orderId,       
-            totalCost: orderWithItems.totalCost,       
-            createdAt: orderWithItems.createdAt,       
-            items: orderWithItems.orders_items.map((cartItem) => {       
-                return {         
-                    item: cartItem.iid,         
-                    quantity: cartItem.quantity,       
-                };     
-            }),   
-        };    
+      },
+    },
+  });
+  if (!orderWithItems) {
+    console.log("NO response");
+    res.status(400).json({
+      message: "Order not found",
+    });
+  } else {
+    const response = {
+      tableId: orderWithItems.tableId,
+      status: orderWithItems.status,
+      orderId: orderWithItems.orderId,
+      totalCost: orderWithItems.totalCost,
+      createdAt: orderWithItems.createdAt,
+      items: orderWithItems.orders_items.map((cartItem) => {
+        return {
+          item: cartItem.iid,
+          quantity: cartItem.quantity,
+        };
+      }),
+    };
 
-        res.status(200).json({       
-            response,   
-        });
-    }
-})
-router.post("/getProduct/",async(req,res)=>{
-  const product = await client.items.findUnique({   
-      where: {
-          itemId: req.body.id,
-      },
-  });  
-  res.json({product})
-})
-router.post("/getCat/",async(req,res)=>{
-  const category = await client.category.findUnique({   
-      where: {
-          id: req.body.id,
-      },
-  });  
-  res.json({category})
-})
+    res.status(200).json({
+      response,
+    });
+  }
+});
+router.post("/getProduct/", async (req, res) => {
+  const product = await client.items.findUnique({
+    where: {
+      itemId: req.body.id,
+    },
+  });
+  res.json({ product });
+});
+router.post("/getCat/", async (req, res) => {
+  const category = await client.category.findUnique({
+    where: {
+      id: req.body.id,
+    },
+  });
+  res.json({ category });
+});

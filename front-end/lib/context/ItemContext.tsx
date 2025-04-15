@@ -2,9 +2,12 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { Cart, Item } from "../types";
+import { usePathname } from "next/navigation";
 
 interface CartContextType {
+  c: number;
   cart: Cart;
+  setCart: (cart: Cart) => void;
   addToCart: (item: Item, quantity: number) => void;
   removeFromCart: (itemId: number) => void;
   updateCart: (itemId: number, quantity: number) => void;
@@ -16,36 +19,17 @@ interface CartContextType {
 
 const cartContext = createContext<CartContextType | undefined>(undefined);
 
-const CartProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const CartProvider: React.FC<{
+  children: React.ReactNode;
+  tID: number;
+}> = ({ children, tID }) => {
+  const [id, setId] = useState(tID);
   const [cart, setCart] = useState<Cart>({
-    tableId: 1,
+    tableId: id,
     totalCost: 0,
     orders: [],
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
-
-  //Initial load of card on mount
-
-  useEffect(() => {
-    console.log("Component rendered 6");
-    console.log("useEffect me");
-    try {
-      const cartItems = sessionStorage.getItem("cart");
-      if (!cartItems) {
-        console.log("No cart found!");
-        sessionStorage.setItem("cart", JSON.stringify({}));
-        return;
-      }
-
-      console.log("till here");
-      setCart(JSON.parse(cartItems));
-      console.log("he", cartItems);
-    } catch (error) {
-      console.log("error ", error);
-    }
-  }, []);
 
   //render each time cart is updated
   useEffect(() => {
@@ -148,7 +132,9 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <cartContext.Provider
       value={{
+        tID,
         cart,
+        setCart,
         addToCart,
         removeFromCart,
         updateCart,
