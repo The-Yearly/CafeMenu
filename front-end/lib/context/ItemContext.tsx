@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { Cart, Item } from "../types";
-import { usePathname } from "next/navigation";
 
 interface CartContextType {
   tID: number;

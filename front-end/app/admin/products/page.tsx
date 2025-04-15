@@ -90,7 +90,7 @@ export default function Products() {
     };
     setFilters();
   }, [searchTerm, priceRange, selectedCategory, products]);
-  console.log("Filtered Products:", filteredProducts); // Log the filtered results
+  console.log("Filtered Products:", filteredProducts);
   const totalPages = Math.ceil(filteredProducts!.length / ITEMS_PER_PAGE);
   console.log("fli", filteredProducts);
   console.log(filteredProducts?.length);
