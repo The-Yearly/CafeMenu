@@ -22,7 +22,7 @@ const CartProvider: React.FC<{
   children: React.ReactNode;
   tID: number;
 }> = ({ children, tID }) => {
-  const [id, setId] = useState(tID);
+  const id = tID;
   const [cart, setCart] = useState<Cart>({
     tableId: id,
     totalCost: 0,
@@ -58,6 +58,7 @@ const CartProvider: React.FC<{
 
       // If item is not found, add it to the cart
       if (itemIndex === -1) {
+        console.log("In")
         const addedItem = {
           itemId: item.itemId,
           quantity: quantity,
@@ -73,6 +74,8 @@ const CartProvider: React.FC<{
       } else {
         // If item exists, update the quantity properly
         const updatedItems = [...prevCart.orders];
+        console.log("The amount to be added",quantity)
+        console.log(updatedItems[itemIndex],"this is the item")
         updatedItems[itemIndex].quantity += quantity;
 
         return {

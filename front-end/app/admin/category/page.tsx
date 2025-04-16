@@ -166,12 +166,11 @@ const CategoryForm: React.FC<{
   useEffect(() => {
     const sendCat = async () => {
       const link = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`
-      let res
       if (isSubmitted == true) {
         if (category != undefined) {
-          res=await axios.post(link+"/editCat", formData)
+          await axios.post(link+"/editCat", formData)
         } else {
-          res=await axios.post(link+"/addCat", formData)
+          await axios.post(link+"/addCat", formData)
         }
         window.location.reload()
       }

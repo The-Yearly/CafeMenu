@@ -5,6 +5,16 @@ import { motion } from "framer-motion";
 import { ChevronLeft, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+interface savedOrders{
+  createdAt
+: 
+"2025-04-16T15:22:25.312Z"
+orderId:number
+orders_items:Order
+status:string
+tableId:number
+totalCost:number
+}
 
 interface OrderItem {
   itemId: number;
@@ -48,11 +58,11 @@ export default function OrdersPage({
             tid: Number(id.id),
           }
         );
-
+        console.log(savedOrders.data)
         if (savedOrders.status === 400 || !savedOrders.data.orders.length) {
           return;
         }
-        const orders = savedOrders.data.orders.map((order: any) => ({
+        const orders = savedOrders.data.orders.map((order: savedOrders) => ({
           ...order,
           timestamp: new Date(order.createdAt), // Convert string to Date object
         }));

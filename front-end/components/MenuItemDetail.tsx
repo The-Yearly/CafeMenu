@@ -6,7 +6,7 @@ import { Item } from "@/lib/types";
 interface MenuItemDetailProps {
   item: Item;
   onClose: () => void;
-  onAddToCart: (item: Item) => void;
+  onAddToCart: (item: Item,quantity:number) => void;
 }
 
 const MenuItemDetail: React.FC<MenuItemDetailProps> = ({
@@ -27,7 +27,8 @@ const MenuItemDetail: React.FC<MenuItemDetailProps> = ({
   };
 
   const handleAddToCart = () => {
-    onAddToCart(item);
+    console.log(item,"sadkjsakdhaskh")
+    onAddToCart(item,quantity);
     onClose();
   };
 

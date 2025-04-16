@@ -464,7 +464,8 @@ router.post("/addCat", async (req, res) => {
       slug: parsedResponse.data.slug,
       description: parsedResponse.data.description,
     },
-  });
+  }
+);
   await client.activities.create({
     data: {
       activity: "ADDED_CATEGORY",
@@ -502,6 +503,7 @@ router.post("/editCat", async (req, res) => {
       changedId: response.id,
     },
   });
+  res.status(200).json({message:"Updated Categories"})
 });
 
 router.get("/getDashStats", async (req, res) => {
@@ -514,21 +516,26 @@ router.get("/getDashStats", async (req, res) => {
     },
   });
   const week: week[] =
-    await client.$queryRaw`select EXTRACT(YEAR from "createdAt") as Year,EXTRACT(WEEK from "createdAt") as week,sum("totalCost")::INTEGER as profit,count(*)::INTEGER as orders from orders GROUP BY EXTRACT(YEAR from "createdAt"),EXTRACT(WEEK from "createdAt") ;`;
-  console.log("in here", week);
-  // const profitPerc = (week[0].profit - week[1].profit / week[1].profit) * 100;
-  // const ordersPerc = (week[0].orders - week[1].orders / week[1].orders) * 100;
-  // console.log(profitPerc);
-  const totalOrders = await client.orders.count();
-  const totalProd = await client.items.count();
-  const totalCat = await client.category.count();
+    await client.$queryRaw`select EXTRACT(YEAR from "createdAt") as Year,EXTRACT(WEEK from "createdAt") as week,sum("totalCost")::INTEGER as profit,count(*)::INTEGER as orders from orders GROUP BY EXTRACT(YEAR from "createdAt"),EXTRACT(WEEK from "createdAt") ORDER BY year DESC,week DESC; ;`;
+  console.log("in here", week)
+  let profitPerc,ordersPerc;
+  if(week[0] && week[1]){
+    profitPerc = ((week[0].profit-week[1].profit)/week[1].profit)*100
+    ordersPerc = ((week[0].orders-week[1].orders)/week[1].orders)*100
+  }else{
+    profitPerc=100
+    ordersPerc=100
+  }
+  const totalOrders=await client.orders.count()
+  const totalProd=await client.items.count()
+  const totalCat=await client.category.count()
   res.json({
     profit: totalProf._sum.totalCost,
     totalOrders: totalOrders,
     totalProd: totalProd,
     totalCat: totalCat,
-    profitPerc: 2,
-    ordersPerc: 5,
+    profitPerc: profitPerc.toFixed(2),
+    ordersPerc:ordersPerc.toFixed(2),
   });
 });
 router.get("/getRecentOrders", async (req, res) => {
