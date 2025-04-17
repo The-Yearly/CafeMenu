@@ -639,7 +639,3 @@ router.post("/deleteItem", async (req, res) => {
     });
   }
 });
-router.get("/checkToken",(req,res)=>{
-  console.log("Hi Token")
-  res.json("Hi Front-end")
-})
