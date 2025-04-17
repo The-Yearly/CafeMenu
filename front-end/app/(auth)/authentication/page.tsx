@@ -14,17 +14,19 @@ export default function Login() {
   const [data, setData] = useState<User | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  Cookie.set("isAdmin", "False", { expires: 7 });
+  Cookie.set("isAdmin", "", { expires: 7 });
   useEffect(() => {
     const sendUser = async () => {
       if (data != null) {
         const res = await axios.post(
-          "https://cafe-menu-green.vercel.app/api/v1/userAuth",
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/userAuth`,
           data
         );
         toast(res.data.message);
         if (res.data.message == "Succesfully Logged In") {
-          Cookie.set("isAdmin", "True", { expires: 7 });
+          console.log(res.data.token)
+          Cookie.set("isAdmin", res.data.token, { expires: 7 });
+          
           router.push("/admin");
         } else {
           setLoading(false);

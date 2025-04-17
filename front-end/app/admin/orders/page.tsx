@@ -133,7 +133,6 @@ export default function Orders() {
       setToast("An error occurred while completing the order");
     }
   };
-  console.log("HHEH",orders,paginatedOrders)
   return (
     <div className="p-4 md:p-8">
       <div className="flex justify-between items-center mb-8">

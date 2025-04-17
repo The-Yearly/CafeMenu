@@ -1,8 +1,10 @@
 import e, { Router } from "express";
 import { client } from "../../utils/client";
 import { categories, ItemSchema, OrderSchema } from "../../utils";
-import { number } from "zod";
+require("dotenv").config()
 import { error } from "console";
+const KEY=process.env.SECRET_KEY
+const jwt=require("jsonwebtoken")
 interface week {
   year: number;
   week: number;
@@ -299,6 +301,7 @@ router.get("/getCategories", async (req, res) => {
 router.post("/userAuth", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
+  console.log(username)
   const response = await client.users.findFirst({
     where: {
       username: username,
@@ -306,7 +309,8 @@ router.post("/userAuth", async (req, res) => {
   });
   if (response != null) {
     if (password == response.password) {
-      res.json({ message: "Succesfully Logged In" });
+      const token=jwt.sign({username:username,password:password,isAdmin:"True"},KEY)
+      res.json({ message: "Succesfully Logged In",token:token });
     } else {
       res.json({ message: "Incorrect Password" });
     }
@@ -379,23 +383,6 @@ router.get("/allitems", async (req, res) => {
   res.status(200).json({
     items: response,
   });
-});
-
-router.post("/userAuth", async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  const data = await client.users.findFirst({
-    where: {
-      username: username,
-    },
-  });
-  if (data != null) {
-    if (password == data.password) {
-      res.status(200).json({ message: "Succesfully Logged In" });
-    } else {
-      res.status(400).json({ message: "Incorrect Password" });
-    }
-  }
 });
 
 router.post("/changeItem", async (req, res) => {
@@ -517,7 +504,6 @@ router.get("/getDashStats", async (req, res) => {
   });
   const week: week[] =
     await client.$queryRaw`select EXTRACT(YEAR from "createdAt") as Year,EXTRACT(WEEK from "createdAt") as week,sum("totalCost")::INTEGER as profit,count(*)::INTEGER as orders from orders GROUP BY EXTRACT(YEAR from "createdAt"),EXTRACT(WEEK from "createdAt") ORDER BY year DESC,week DESC; ;`;
-  console.log("in here", week)
   let profitPerc,ordersPerc;
   if(week[0] && week[1]){
     profitPerc = ((week[0].profit-week[1].profit)/week[1].profit)*100
@@ -653,3 +639,7 @@ router.post("/deleteItem", async (req, res) => {
     });
   }
 });
+router.get("/checkToken",(req,res)=>{
+  console.log("Hi Token")
+  res.json("Hi Front-end")
+})
