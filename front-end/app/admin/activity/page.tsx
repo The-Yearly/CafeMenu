@@ -51,7 +51,7 @@ export default function Activities() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
           {
-            (activities!=null)?activities?.map((activity,i)=><ActivityCard key={activity.activitId} activity={activity}/>): 
+            (activities!=null)?activities?.map((activity)=><ActivityCard key={activity.activitId} activity={activity}/>): 
           Array(8).fill(0).map((_,i)=><ActivitySkeleton key={i}/>)
         }
         </div>
