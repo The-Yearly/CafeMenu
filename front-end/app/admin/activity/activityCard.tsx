@@ -1,46 +1,18 @@
 import { motion } from "framer-motion"
 import { getImg,messagestatusColors,ActivityType } from "../components/Dashboard" 
 import { ChevronRight, ChevronLeft } from "lucide-react"
+import TableCard from "./tableCard"
 import { OrderCard } from "../orders/OrderCard"
 import CategoryCard from "./categoryCard"
-import { Item } from "@/lib/types"
+import { DeleteCard } from "./deleteCard"
+import { Item,Table } from "@/lib/types"
 import { CategorySkeletonLoader } from "../category/skeleton"
 import ProductCard from "./productCard"
 import { useEffect, useState } from "react"
 import axios from "axios"
-enum Status {
-    PENDING = "PENDING",
-    COMPLETED = "COMPLETED",
-  }
-interface details{
-      tableId: number;
-      orderId: number;
-      totalCost: number;
-      createdAt: string;
-      status: Status;
-      items: [
-        {
-          item: Item;
-          quantity: number;
-        }
-      ]
-      itemId: number;
-      name: string;
-      bio: string;
-      image: string;
-      category: string;
-      subcategory: string;
-      tags: string[];
-      isvegan: boolean;
-      cost: number;
-      availability: boolean;
-      ingredients: string[];
-      id: number;
-      cname: string;
-      description: string;
-      images: string;
-      totalItems:number;
-}
+import { Activity_messages } from "../components/Dashboard"
+import { Order } from "../orders/page"
+import { CategoryActivity } from "./categoryCard"
 const itemVariants = {
     hidden: { opacity: 0, y: 10 },
     visible: {
@@ -49,20 +21,18 @@ const itemVariants = {
         transition: { duration: 0.3 },
     },
 }
-const activity_messages = {
-    "PLACED_ORDER": "Order has been placed with Order ID: {change_id}.",
-    "COMPLETED_ORDER": "Order with Order ID: {change_id} has been completed.",
-    "ADDED_ITEM": "Item with Id {change_id} has been added successfully.",
-    "UPDATED_ITEM": "Item with Id {change_id} has been updated.",
-    "ADDED_CATEGORY": "Category with Id {change_id} has been added successfully.",
-    "UPDATED_CATEGORY": "Category with ID {change_id} has been updated."
+
+export interface DeleteCardI{
+    id:number,
+    type:string
 }
+
 export default function ActivityCard(props:{activity:ActivityType}){
     const activity=props.activity
     const Icon = getImg[activity.activity]
     const [act,setAct]=useState("")
     const [load,setLoad]=useState(false)
-    const [details,setDetails]=useState<details|null>(null)
+    const [details,setDetails]=useState<Order|Item|CategoryActivity|Table|DeleteCardI|null>(null)
     function renderCard(){
         console.log(details)
         if (details==null) {
@@ -72,15 +42,19 @@ export default function ActivityCard(props:{activity:ActivityType}){
         switch (act){
             case "COMPLETED_ORDER":
             case "PLACED_ORDER":
-                return <OrderCard key={activity.changedId} order={details} totalCost={details.totalCost}/>
+                return <OrderCard key={activity.changedId} order={details as Order} totalCost={(details as Order).totalCost}/>
             case "ADDED_ITEM":
             case "UPDATED_ITEM":
-                return <ProductCard item={details}/>
+                return <ProductCard item={details as Item}/>
             case "ADDED_CATEGORY":
             case "UPDATED_CATEGORY":
-                return <CategoryCard category={details}/>
-
-                
+                return <CategoryCard category={details as CategoryActivity}/>
+            case "ADDED_TABLE":
+                return <TableCard tables={details as Table}/>
+            case "DELETED_TABLE":
+            case "DELETED_ITEM":
+            case "DELETED_CATEGORY":
+                return <DeleteCard deleteData={details as DeleteCardI}/>            
         }
     }
     }
@@ -100,6 +74,14 @@ export default function ActivityCard(props:{activity:ActivityType}){
                 const res=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/getCat/`,{id:activity.changedId})
                 setDetails(res.data.category)
             }
+            else if(act == "ADDED_TABLE"){
+                const res=await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/checkTable/`+activity.changedId)
+                console.log(res.data.table,activity)
+                setDetails(res.data.table)
+            }
+            else if(act == "DELETED_TABLE" || act == "DELETED_ITEM" || act == "DELETED_CATEGORY"){
+                setDetails({id:activity.changedId,type:act})
+            }
         }
     }
     getData()},[load])
@@ -115,7 +97,7 @@ export default function ActivityCard(props:{activity:ActivityType}){
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-medium">{(activity_messages[activity.activity]).replace("{change_id}",String(activity.changedId))}</p>
+                  <p className="font-medium">{(Activity_messages[activity.activity]).replace("{change_id}",String(activity.changedId))}</p>
                     <div className="flex items-center"><p className="text-sm text-gray-500 dark:text-gray-400">{String(activity.createdAt)}</p>
                     <motion.button className="ml-5" whileHover={load==false?{ x: -5 }:{x:5}} onClick={()=>{setLoad(!load);
                         setAct(activity.activity)}}>

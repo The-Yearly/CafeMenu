@@ -8,6 +8,8 @@ import {
   Pencil,
   FolderPlus,
   FolderPen,
+  Armchair,
+  Trash2
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -28,9 +30,13 @@ export const getImg = {
   PLACED_ORDER: ShoppingCart,
   COMPLETED_ORDER: CircleCheckBig,
   ADDED_ITEM: CircleFadingPlus,
+  DELETED_ITEM:Trash2,
   UPDATED_ITEM: Pencil,
   ADDED_CATEGORY: FolderPlus,
+  DELETED_CATEGORY:Trash2,
   UPDATED_CATEGORY: FolderPen,
+  ADDED_TABLE:Armchair,
+  DELETED_TABLE:Trash2,
 };
 export const messagestatusColors = {
   PLACED_ORDER:
@@ -39,20 +45,32 @@ export const messagestatusColors = {
     "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
   ADDED_ITEM:
     "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300",
+  DELETED_ITEM:
+    "bg-red-100 text-red-500 dark:bg-red-900/30 dark:text-red-300",
   UPDATED_ITEM:
     "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
   ADDED_CATEGORY:
     "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+  DELETED_CATEGORY:
+    "bg-red-100 text-red-500 dark:bg-red-900/30 dark:text-red-300",
   UPDATED_CATEGORY:
     "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+  ADDED_TABLE:
+    "bg-green-100 text-green-500 dark:bg-green-900/30 dark:text-green-300",
+  DELETED_TABLE:
+   "bg-red-100 text-red-500 dark:bg-red-900/30 dark:text-red-300",
 };
 export const Activity_messages = {
   PLACED_ORDER: "Order has been placed with Order ID: {change_id}.",
   COMPLETED_ORDER: "Order with Order ID: {change_id} has been completed.",
   ADDED_ITEM: "Item with Id {change_id} has been added successfully.",
+  DELETED_ITEM: "Item With Id {change_id} has been deleted",
   UPDATED_ITEM: "Item with Id {change_id} has been updated.",
   ADDED_CATEGORY: "Category with Id {change_id} has been added successfully.",
+  DELETED_CATEGORY: "Category with Id {change_id} has been deleted successfully.",
   UPDATED_CATEGORY: "Category with ID {change_id} has been updated.",
+  ADDED_TABLE:"Table With Id {change_id} has been added",
+  DELETED_TABLE:"Deleted Table with Id {change_id}",
 };
 import {
   ShoppingBag,

@@ -611,12 +611,37 @@ router.post("/getCat/", async (req, res) => {
 
 router.post("/deleteCat", async (req, res) => {
   const cID = req.body.cID;
+  const items=await client.category.findFirst({
+    where:{
+      id:cID
+    },
+    select:{
+      items:true
+    }
+  })
   const response = await client.category.delete({
     where: {
       id: cID,
     },
   });
-  if (response) {
+  
+  if (response){
+    if(items!=null){
+      await client.$transaction(async()=>{
+        await client.activities.createMany({
+          data:items.items.map((item)=>({
+            activity:"DELETED_ITEM",
+            changedId:item.itemId
+          }))
+        })
+      })
+    }
+    await client.activities.create({
+      data:{
+        activity:"DELETED_CATEGORY",
+        changedId:req.body.cID
+      }
+    })
     res.status(200).json({
       msg: "Cat delete",
     });
@@ -636,6 +661,14 @@ router.post("/deleteItem", async (req, res) => {
         itemId: pID,
       },
     });
+    if(response){
+      await client.activities.create({
+        data:{
+          changedId:parseInt(pID),
+          activity:"DELETED_ITEM"  
+        }
+      })
+    }
     if (response) {
       res.status(200).json({
         msg: "Item deleted",
@@ -670,6 +703,14 @@ router.post("/addTable",async(req,res)=>{
       tablename:parsedResponse.data.tablename
     }
   })
+  if(response){
+    await client.activities.create({
+      data:{
+        activity:"ADDED_TABLE",
+        changedId:response.tid
+      }
+    })
+  }
   if(!response){
     res.json({message:"Couldnt Add Table"})
     return
@@ -685,6 +726,14 @@ router.get("/deleteTable/:tid",async(req,res)=>{
     })
   if(!response){
     res.json({message:"Couldnt Delete Table"})
+  }
+  if(response){
+    await client.activities.create({
+      data:{
+        changedId:parseInt(req.params.tid),
+        activity:"DELETED_TABLE"
+      }
+    })
   }
   res.json({message:"Table Has Been Deleted"})
 })

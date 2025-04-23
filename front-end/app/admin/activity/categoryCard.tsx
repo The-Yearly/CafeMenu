@@ -1,12 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
-interface Category {
+export interface CategoryActivity {
     id: number;
     cname: string;
     description: string;
     images: string;
     totalItems:number;
   }
-export default function CategoryCard(props:{category:Category}){
+export default function CategoryCard(props:{category:CategoryActivity}){
     const category=props.category
     return(
         <AnimatePresence>
