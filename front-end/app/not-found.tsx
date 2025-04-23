@@ -20,7 +20,7 @@ export default function NotFound(){
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="w-32 h-32 mb-6 relative"
                 >
-                  <Rabbit className="w-32 h-32"/>
+                  <Rabbit className="w-32 h-32 text-gray-600"/>
                   <motion.div
                     className="absolute inset-0 flex items-center justify-center"
                     initial={{ opacity: 0 }}
@@ -30,8 +30,7 @@ export default function NotFound(){
                     <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center">
                       <svg
                         viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none" 
                         className="w-8 h-8 text-red-500"
                       >
                         <path
@@ -69,7 +68,7 @@ export default function NotFound(){
                 >
                   <button
                     onClick={() => router.back()}
-                    className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                    className="px-6 py-3 bg-gray-500 dark:bg-gray-700 rounded-lg font-medium hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
                   >
                     Go Back
                   </button>
