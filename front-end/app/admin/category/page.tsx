@@ -2,7 +2,7 @@
 import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Edit2, Trash2, X } from "lucide-react";
+import { Plus, Search, Edit2, Trash2,AlertCircle, X } from "lucide-react";
 import axios from "axios";
 import { CategorySkeletonLoader } from "./skeleton";
 import ImageKit from "imagekit";
@@ -15,6 +15,9 @@ interface Category {
   description: string;
   images: string;
   totalItems: number;
+  _count?: {
+    items: number;
+  };
 }
 
 interface ModalProps {
@@ -91,6 +94,52 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
   );
 };
 
+const DeleteCatConfirmationModal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  catName: string;
+}> = ({ isOpen, onClose, onConfirm, catName }) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title="Delete Product">
+      <div className="space-y-4">
+        <div className="flex items-start gap-3 text-red-600">
+          <AlertCircle className="w-5 h-5 mt-0.5" />
+          <div>
+            <h3 className="font-medium">
+              Are you sure you want to delete this category?
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-700 mt-1">
+              You are about to delete &apos;
+              <span className="font-medium text-gray-600 dark:text-gray-700">
+                {catName}
+              </span>
+              &apos;. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+        <div className="flex justify-end gap-3 pt-4">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-gray-600 dark:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }}
+            className="px-4 py-2 bg-red-600  text-primary dark:text-text  rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Delete Category
+          </button>
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
 const CategoryForm: React.FC<{
   category?: Category;
   onSubmit: (data: Partial<Category>) => void;
@@ -108,7 +157,6 @@ const CategoryForm: React.FC<{
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const imagekit = new ImageKit({
     publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || "",
     privateKey: process.env.NEXT_PUBLIC_IMAGEKIT_PRIVATE_KEY || "",
@@ -291,10 +339,11 @@ function CategoryComponent() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [deletingCategory,setDeletingCategory]=useState<Category|null>(null)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
-
+  const [refresh,setRefresh]=useState(true)
   useEffect(() => {
     const getCategories = async () => {
       const response = await axios.get(
@@ -305,11 +354,12 @@ function CategoryComponent() {
         setCategories([]);
       } else {
         setCategories(response.data.categories);
+        console.log(response.data.categories)
       }
       setIsLoading(false);
     };
     getCategories();
-  }, [toast]);
+  }, [refresh]);
 
   const filteredCategories = categories?.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -345,6 +395,7 @@ function CategoryComponent() {
     if (deleteCategory.status == 200) {
       {
         setToast("Cat deleted");
+        setRefresh(!refresh)
       }
     }
   };
@@ -411,7 +462,7 @@ function CategoryComponent() {
                             <Edit2 className="w-4 h-4 text-gray-700" />
                           </button>
                           <button
-                            onClick={() => handleDeleteCategory(category.id)}
+                            onClick={() => setDeletingCategory(category)}
                             className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
                           >
                             <Trash2 className="w-4 h-4 text-red-500" />
@@ -427,7 +478,7 @@ function CategoryComponent() {
                         </p>
                         <div className="mt-4 flex items-center justify-between">
                           <span className="text-sm font-medium text-gray-600">
-                            {category.totalItems} Products
+                            {category._count?.items} Products
                           </span>
                           <motion.button
                             whileHover={{ scale: 1.05 }}
@@ -467,6 +518,18 @@ function CategoryComponent() {
           onClose={() => setEditingCategory(null)}
         />
       </Modal>
+
+            <DeleteCatConfirmationModal
+              isOpen={!!deletingCategory}
+              onClose={() => setDeletingCategory(null)}
+              onConfirm={() => {
+                if (deletingCategory) {
+                  handleDeleteCategory(deletingCategory.id!);
+                }
+                setDeletingCategory(null);
+              }}
+              catName={deletingCategory?.name || ""}
+            />
     </div>
   );
 }

@@ -33,7 +33,8 @@ export default function Products() {
     max: 1000,
   });
   const [filteredProducts, setFilteredProducts] = useState<Item[]>([]);
-  const [toast, setToast] = useState<string | null>("dle");
+  const [toast, setToast] = useState<string | null>("");
+  const [refresh,setRefresh]=useState(true)
   useEffect(() => {
     const getProducts = async () => {
       const response = await axios.get(
@@ -63,7 +64,7 @@ export default function Products() {
 
     getCategories();
     getProducts();
-  }, [toast]);
+  }, [refresh]);
   useEffect(() => {
     const setFilters = () => {
       console.log("Applying filters:", {
@@ -144,6 +145,7 @@ export default function Products() {
     if (deleteProduct.status == 200) {
       {
         setToast("Product deleted");
+        setRefresh(!refresh)
       }
     }
   };

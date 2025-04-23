@@ -1,3 +1,4 @@
+
 export interface Item {
   itemId: number;
   name: string;
@@ -35,4 +36,9 @@ export interface User {
   username: string;
   password: string;
   isAdmin: boolean;
+}
+
+export interface Table{
+  tid:number,
+  tablename:string
 }

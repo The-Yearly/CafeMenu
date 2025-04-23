@@ -5,8 +5,8 @@ import {
   ShoppingBag,
   Cat as Categories,
   Package,
-  BarChart3,
   Clock,
+  Armchair,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -15,7 +15,7 @@ const menuItems = [
   { icon: Categories, label: "Categories", href: "/admin/category" },
   { icon: Package, label: "Products", href: "/admin/products" },
   { icon: ShoppingBag, label: "Orders", href: "/admin/orders" },
-  { icon: BarChart3, label: "Analytics", href: "/admin/analytics" },
+  { icon: Armchair, label: "Tables", href: "/admin/tables" },
   { icon: Clock, label: "Recent Activity", href: "/admin/activity" },
 ];
 

@@ -43,7 +43,7 @@ export const ProductForm: React.FC<{
   useEffect(()=>{
     const updateItem=async()=>{
       const link=`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`
-      console.log(formData)
+      console.log(isSubmitted,"asd")
       if(isSubmitted== true){
         if(product != undefined){
           await axios.post(link+"/changeItem",formData)
@@ -110,7 +110,6 @@ export const ProductForm: React.FC<{
         return
       }
     }
-
     onSubmit(formData)
     setIsSubmitted(true)
     onClose()
@@ -342,7 +341,7 @@ export const ProductForm: React.FC<{
       </div>
 
       <div className="flex justify-end gap-3 pt-4">
-        <button onClick={onClose} className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+        <button type="button" onClick={()=>{setIsSubmitted(false);onClose();}} className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
           Cancel
         </button>
         <button
