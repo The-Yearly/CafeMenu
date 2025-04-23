@@ -9,7 +9,7 @@ export default function AdminTables(){
   const [loading,setLoading]=useState(false)
 
   const sendData=async()=>{
-    await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/addTable`,{tid:tables[tables.length-1].tid+1,tablename:newTable})
+    await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/addTable`,{tid:tables[tables.length-1]?.tid+1||1,tablename:newTable})
   }
 
   const deleteTable=async(tid:number)=>{
@@ -28,7 +28,7 @@ export default function AdminTables(){
     setTables([
       ...tables,
       {
-        tid:tables[tables.length-1].tid+1,
+        tid:tables[tables.length-1]?.tid+1 || 1,
         tablename:newTable,
       },
     ])
