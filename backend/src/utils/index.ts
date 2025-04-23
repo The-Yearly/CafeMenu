@@ -48,3 +48,8 @@ export const activities=z.object({
   activity:z.enum(["PLACED_ORDER","COMPLETED_ORDER","ADDED_ITEM","UPDATED_ITEM","ADDED_CATEGORY","UPDATED_CATEGORY"]),
   changedId:z.number()
 })
+
+export const tables=z.object({
+  tid:z.number().optional(),
+  tablename:z.string()
+})

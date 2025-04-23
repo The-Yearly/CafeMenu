@@ -1,8 +1,8 @@
 import e, { Router } from "express";
 import { client } from "../../utils/client";
-import { categories, ItemSchema, OrderSchema } from "../../utils";
+import { categories, ItemSchema, OrderSchema, tables } from "../../utils";
 require("dotenv").config()
-import { error } from "console";
+import { error, table } from "console";
 const KEY=process.env.SECRET_KEY
 const jwt=require("jsonwebtoken")
 interface week {
@@ -285,6 +285,18 @@ router.get("/getCategories", async (req, res) => {
     orderBy: {
       id: "asc",
     },
+    select:{
+      id:true,
+      description:true,
+      images:true,
+      name:true,
+      slug:true,
+      _count:{
+        select:{
+          items:true
+        }
+      }
+    }
   });
   if (!response) {
     console.log("NO response");
@@ -639,3 +651,49 @@ router.post("/deleteItem", async (req, res) => {
     });
   }
 });
+
+router.get("/getTables",async(req,res)=>{
+  const response=await client.tables.findMany()
+  res.json({tables:response})
+})
+
+router.post("/addTable",async(req,res)=>{
+  console.log(req.body)
+  const parsedResponse=tables.safeParse(req.body)
+  if(!parsedResponse.success){
+    res.json({message:"Couldnt Add Table"})
+    return
+  }
+  const response=await client.tables.create({
+    data:{
+      tid:parsedResponse.data.tid,
+      tablename:parsedResponse.data.tablename
+    }
+  })
+  if(!response){
+    res.json({message:"Couldnt Add Table"})
+    return
+  }
+  res.json({message:"Table Has Been Added"})
+})
+
+router.get("/deleteTable/:tid",async(req,res)=>{
+    const response=await client.tables.delete({
+      where:{
+        tid:parseInt(req.params.tid)
+      }
+    })
+  if(!response){
+    res.json({message:"Couldnt Delete Table"})
+  }
+  res.json({message:"Table Has Been Deleted"})
+})
+
+router.get("/checkTable/:tid",async(req,res)=>{
+  const response=await client.tables.findFirst({
+    where:{
+      tid:parseInt(req.params.tid)
+    }
+  })
+  res.json({table:response})
+})
