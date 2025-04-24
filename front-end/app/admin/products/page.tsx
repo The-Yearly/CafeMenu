@@ -29,6 +29,7 @@ export default function Products() {
   const [paginatedProducts, setPaginatedProducts] = useState<Item[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading,setIsLoading]=useState(true)
+  const [isDeleting,setIsDeleting]=useState(false)
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: 0,
     max: 1000,
@@ -135,6 +136,7 @@ export default function Products() {
   };
 
   const handleDeleteProduct = async (id: number) => {
+    setIsDeleting(true)
     console.log("dlt id ", id);
     const deleteProduct = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/deleteItem`,
@@ -149,6 +151,7 @@ export default function Products() {
         setDeletingProduct(null);
       }
     }
+    setIsDeleting(false)
   };
   return (
     <div className="p-4 md:p-8 mt-14 ">
@@ -159,7 +162,8 @@ export default function Products() {
         <button
           onClick={() => {
             if(category.length!=0){setIsAddModalOpen(true)}else{setToast("Add A Category First")}}}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600  text-white rounded-lg hover:bg-blue-700 transition-colors"
+            disabled={isDeleting}
+          className={`flex items-center gap-2 px-4 py-2 bg-blue-600  text-white rounded-lg hover:bg-blue-700 transition-colors ${isDeleting?"cursor-wait":""}`}
         >
           <Plus className="w-5 h-5" />
           <span>Add Product</span>
@@ -256,13 +260,15 @@ export default function Products() {
                   <div className="absolute top-2 right-2 flex gap-2">
                     <button
                       onClick={() => setEditingProduct(product)}
-                      className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+                      disabled={isDeleting}
+                      className={`p-2 bg-white/90 rounded-full hover:bg-white transition-colors ${isDeleting?"cursor-wait":""}`}
                     >
                       <Edit2 className="w-4 h-4 text-gray-700" />
                     </button>
                     <button
                       onClick={() => setDeletingProduct(product)}
-                      className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+                      disabled={isDeleting}
+                      className={`p-2 bg-white/90 rounded-full hover:bg-white transition-colors ${isDeleting?"cursor-wait":""}`}
                     >
                       <Trash2 className="w-4 h-4 text-red-500" />
                     </button>
