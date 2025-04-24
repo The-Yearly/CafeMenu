@@ -117,7 +117,7 @@ export const DeleteConfirmationModal: React.FC<{
           <button
             onClick={() => {
               onConfirm();
-              onClose();
+              
             }}
             className="px-4 py-2 bg-red-600  text-primary dark:text-text  rounded-lg hover:bg-red-700 transition-colors"
           >

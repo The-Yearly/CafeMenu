@@ -56,7 +56,6 @@ export default function Orders() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders`
         );
-        console.log("Helllo",response.data)
         if (response.status === 200) {
           setOrders(response.data.response);
         } else {
@@ -170,7 +169,7 @@ export default function Orders() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
         <AnimatePresence>
-          {(filteredOrders.length!=0)?paginatedOrders.map((order) => (
+          {(!isLoading)?paginatedOrders.map((order) => (
             <OrderCard
               key={order.orderId}
               order={order}

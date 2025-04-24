@@ -28,6 +28,7 @@ export default function Products() {
   const [deletingProduct, setDeletingProduct] = useState<Item | null>(null);
   const [paginatedProducts, setPaginatedProducts] = useState<Item[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading,setIsLoading]=useState(true)
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: 0,
     max: 1000,
@@ -47,7 +48,7 @@ export default function Products() {
         setProducts(response.data.items);
         console.log("Call2");
       }
-      console.log("bd", response.data.items);
+      setIsLoading(false)
     };
     const getCategories = async () => {
       const response = await axios.get(
@@ -59,7 +60,6 @@ export default function Products() {
       } else {
         setCategory(response.data.categories);
       }
-      console.log("cd", response.data.categories);
     };
 
     getCategories();
@@ -146,6 +146,7 @@ export default function Products() {
       {
         setToast("Product deleted");
         setRefresh(!refresh)
+        setDeletingProduct(null);
       }
     }
   };
@@ -156,7 +157,8 @@ export default function Products() {
           Products
         </h1>
         <button
-          onClick={() => setIsAddModalOpen(true)}
+          onClick={() => {
+            if(category.length!=0){setIsAddModalOpen(true)}else{setToast("Add A Category First")}}}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600  text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Plus className="w-5 h-5" />
@@ -231,7 +233,7 @@ export default function Products() {
         </div>
       </div>
 
-      {products.length == 0 ? (
+      {isLoading? (
         <ProductSkeleton />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-8">
@@ -340,6 +342,7 @@ export default function Products() {
           categories={category}
         />
       </Modal>
+      
 
       <Modal
         isOpen={!!editingProduct}
@@ -354,6 +357,7 @@ export default function Products() {
         />
       </Modal>
 
+
       <DeleteConfirmationModal
         isOpen={!!deletingProduct}
         onClose={() => setDeletingProduct(null)}
@@ -361,7 +365,7 @@ export default function Products() {
           if (deletingProduct) {
             handleDeleteProduct(deletingProduct.itemId!);
           }
-          setDeletingProduct(null);
+          
         }}
         productName={deletingProduct?.name || ""}
       />
