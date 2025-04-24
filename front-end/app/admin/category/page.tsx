@@ -344,6 +344,7 @@ function CategoryComponent() {
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
   const [refresh,setRefresh]=useState(true)
+  const [gotResp,setGotResp]=useState(false)
   useEffect(() => {
     const getCategories = async () => {
       const response = await axios.get(
@@ -386,12 +387,15 @@ function CategoryComponent() {
   };
 
   const handleDeleteCategory = async (id: number) => {
+    setGotResp(true)
+    setToast("Deleting...")
     const deleteCategory = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/deleteCat`,
       {
         cID: id,
       }
     );
+    setGotResp(false)
     if (deleteCategory.status == 200) {
       {
         setToast("Cat deleted");
@@ -412,8 +416,9 @@ function CategoryComponent() {
               </h1>
             </div>
             <button
+              disabled={gotResp}
               onClick={() => setIsAddModalOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm md:text-base"
+              className={`flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm md:text-base ${gotResp?"cursor-wait":""}`}
             >
               <Plus className="w-4 h-4 md:w-5 md:h-5" />
               <span className="hidden md:inline">Add Category</span>
@@ -457,13 +462,15 @@ function CategoryComponent() {
                         <div className="absolute top-2 right-2 flex gap-2">
                           <button
                             onClick={() => setEditingCategory(category)}
-                            className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+                            disabled={gotResp}
+                            className={`p-2 bg-white/90 rounded-full hover:bg-white transition-colors ${gotResp?"cursor-wait":""}`}
                           >
                             <Edit2 className="w-4 h-4 text-gray-700" />
                           </button>
                           <button
+                            disabled={gotResp}
                             onClick={() => setDeletingCategory(category)}
-                            className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+                            className={`p-2 bg-white/90 rounded-full hover:bg-white transition-colors ${gotResp?"cursor-wait":""}`}
                           >
                             <Trash2 className="w-4 h-4 text-red-500" />
                           </button>

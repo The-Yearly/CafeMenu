@@ -7,11 +7,22 @@ export async function middleware(req: NextRequest) {
     const isAdmin=cookiesStore.get("isAdmin")
     const KEY=process.env.NEXT_PUBLIC_SECRET_KEY
     const token=jwt.decode(isAdmin?.value,KEY)
-    if(token?.isAdmin!="True"){
-        return NextResponse.redirect(new URL("/authentication", req.url));
+    const path = req.nextUrl.pathname;
+    if(path.startsWith("/admin")){
+        if(token?.isAdmin!="True"){
+            return NextResponse.redirect(new URL("/authentication", req.url));
+        }
+    }else if(path.startsWith("/table")){
+        const id=parseInt(path.split("/")[path.split("/").length-1])
+        if(path!="/table/not-found"){
+            const res=await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/checkTable/`+id)
+            if(res.data.table==null){
+                return NextResponse.redirect(new URL("/table/not-found", req.url));
+            }
+        }
     }
 }
 
 export const config = {
-    matcher: "/admin(.*)",
+    matcher: ["/admin(.*)","/table(.*)"],
 };

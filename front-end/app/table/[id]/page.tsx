@@ -12,23 +12,21 @@ import FloatingCartButton from "@/components/FloatingCartButton";
 import CartSidebar from "@/components/CardSidebar";
 import MenuItemGrid from "@/components/MenuItemGrid";
 import { TableSkeleton } from "@/components/tableSkeleton";
-export default function Home({ params }: { params: Promise<{ id: number }> }) {
+export default function Home({ params }: { params: Promise<{ id: number|string }> }) {
   const id = use(params);
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
   const [load, setLoad] = useState(true);
   const [tableFound,setTableFound]=useState(false)
-  
-  useEffect(()=>{const findTable=async()=>{
-    const res=await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/checkTable/`+id.id)
-    if(res.data.table!=null){
-      setTableFound(true)
-    }else{
+  useEffect(()=>{const validateTable=async()=>{
+    if(id.id=="not-found"){
       setTableFound(false)
+    }else{
+      setTableFound(true)
     }
   }
-  findTable()},[])
+  validateTable()},[id])
   
   useEffect(() => {
     if (String(id.id) == "authentication") {
@@ -55,38 +53,38 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
     };
     getMenuItems();
   }, [selectedCategory]);
-  if (load != true && tableFound==true) {
-    return (
-      <>
-        <div className="min-h-screen text-text bg-background ">
-          <Navbar id={id.id} />
-          <SearchBar onSelectItem={setSelectedCategory} />
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="lg:container mx-auto pb-24"
-            >
-              <CategorySelector
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-              />
+  if(tableFound){
+    if (load != true) {
+      return (
+        <>
+          <div className="min-h-screen text-text bg-background ">
+            <Navbar id={id.id as number} />
+            <SearchBar onSelectItem={setSelectedCategory} />
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="lg:container mx-auto pb-24"
+              >
+                <CategorySelector
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={setSelectedCategory}
+                />
 
-              <MenuCarousel items={filteredItems} />
-              <FloatingCartButton />
-              <CartSidebar tid={id.id} />
+                <MenuCarousel items={filteredItems} />
+                <FloatingCartButton />
+                <CartSidebar tid={id.id as number} />
 
-              <MenuItemGrid items={filteredItems} />
-            </motion.div>
-        </div>
-      </>
-    );
+                <MenuItemGrid items={filteredItems} />
+              </motion.div>
+          </div>
+        </>
+      );
   } else {
-    if(!load && tableFound){
     return (
       <>
         <div className="min-h-screen text-text bg-background ">
-          <Navbar id={id.id} />
+          <Navbar id={id.id as number} />
           <SearchBar onSelectItem={setSelectedCategory} />
             <motion.div
               initial={{ opacity: 0 }}
@@ -100,10 +98,11 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
         </div>
       </>
     );
+  }
   }else{
     return(
       <div className="min-h-screen text-text bg-background">
-        <Navbar id={id.id} />
+        <Navbar id={id.id as number} />
         <SearchBar onSelectItem={setSelectedCategory} />
         <main>
           <motion.div
@@ -170,7 +169,7 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-              >
+            >
                 We couldn&apos;t find the table you&apos;re looking for. It may have been moved or doesn&apos;t exist.
               </motion.p>
               <motion.div
@@ -194,6 +193,5 @@ export default function Home({ params }: { params: Promise<{ id: number }> }) {
       </div>
     
     )
-  }
   }
 }
