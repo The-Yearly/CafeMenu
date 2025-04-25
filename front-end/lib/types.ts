@@ -12,6 +12,8 @@ export interface Item {
   availability: boolean;
   ingredients: string[];
   createdAt?: string;
+  rating?:number[]
+  averageRating?:number
 }
 
 export interface Cart {

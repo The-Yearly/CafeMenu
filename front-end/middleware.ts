@@ -15,6 +15,7 @@ export async function middleware(req: NextRequest) {
     }else if(path.startsWith("/table")){
         const id=parseInt(path.split("/")[path.split("/").length-1])
         if(path!="/table/not-found"){
+            console.log(process.env.NEXT_PUBLIC_BACKEND_URL+"/api/v1/checkTable/"+id)
             const res=await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/checkTable/`+id)
             if(res.data.table==null){
                 return NextResponse.redirect(new URL("/table/not-found", req.url));

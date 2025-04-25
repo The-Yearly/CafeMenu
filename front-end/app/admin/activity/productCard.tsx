@@ -1,4 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { Star } from "lucide-react";
+import { average } from "@/components/MenuItemDetail";
 import { Item } from "@/lib/types";
 export default function ProductCard(props:{item:Item}){
     const product=props.item
@@ -41,6 +43,20 @@ export default function ProductCard(props:{item:Item}){
                   <p className="text-sm text-gray-600 mt-1 line-clamp-2">
                     {product.bio}
                   </p>
+                  <div className="flex items-center mb-1">
+                  <div className="flex">
+                    {
+                    [1,2,3,4,5].map((star)=>(
+                      
+                      <Star
+                        key={star}
+                        size={18}
+                        className={`${star <= average(product.rating||[3])?"fill-yellow-400 text-yellow-400":"text-gray-300"} mr-0.5`}
+                      />
+                    ))}
+                  </div>
+                  <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">{average(product.rating||[3]).toFixed(1)} / 5</span>
+                </div>
                   <div className="mt-3 flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-500">
                       {product.category}

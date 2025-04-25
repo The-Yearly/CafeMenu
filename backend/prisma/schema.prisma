@@ -19,6 +19,7 @@ model items {
   availability  Boolean
   tags          String[]
   ingredients   String[]
+  rating        Int[] @default([3])
   createdAt     DateTime @default(now())
   category_item category @relation(fields: [category], references: [name], onDelete: Cascade)
   orders_items  cart[]

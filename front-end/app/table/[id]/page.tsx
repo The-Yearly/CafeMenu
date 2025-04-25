@@ -17,6 +17,7 @@ export default function Home({ params }: { params: Promise<{ id: number|string }
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
+  const [carouselItems,setCarouselItems]=useState<Item[]>([])
   const [load, setLoad] = useState(true);
   const [tableFound,setTableFound]=useState(false)
   useEffect(()=>{const validateTable=async()=>{
@@ -47,8 +48,21 @@ export default function Home({ params }: { params: Promise<{ id: number|string }
         console.log("NO items found in this category");
         return [];
       }
-
+      
       setFilteredItems(items.data.items);
+      const itemsWithAverageRating=items.data.items.map((item:Item)=> {
+        const ratings=item.rating||[3];
+        const averageRating=ratings.length>0 
+          ? ratings.reduce((a,b) =>a+b,0)/ratings.length 
+          : 0;
+        
+        return {
+          ...item,
+          averageRating,  
+        };
+      });
+      const sortedItems = itemsWithAverageRating.sort((a:Item,b:Item) => (b?.averageRating||0)-(a?.averageRating||1));
+      setCarouselItems(sortedItems.slice(0,5))
       setLoad(false);
     };
     getMenuItems();
@@ -71,7 +85,7 @@ export default function Home({ params }: { params: Promise<{ id: number|string }
                   onSelectCategory={setSelectedCategory}
                 />
 
-                <MenuCarousel items={filteredItems} />
+                <MenuCarousel items={carouselItems} />
                 <FloatingCartButton />
                 <CartSidebar tid={id.id as number} />
 
@@ -112,7 +126,7 @@ export default function Home({ params }: { params: Promise<{ id: number|string }
             className="lg:container mx-auto pb-24"
           >
             <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
-              <motion.div
+                <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.2 }}

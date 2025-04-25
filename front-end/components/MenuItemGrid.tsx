@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { Plus,Star } from "lucide-react";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import MenuItemDetail from "./MenuItemDetail";
-
+import { average } from "./MenuItemDetail";
 import { Item } from "@/lib/types";
 import { useCart } from "@/lib/context/ItemContext";
 import { useAddToCart } from "@/lib/hooks/useAddToCart";
@@ -22,7 +22,6 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
   );
   const [page, setPage] = useState(1);
   const { handleAddToCart } = useAddToCart();
-
   useEffect(() => {
     const setPages = () => {
       setPaginatedItems(
@@ -109,9 +108,23 @@ const MenuItemGrid: React.FC<MenuItemGridProps> = ({ items }) => {
                   </span>
                 </div>
 
-                <p className="text-gray-600 dark:text-gray-300 hidden sm:block sm:text-sm  mb-2 sm:mb-8 line-clamp-2">
+                <p className="text-gray-600 dark:text-gray-300 hidden sm:block sm:text-sm  mb-2 line-clamp-2">
                   {menuItem.bio}
-                </p>
+                </p>  
+                <div className="flex items-center">
+                  <div className="flex">
+                    {
+                    [1,2,3,4,5].map((star)=>(
+                      
+                      <Star
+                        key={star}
+                        size={18}
+                        className={`${star <= average(menuItem.rating||[3])?"fill-yellow-400 text-yellow-400":"text-gray-300"} mr-0.5`}
+                      />
+                    ))}
+                  </div>
+                  <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">{average(menuItem.rating||[3]).toFixed(1)} / 5</span>
+                </div>
               </div>
             </div>
             <div className="flex justify-center pb-4">

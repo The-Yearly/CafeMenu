@@ -20,6 +20,9 @@ router.get("/menu", async (req, res) => {
     where: {
       availability: true,
     },
+    orderBy:{
+      name:"asc"
+    }
   });
   if (!response) {
     console.log("NO response");
@@ -251,6 +254,9 @@ router.post("/category", async (req, res) => {
       where: {
         availability: true,
       },
+      orderBy:{
+        name:"asc"
+      }
     });
     if (!response) {
       res.status(400).json({
@@ -266,6 +272,9 @@ router.post("/category", async (req, res) => {
         category: categoryName,
         availability: true,
       },
+      orderBy:{
+        name:"asc"
+      }
     });
     if (!response) {
       res.status(400).json({
@@ -739,10 +748,32 @@ router.get("/deleteTable/:tid",async(req,res)=>{
 })
 
 router.get("/checkTable/:tid",async(req,res)=>{
+  console.log("Here")
   const response=await client.tables.findFirst({
     where:{
       tid:parseInt(req.params.tid)
     }
   })
   res.json({table:response})
+})
+
+router.post("/sendRev",async (req,res)=>{
+  const id=req.body.id
+  const rating=req.body.rating
+  const ratings=await client.items.findFirst({
+    where:{
+      itemId:id
+    },
+    select:{
+      rating:true
+    }
+  })
+  const response=await client.items.update({
+    where:{
+      itemId:id
+    },
+    data:{
+      rating:[...ratings?.rating||[],rating]
+    }
+  })
 })

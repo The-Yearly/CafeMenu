@@ -1,13 +1,13 @@
 "use client";
 import { CategorySkeletonLoader } from "@/app/admin/category/skeleton";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus ,Star} from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 import MenuItemDetail from "./MenuItemDetail";
 import { Item } from "@/lib/types";
 import { useAddToCart } from "@/lib/hooks/useAddToCart";
-
+import { average } from "./MenuItemDetail";
 interface MenuCarouselProps {
   items: Item[];
 }
@@ -23,6 +23,7 @@ export const MenuCarousel: React.FC<MenuCarouselProps> = ({ items }) => {
   const [direction, setDirection] = useState(0);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const { handleAddToCart } = useAddToCart();
+  console.log(items)
 
   // Reset currentIndex to 0 when items change
   useEffect(() => {
@@ -186,10 +187,23 @@ const MenuCard = ({ item, onAddToCart, onViewDetails }: MenuCardProps) => {
           <span className="text-accent font-bold">${item.cost.toFixed(2)}</span>
         </div>
 
-        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+        <p className="text-gray-600 dark:text-gray-300 text-sm mb-2 line-clamp-2">
           {item.bio}
         </p>
-
+        <div className="flex items-center">
+          <div className="flex">
+            {
+            [1,2,3,4,5].map((star)=>(
+              
+              <Star
+                key={star}
+                size={18}
+                className={`${star <= average(item.rating||[3])?"fill-yellow-400 text-yellow-400":"text-gray-300"} mr-0.5`}
+              />
+            ))}
+          </div>
+          <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">{average(item.rating||[3]).toFixed(1)} / 5</span>
+        </div>
         <div className="flex justify-between items-center">
           <button
             onClick={onViewDetails}
