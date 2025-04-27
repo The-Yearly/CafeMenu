@@ -8,7 +8,8 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
-  Star
+  Star,
+  StarHalf
 } from "lucide-react";
 import { average } from "@/components/MenuItemDetail";
 import { Category, Item } from "@/lib/types";
@@ -301,15 +302,14 @@ export default function Products() {
                   </p>
                   <div className="flex items-center mb-1">
                   <div className="flex">
-                    {
-                    [1,2,3,4,5].map((star)=>(
-                      
-                      <Star
-                        key={star}
-                        size={18}
-                        className={`${star <= average(product.rating||[3])?"fill-yellow-400 text-yellow-400":"text-gray-300"} mr-0.5`}
-                      />
-                    ))}
+                  {[1,2,3,4,5].map((star)=>(
+                    (star<=average(product.rating||[3]))?
+                    <Star
+                      key={star}
+                      size={18}
+                      className="fill-yellow-400 text-yellow-400 mr-0.5"
+                    />:(average(product.rating||[3])>=star-0.5)?<div className="flex" key={star}><StarHalf size={18} className="absolute fill-yellow-400 text-yellow-400"/><Star size={18} className="text-gray-300 mr-0.5"/></div>:<Star key={star} size={18} className="text-gray-300 mr-0.5"/>
+                  ))}
                   </div>
                   <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">{average(product.rating||[3]).toFixed(1)} / 5</span>
                 </div>

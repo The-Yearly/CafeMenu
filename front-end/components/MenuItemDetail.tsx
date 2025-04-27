@@ -3,7 +3,7 @@
   import type React from "react"
   import { useState } from "react"
   import { motion,AnimatePresence } from "framer-motion"
-  import { X,Minus,Plus,ShoppingBag,Star,Send } from "lucide-react"
+  import { X,Minus,Plus,ShoppingBag,Star,Send,StarHalf } from "lucide-react"
   import type { Item } from "@/lib/types"
   import axios from "axios"
   interface MenuItemDetailProps {
@@ -95,11 +95,12 @@
               <div className="flex items-center mb-3">
                 <div className="flex">
                   {[1,2,3,4,5].map((star)=>(
+                    (star<=rating)?
                     <Star
                       key={star}
                       size={18}
-                      className={`${star <= rating?"fill-yellow-400 text-yellow-400":"text-gray-300"} mr-0.5`}
-                    />
+                      className="fill-yellow-400 text-yellow-400 mr-0.5"
+                    />:(rating>=star-0.5)?<div className="flex" key={star}><StarHalf size={18} className="absolute fill-yellow-400 text-yellow-400"/><Star size={18} className="text-gray-300 mr-0.5"/></div>:<Star key={star} size={18} className="text-gray-300 mr-0.5"/>
                   ))}
                 </div>
                 <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">{rating.toFixed(1)} / 5</span>

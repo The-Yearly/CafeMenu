@@ -1,7 +1,7 @@
 "use client";
 import { CategorySkeletonLoader } from "@/app/admin/category/skeleton";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Plus ,Star} from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus ,Star,StarHalf} from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 import MenuItemDetail from "./MenuItemDetail";
@@ -192,15 +192,14 @@ const MenuCard = ({ item, onAddToCart, onViewDetails }: MenuCardProps) => {
         </p>
         <div className="flex items-center">
           <div className="flex">
-            {
-            [1,2,3,4,5].map((star)=>(
-              
-              <Star
-                key={star}
-                size={18}
-                className={`${star <= average(item.rating||[3])?"fill-yellow-400 text-yellow-400":"text-gray-300"} mr-0.5`}
-              />
-            ))}
+          {[1,2,3,4,5].map((star)=>(
+            (star<=average(item.rating||[3]))?
+            <Star
+              key={star}
+              size={18}
+              className="fill-yellow-400 text-yellow-400 mr-0.5"
+            />:(average(item.rating||[3])>=star-0.5)?<div className="flex" key={star}><StarHalf size={18} className="absolute fill-yellow-400 text-yellow-400"/><Star size={18} className="text-gray-300 mr-0.5"/></div>:<Star key={star} size={18} className="text-gray-300 mr-0.5"/>
+          ))}
           </div>
           <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">{average(item.rating||[3]).toFixed(1)} / 5</span>
         </div>
