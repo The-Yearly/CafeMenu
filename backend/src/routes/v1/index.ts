@@ -488,6 +488,7 @@ router.post("/addCat", async (req, res) => {
 router.post("/editCat", async (req, res) => {
   const parsedResponse = categories.safeParse(req.body);
   console.log("updateCat");
+  console.log()
   if (!parsedResponse.success) {
     res.status(400).json({
       message: "Validation failed",

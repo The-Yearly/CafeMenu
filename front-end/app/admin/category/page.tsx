@@ -174,7 +174,7 @@ const CategoryForm: React.FC<{
     }
   };
 
-  const uploadImageToImageKit = async () => {
+  const uploadImageToImageKit = async (id:number,image:string) => {
     if (!selectedFile) return null;
 
     setIsUploading(true);
@@ -187,12 +187,22 @@ const CategoryForm: React.FC<{
         };
         reader.readAsDataURL(selectedFile);
       });
+      const imgname=image.split("/")[image.split("/").length-1]
+      console.log(imgname)
+      const imglists=await imagekit.listFiles({
+        searchQuery : `name=${imgname}`
+      })
+      const file=imglists.find((file)=>'fileId' in file)
+      const fileId=file?(file as {fileId:string}).fileId:null
+      try{
+        await imagekit.deleteFile(fileId||"")
+      }catch{
+        console.log("Image Does not exist")
+      }
       const base64 = await base64Promise;
       const result = await imagekit.upload({
         file: base64,
-        fileName: `category_${Date.now()}.${selectedFile.name
-          .split(".")
-          .pop()}`,
+        fileName: `category_${id}`,
         folder: "/categories",
       });
       setFormData((prev) => ({ ...prev, images: result.url }));
@@ -213,7 +223,7 @@ const CategoryForm: React.FC<{
     }
     if (selectedFile) {
       setIsUploading(true);
-      const imageUrl = await uploadImageToImageKit();
+      const imageUrl = await uploadImageToImageKit(category?.id||0,category?.images||"");
       setIsUploading(false);
 
       if (!imageUrl) {
@@ -235,7 +245,7 @@ const CategoryForm: React.FC<{
         } else {
           await axios.post(link + "/addCat", formData);
         }
-        window.location.reload();
+        window.location.reload()
       }
     };
     sendCat();
